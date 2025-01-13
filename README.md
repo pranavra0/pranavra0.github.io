@@ -1,2 +1,1 @@
-# pranavra0.github.io
-my blog
+# [pranavra0.github.io](https://pranavra0.github.io/)
