@@ -50,34 +50,33 @@ print(&#34;Hello World!&#34;) Images:">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
-:root {
-    --width: 800px;
-    --font-main: "Times New Roman", serif;  
-    --font-secondary: "Georgia", serif;    
-    --font-scale: 1em;
-    --background-color: #fff;
-    --heading-color: #222;
-    --text-color: #444;
-    --link-color: #3273dc;
-    --visited-color:  #8b6fcb;
-    --code-background-color: #f2f2f2;
-    --code-color: #222;
-    --blockquote-color: #222;
-}
-
-
-  @media (prefers-color-scheme: dark) {
-      :root {
-        --background-color: #fff;
+  :root {
+      --width: 800px;
+      --font-main: Times New Roman, serif;
+      --font-secondary: Times, serif;
+      --font-scale: 1em;
+      --background-color: #fff;
       --heading-color: #222;
       --text-color: #444;
       --link-color: #3273dc;
       --visited-color:  #8b6fcb;
-          --code-background-color: #777;
-          --code-color: #ddd;
-          --blockquote-color: #ccc;
-      }
+      --code-background-color: #f2f2f2;
+      --code-color: #222;
+      --blockquote-color: #222;
   }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #1e1e2f;
+        --heading-color: #ffffff;
+        --text-color: #cccccc;
+        --link-color: #7abfff;
+        --visited-color: #b693f9;
+        --code-background-color: #2e2e3e;
+        --code-color: #f8f8f2;
+        --blockquote-color: #bbbbbb;
+    }
+}
 
   body {
       font-family: var(--font-secondary);
@@ -96,7 +95,7 @@ print(&#34;Hello World!&#34;) Images:">
   h1, h2, h3, h4, h5, h6 {
       font-family: var(--font-main);
       color: var(--heading-color);
-      font-style: italic;
+      font-style: italic;   
   }
 
   a {
@@ -140,12 +139,18 @@ print(&#34;Hello World!&#34;) Images:">
   }
 
   code {
-      font-family: monospace;
-      padding: 1px;
-      background-color: var(--code-background-color);
-      color: var(--code-color);
-      border-radius: 3px;
-  }
+    font-family: 'Fira Code', monospace;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 0;  
+    margin: 0;  
+    outline: 2px dashed #999;  
+    outline-offset: 4px;  
+}
+
 
   blockquote {
       border-left: 1px solid #999;
@@ -171,15 +176,23 @@ print(&#34;Hello World!&#34;) Images:">
       width: auto !important;
   }
 
-  .highlight, .code {
-      padding: 1px 15px;
-      background-color: var(--code-background-color);
-      color: var(--code-color);
-      border-radius: 3px;
-      margin-block-start: 1em;
-      margin-block-end: 1em;
-      overflow-x: auto;
-  }
+    .highlight .keyword, .code .keyword {
+        color: #ff79c6;
+        font-weight: bold;
+    }
+
+    .highlight .string, .code .string {
+        color: #f1fa8c;
+    }
+
+    .highlight .comment, .code .comment {
+        color: #6272a4;
+        font-style: italic;
+    }
+
+    .highlight .number, .code .number {
+        color: #bd93f9;
+    }
 
    
   ul.blog-posts {
