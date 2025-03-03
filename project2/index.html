@@ -8,7 +8,10 @@
 <link rel="shortcut icon" href="https://pranavra0.github.io/images/favicon.png" />
 <title>Project2 | ...</title>
 <meta name="title" content="Project2" />
-<meta name="description" content="The Problem
+<meta name="description" content="NOTE: the Jupyter Notebook link contains all the code used to generate visuals as well as the data cleaning
+Jupyter Notebok
+Dataset Link
+The Problem
 Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk." />
 <meta name="keywords" content="" />
 
@@ -16,7 +19,10 @@ Originally, I was looking into various financial datasets when I came across the
 <meta property="og:url" content="https://pranavra0.github.io/project2/">
   <meta property="og:site_name" content="...">
   <meta property="og:title" content="Project2">
-  <meta property="og:description" content="The Problem Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.">
+  <meta property="og:description" content="NOTE: the Jupyter Notebook link contains all the code used to generate visuals as well as the data cleaning
+Jupyter Notebok
+Dataset Link
+The Problem Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.">
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="article">
     <meta property="article:section" content="blog">
@@ -28,16 +34,22 @@ Originally, I was looking into various financial datasets when I came across the
 
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Project2">
-  <meta name="twitter:description" content="The Problem Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.">
+  <meta name="twitter:description" content="NOTE: the Jupyter Notebook link contains all the code used to generate visuals as well as the data cleaning
+Jupyter Notebok
+Dataset Link
+The Problem Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.">
 
 
 
 
   <meta itemprop="name" content="Project2">
-  <meta itemprop="description" content="The Problem Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.">
+  <meta itemprop="description" content="NOTE: the Jupyter Notebook link contains all the code used to generate visuals as well as the data cleaning
+Jupyter Notebok
+Dataset Link
+The Problem Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.">
   <meta itemprop="datePublished" content="2025-02-21T09:09:43-05:00">
   <meta itemprop="dateModified" content="2025-02-21T09:09:43-05:00">
-  <meta itemprop="wordCount" content="677">
+  <meta itemprop="wordCount" content="1940">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
   <style>
@@ -229,7 +241,10 @@ Originally, I was looking into various financial datasets when I came across the
 </p>
 
 <content>
-  <h1 id="the-problem">The Problem</h1>
+  <p><strong>NOTE: the Jupyter Notebook link contains all the code used to generate visuals as well as the data cleaning</strong></p>
+<p><a href="/notebooks/project2.html">Jupyter Notebok</a></p>
+<p><a href="https://www.kaggle.com/datasets/uciml/german-credit?resource=download">Dataset Link</a></p>
+<h1 id="the-problem">The Problem</h1>
 <p>Originally, I was looking into various financial datasets when I came across the German Credit Risk dataset. I expected it to be a straightforward analysis since credit risk assessment follows well-defined principles. However, as I started exploring the data, I realized how complex and nuanced the factors determining creditworthiness actually are. The dataset presents a mixture of numerical and categorical attributes, each influencing whether a person is classified as a good or bad credit risk.</p>
 <p>One of the first things that stood out was how qualitative attributes like &ldquo;saving accounts&rdquo; and &ldquo;housing&rdquo; were just as important as hard numbers like &ldquo;credit amount&rdquo; and &ldquo;duration.&rdquo; This made me wonder what patterns truly define a &ldquo;bad risk&rdquo; in this dataset. Is it primarily financial standing, or do other factors play a bigger role than expected?</p>
 <p>Through this project, I will explore key trends in the German Credit Risk dataset to uncover what drives credit decisions. I also want to analyze potential biases in the dataset to see if certain groups are disproportionately classified as high risk and why. By the end of this, I hope to have a clearer understanding of how financial institutions assess creditworthiness and what hidden patterns exist within this data.</p>
@@ -264,12 +279,14 @@ Originally, I was looking into various financial datasets when I came across the
 </span></span></code></pre></div><p>And with that our dataset should be good to start running some models on. This was thankfully much simpler than project1 and should allow us to run a variety of models and see which one is the best at classifying this particular dataset.</p>
 <p>Now is a good time to mention the dataset will be classified along &ldquo;Credit Amount&rdquo;</p>
 <h1 id="exploring-the-data">Exploring the Data</h1>
-<p>Before doing that lets take a quick look at the data visually:</p>
+<p>Before doing that lets take a quick look at the data visually. This is just to get an idea of what we are looking at as well as what models would prove useful for out data.</p>
+<p>To start I decided to take brief overview of the demographics of the numerical data we do have. This should roughly show the distribution we are working with.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>num_cols <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;Age&#34;</span>, <span style="color:#e6db74">&#34;Credit amount&#34;</span>, <span style="color:#e6db74">&#34;Duration&#34;</span>, <span style="color:#e6db74">&#34;Job&#34;</span>]
 </span></span><span style="display:flex;"><span>data[num_cols]<span style="color:#f92672">.</span>hist(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">6</span>), bins<span style="color:#f92672">=</span><span style="color:#ae81ff">20</span>, edgecolor<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;black&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>suptitle(<span style="color:#e6db74">&#34;Distributions of Numerical Variables&#34;</span>)
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
 </span></span></code></pre></div><p><img src="/images/project2/distribution_numerical.png" alt="numerical_dist"></p>
+<p>Here we will be looking at the distribution of the categorical variables for similar reasons as explained above.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>category_cols <span style="color:#f92672">=</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Sex&#34;</span>: [<span style="color:#e6db74">&#34;Sex_male&#34;</span>],
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Housing&#34;</span>: [<span style="color:#e6db74">&#34;Housing_own&#34;</span>, <span style="color:#e6db74">&#34;Housing_rent&#34;</span>],
@@ -301,7 +318,125 @@ Originally, I was looking into various financial datasets when I came across the
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>tight_layout()
 </span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
 </span></span></code></pre></div><p><img src="/images/project2/distribution_categorical.png" alt="categroical_dist"></p>
+<p>Now here I am looking at credit amounts with some factors you would assume are fairly correlated (like age or home ownerhsip)</p>
 <p><img src="/images/project2/credit_v_age.png" alt="credit_v_age"></p>
+<p><img src="/images/project2/job_type_credit_risk.png" alt="job_type_credit_risk"></p>
+<p><img src="/images/project2/credit_amount_v_home_ownership.png" alt="credit amnt v home ownership"></p>
+<p>Interesting! From here seeing the types of data I am working with as well as the weaker than expected correlations on some of these figures, I have a solid idea of what model will end up working well here.</p>
+<h1 id="modedling">Modedling</h1>
+<p>When deciding on the best model for this dataset, I wanted to find something that balances accuracy, generalization, and robustness. SVM immediately stood out as the best option. The dataset has a mix of numerical and categorical features that, after encoding, create a high-dimensional space. SVM thrives in these scenarios, as it works by finding the optimal boundary between different credit risk classifications, even when the data isn’t perfectly separable.</p>
+<p>One of the main reasons I gravitated toward SVM is that much of the data appears to be somewhat uncorrelated. When exploring the dataset, I noticed that many of the features don’t have strong linear relationships with each other or with the credit amount. This means that models like logistic regression, which rely heavily on linear separability, aren’t a great fit. Decision trees and random forests could perform decently, but they tend to overfit, especially when working with less informative features. SVM, on the other hand, is designed to work well even when the data isn&rsquo;t easily separable, making it a strong choice for capturing subtle patterns.</p>
+<p><em>Edit: this is what I was thinking and then I realized I have no contraints &ndash; I could just use multiple models and evaluate their results</em></p>
+<p>With my newfound realization, I decided the most effective course of action was using multiple models and then seeing how their accuracy compares given what we know.</p>
+<h3 id="brief-overview-of-the-other-models">Brief Overview of the Other Models</h3>
+<p>A Decision Tree is a fairly straightforward model that splits data based on feature values, creating a flowchart-like decision process. While it&rsquo;s highly interpretable, it has a tendency to overfit, especially with smaller datasets like this one. A Random Forest helps mitigate that issue by training multiple decision trees on random subsets of the data and averaging their predictions. This reduces overfitting and improves generalization, though it can sometimes be less interpretable than a single decision tree. Finally, Logistic Regression offers a simple and efficient baseline for classification. It assumes a linear relationship between the features and the target variable, which might not hold well in this dataset, but it serves as a useful benchmark to compare against more complex models.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>X <span style="color:#f92672">=</span> data<span style="color:#f92672">.</span>drop(<span style="color:#e6db74">&#34;Credit amount&#34;</span>, axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> data[<span style="color:#e6db74">&#34;Credit amount&#34;</span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># put credit amount into bins</span>
+</span></span><span style="display:flex;"><span>y <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>qcut(y, q<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, labels<span style="color:#f92672">=</span>[<span style="color:#ae81ff">0</span>, <span style="color:#ae81ff">1</span>])  
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>X_train, X_test, y_train, y_test <span style="color:#f92672">=</span> train_test_split(X, y, test_size<span style="color:#f92672">=</span><span style="color:#ae81ff">0.2</span>, 
+</span></span><span style="display:flex;"><span>                                    random_state<span style="color:#f92672">=</span><span style="color:#ae81ff">42</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>models <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Decision Tree&#34;</span>: DecisionTreeClassifier(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Random Forest&#34;</span>: RandomForestClassifier(),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;Logistic Regression&#34;</span>: LogisticRegression(max_iter<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span>),
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;SVM&#34;</span>: SVC()
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>accuracy_scores <span style="color:#f92672">=</span> {}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> name, model <span style="color:#f92672">in</span> models<span style="color:#f92672">.</span>items():
+</span></span><span style="display:flex;"><span>    model<span style="color:#f92672">.</span>fit(X_train, y_train)
+</span></span><span style="display:flex;"><span>    y_pred <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>predict(X_test)
+</span></span><span style="display:flex;"><span>    accuracy <span style="color:#f92672">=</span> accuracy_score(y_test, y_pred)
+</span></span><span style="display:flex;"><span>    accuracy_scores[name] <span style="color:#f92672">=</span> accuracy
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>sorted_results <span style="color:#f92672">=</span> sorted(accuracy_scores<span style="color:#f92672">.</span>items(), key<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> x: x[<span style="color:#ae81ff">1</span>], reverse<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Sorted Model Performance:&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> name, acc <span style="color:#f92672">in</span> sorted_results:
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">{</span>name<span style="color:#e6db74">}</span><span style="color:#e6db74">: </span><span style="color:#e6db74">{</span>acc<span style="color:#e6db74">:</span><span style="color:#e6db74">.2f</span><span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span></code></pre></div><p>The output I ended up getting:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Sorted Model Performance:
+</span></span><span style="display:flex;"><span>SVM: <span style="color:#ae81ff">0.75</span>
+</span></span><span style="display:flex;"><span>Random Forest: <span style="color:#ae81ff">0.74</span>
+</span></span><span style="display:flex;"><span>Logistic Regression: <span style="color:#ae81ff">0.74</span>
+</span></span><span style="display:flex;"><span>Decision Tree: <span style="color:#ae81ff">0.62</span>
+</span></span></code></pre></div><p>To my surprise, they were all pretty close except for the decision tree!</p>
+<h1 id="evaluation">Evaluation</h1>
+<p>Accuracy is just one part of the puzzle. We have a wide variety of metrics with which we can see how well everything performed.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>dt_model <span style="color:#f92672">=</span> DecisionTreeClassifier()
+</span></span><span style="display:flex;"><span>rf_model <span style="color:#f92672">=</span> RandomForestClassifier()
+</span></span><span style="display:flex;"><span>lr_model <span style="color:#f92672">=</span> LogisticRegression(max_iter<span style="color:#f92672">=</span><span style="color:#ae81ff">1000</span>)
+</span></span><span style="display:flex;"><span>svm_model <span style="color:#f92672">=</span> SVC()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dt_model<span style="color:#f92672">.</span>fit(X_train, y_train)
+</span></span><span style="display:flex;"><span>rf_model<span style="color:#f92672">.</span>fit(X_train, y_train)
+</span></span><span style="display:flex;"><span>lr_model<span style="color:#f92672">.</span>fit(X_train, y_train)
+</span></span><span style="display:flex;"><span>svm_model<span style="color:#f92672">.</span>fit(X_train, y_train)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>y_pred_dt <span style="color:#f92672">=</span> dt_model<span style="color:#f92672">.</span>predict(X_test)
+</span></span><span style="display:flex;"><span>y_pred_rf <span style="color:#f92672">=</span> rf_model<span style="color:#f92672">.</span>predict(X_test)
+</span></span><span style="display:flex;"><span>y_pred_lr <span style="color:#f92672">=</span> lr_model<span style="color:#f92672">.</span>predict(X_test)
+</span></span><span style="display:flex;"><span>y_pred_svm <span style="color:#f92672">=</span> svm_model<span style="color:#f92672">.</span>predict(X_test)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>models <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#34;Decision Tree&#34;</span>, <span style="color:#e6db74">&#34;Random Forest&#34;</span>, <span style="color:#e6db74">&#34;Logistic Regression&#34;</span>, <span style="color:#e6db74">&#34;SVM&#34;</span>]
+</span></span><span style="display:flex;"><span>y_preds <span style="color:#f92672">=</span> [y_pred_dt, y_pred_rf, y_pred_lr, y_pred_svm]  
+</span></span><span style="display:flex;"><span>performance_metrics <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;Model&#34;</span>: [], <span style="color:#e6db74">&#34;Accuracy&#34;</span>: [], <span style="color:#e6db74">&#34;Precision&#34;</span>: [], <span style="color:#e6db74">&#34;Recall&#34;</span>: [], 
+</span></span><span style="display:flex;"><span>                        <span style="color:#e6db74">&#34;F1 Score&#34;</span>: []}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> model_name, y_pred <span style="color:#f92672">in</span> zip(models, y_preds):
+</span></span><span style="display:flex;"><span> 
+</span></span><span style="display:flex;"><span>    accuracy <span style="color:#f92672">=</span> accuracy_score(y_test, y_pred)
+</span></span><span style="display:flex;"><span>    precision <span style="color:#f92672">=</span> precision_score(y_test, y_pred, average<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binary&#34;</span>)
+</span></span><span style="display:flex;"><span>    recall <span style="color:#f92672">=</span> recall_score(y_test, y_pred, average<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binary&#34;</span>)
+</span></span><span style="display:flex;"><span>    f1 <span style="color:#f92672">=</span> f1_score(y_test, y_pred, average<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;binary&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    performance_metrics[<span style="color:#e6db74">&#34;Model&#34;</span>]<span style="color:#f92672">.</span>append(model_name)
+</span></span><span style="display:flex;"><span>    performance_metrics[<span style="color:#e6db74">&#34;Accuracy&#34;</span>]<span style="color:#f92672">.</span>append(accuracy)
+</span></span><span style="display:flex;"><span>    performance_metrics[<span style="color:#e6db74">&#34;Precision&#34;</span>]<span style="color:#f92672">.</span>append(precision)
+</span></span><span style="display:flex;"><span>    performance_metrics[<span style="color:#e6db74">&#34;Recall&#34;</span>]<span style="color:#f92672">.</span>append(recall)
+</span></span><span style="display:flex;"><span>    performance_metrics[<span style="color:#e6db74">&#34;F1 Score&#34;</span>]<span style="color:#f92672">.</span>append(f1)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">{</span>model_name<span style="color:#e6db74">}</span><span style="color:#e6db74"> Performance:&#34;</span>)
+</span></span><span style="display:flex;"><span>    print(classification_report(y_test, y_pred))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cm <span style="color:#f92672">=</span> confusion_matrix(y_test, y_pred)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">4</span>))
+</span></span><span style="display:flex;"><span>    sns<span style="color:#f92672">.</span>heatmap(cm, annot<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, fmt<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;d&#34;</span>, cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Blues&#34;</span>, 
+</span></span><span style="display:flex;"><span>                xticklabels<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;Low Credit&#34;</span>, <span style="color:#e6db74">&#34;High Credit&#34;</span>], 
+</span></span><span style="display:flex;"><span>                yticklabels<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;Low Credit&#34;</span>, <span style="color:#e6db74">&#34;High Credit&#34;</span>])
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>xlabel(<span style="color:#e6db74">&#34;Predicted Label&#34;</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#34;True Label&#34;</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Confusion Matrix - </span><span style="color:#e6db74">{</span>model_name<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>show()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>performance_df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>DataFrame(performance_metrics)
+</span></span><span style="display:flex;"><span>performance_df <span style="color:#f92672">=</span> performance_df<span style="color:#f92672">.</span>sort_values(by<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Accuracy&#34;</span>, ascending<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">Model Performance Summary:&#34;</span>)
+</span></span><span style="display:flex;"><span>print(performance_df)
+</span></span></code></pre></div><p><strong>OUTPUT</strong> <em>Note: You can see the confusion matrices generated in the full notebook linked at the top of the page</em></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>Model Performance Summary:
+</span></span><span style="display:flex;"><span>                 Model  Accuracy  Precision    Recall  F1 Score
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">3</span>                  SVM     <span style="color:#ae81ff">0.750</span>   <span style="color:#ae81ff">0.768293</span>  <span style="color:#ae81ff">0.670213</span>  <span style="color:#ae81ff">0.715909</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">2</span>  Logistic Regression     <span style="color:#ae81ff">0.740</span>   <span style="color:#ae81ff">0.738636</span>  <span style="color:#ae81ff">0.691489</span>  <span style="color:#ae81ff">0.714286</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>        Random Forest     <span style="color:#ae81ff">0.735</span>   <span style="color:#ae81ff">0.730337</span>  <span style="color:#ae81ff">0.691489</span>  <span style="color:#ae81ff">0.710383</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">0</span>        Decision Tree     <span style="color:#ae81ff">0.640</span>   <span style="color:#ae81ff">0.612245</span>  <span style="color:#ae81ff">0.638298</span>  <span style="color:#ae81ff">0.625000</span>
+</span></span></code></pre></div><p>Looking at the model performance summary, it&rsquo;s clear that the Support Vector Machine (SVM) came out on top, with the highest accuracy of 0.750. SVM also led in precision, which indicates that when it predicts a &ldquo;high credit&rdquo; label, it is correct approximately 77% of the time. Although it didn&rsquo;t dominate across all metrics, it still provided a solid balance between accuracy and precision compared to the other models. This suggests that the SVM is good at identifying positive cases without overpredicting them, making it a reliable choice overall.</p>
+<p>While SVM performed the best, Logistic Regression and Random Forest weren&rsquo;t far behind, with accuracy scores of 0.740 and 0.735, respectively. Logistic Regression had a higher recall of 0.691 compared to the Random Forest (also 0.691), meaning it was equally effective at capturing positive cases but didn&rsquo;t quite match SVM’s precision. The Decision Tree, with its accuracy of 0.640, lagged behind the others. While it still had some decent performance, it struggled to balance the trade-off between precision and recall, likely due to overfitting on the training data.</p>
+<p>Accuracy measures how often the model’s predictions are correct overall, but it doesn&rsquo;t always tell the full story, especially when dealing with imbalanced datasets. Precision focuses on how many of the predicted positive cases are actually positive, ensuring that when a model predicts a &ldquo;high credit&rdquo; label, it&rsquo;s a true positive most of the time. Recall, on the other hand, evaluates how well the model catches all the true positives—it&rsquo;s more about not missing any cases. Finally, F1 Score is the harmonic mean of precision and recall, offering a single metric that balances the two. High F1 scores, like the ones seen for SVM and Logistic Regression, indicate that the model is not just accurate but also good at balancing the false positives and false negatives.</p>
+<h1 id="impact">Impact</h1>
+<p>While seemingly pretty useful, there is a pretty clear concern here. That concern being that old data being used to evaluate debtors will simply continue to disadvantage those people making it somewhat of a self fulfilling process. While it is an interesting experiment and I had fun doing this project, I am not really sure that these types of models are a good way to go about evaluate future risk. With that being said, as a way to review what has happened in the past, they seem incredibly powerful and, not to mention, easy! I was able to create multiple models with just a for loop which shows just how powerful and well documented the technology has become.</p>
 
 </content>
 <p>
