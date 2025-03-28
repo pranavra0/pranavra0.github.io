@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-US</language>
     <copyright>Copyright © 2025</copyright>
-    <lastBuildDate>Fri, 21 Feb 2025 09:09:43 -0500</lastBuildDate>
+    <lastBuildDate>Thu, 27 Mar 2025 09:16:52 -0400</lastBuildDate>
     <atom:link href="https://pranavra0.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Project3</title>
+      <link>https://pranavra0.github.io/project3/</link>
+      <pubDate>Thu, 27 Mar 2025 09:16:52 -0400</pubDate>
+      <guid>https://pranavra0.github.io/project3/</guid>
+      <description>&lt;p&gt;&lt;a href=&#34;https://pranavra0.github.io/notebooks/project3.html&#34;&gt;Jupyter Notebok&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;&lt;a href=&#34;https://www.kaggle.com/datasets/denkuznetz/food-delivery-time-prediction&#34;&gt;Dataset Link&lt;/a&gt;&lt;/p&gt;&#xA;&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;&#xA;&lt;h2 id=&#34;the-problem&#34;&gt;The Problem&lt;/h2&gt;&#xA;&lt;p&gt;Food delivery is notoriously inaccurate. The times provided in apps are often wrong by significant apps. Estimation for these types of tasks is incredibly difficult. This project aims to develop a linear regression model that predicts food delivery times based on various factors such as distance, weather, traffic conditions, and courier experience. The main benefit is perhaps on the user side&amp;ndash; as a user you might be able to have a better idea than the in app time estimation! Additionally, food delivery companies may be able to modulate the time estimation. For example: traffic may say time x but the model suggests weather adds another 5 minutes so you bump up the estimation on the user side. This way expecations are met more often than not.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Project2</title>
       <link>https://pranavra0.github.io/project2/</link>

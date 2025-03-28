@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://pranavra0.github.io/images/favicon.png" />
+<title>Project3 | ...</title>
+<meta name="title" content="Project3" />
+<meta name="description" content="Jupyter Notebok
+Dataset Link
+Introduction
+The Problem
+Food delivery is notoriously inaccurate. The times provided in apps are often wrong by significant apps. Estimation for these types of tasks is incredibly difficult. This project aims to develop a linear regression model that predicts food delivery times based on various factors such as distance, weather, traffic conditions, and courier experience. The main benefit is perhaps on the user side&ndash; as a user you might be able to have a better idea than the in app time estimation! Additionally, food delivery companies may be able to modulate the time estimation. For example: traffic may say time x but the model suggests weather adds another 5 minutes so you bump up the estimation on the user side. This way expecations are met more often than not." />
+<meta name="keywords" content="" />
+
+
+<meta property="og:url" content="https://pranavra0.github.io/project3/">
+  <meta property="og:site_name" content="...">
+  <meta property="og:title" content="Project3">
+  <meta property="og:description" content="Jupyter Notebok
+Dataset Link
+Introduction The Problem Food delivery is notoriously inaccurate. The times provided in apps are often wrong by significant apps. Estimation for these types of tasks is incredibly difficult. This project aims to develop a linear regression model that predicts food delivery times based on various factors such as distance, weather, traffic conditions, and courier experience. The main benefit is perhaps on the user side– as a user you might be able to have a better idea than the in app time estimation! Additionally, food delivery companies may be able to modulate the time estimation. For example: traffic may say time x but the model suggests weather adds another 5 minutes so you bump up the estimation on the user side. This way expecations are met more often than not.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2025-03-27T09:16:52-04:00">
+    <meta property="article:modified_time" content="2025-03-27T09:16:52-04:00">
+
+
+
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Project3">
+  <meta name="twitter:description" content="Jupyter Notebok
+Dataset Link
+Introduction The Problem Food delivery is notoriously inaccurate. The times provided in apps are often wrong by significant apps. Estimation for these types of tasks is incredibly difficult. This project aims to develop a linear regression model that predicts food delivery times based on various factors such as distance, weather, traffic conditions, and courier experience. The main benefit is perhaps on the user side– as a user you might be able to have a better idea than the in app time estimation! Additionally, food delivery companies may be able to modulate the time estimation. For example: traffic may say time x but the model suggests weather adds another 5 minutes so you bump up the estimation on the user side. This way expecations are met more often than not.">
+
+
+
+
+  <meta itemprop="name" content="Project3">
+  <meta itemprop="description" content="Jupyter Notebok
+Dataset Link
+Introduction The Problem Food delivery is notoriously inaccurate. The times provided in apps are often wrong by significant apps. Estimation for these types of tasks is incredibly difficult. This project aims to develop a linear regression model that predicts food delivery times based on various factors such as distance, weather, traffic conditions, and courier experience. The main benefit is perhaps on the user side– as a user you might be able to have a better idea than the in app time estimation! Additionally, food delivery companies may be able to modulate the time estimation. For example: traffic may say time x but the model suggests weather adds another 5 minutes so you bump up the estimation on the user side. This way expecations are met more often than not.">
+  <meta itemprop="datePublished" content="2025-03-27T09:16:52-04:00">
+  <meta itemprop="dateModified" content="2025-03-27T09:16:52-04:00">
+  <meta itemprop="wordCount" content="1794">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+      --width: 800px;
+      --font-main: Times New Roman, serif;
+      --font-secondary: Times, serif;
+      --font-scale: 1.1em;
+      --background-color: #fff;
+      --heading-color: #222;
+      --text-color: #444;
+      --link-color: #3273dc;
+      --visited-color:  #8b6fcb;
+      --code-background-color: #09090b;
+      --code-color: #f8f8f2;
+      --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: #09090b;
+        --heading-color: #ffffff;
+        --text-color: #cccccc;
+        --link-color: #7abfff;
+        --visited-color: #b693f9;
+        --code-background-color: #2e2e3e;
+        --code-color: #f8f8f2;
+        --blockquote-color: #bbbbbb;
+    }
+}
+
+  body {
+      font-family: var(--font-secondary);
+      font-size: var(--font-scale);
+      margin: auto;
+      padding: 20px;
+      max-width: var(--width);
+      text-align: left;
+      background-color: var(--background-color);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      line-height: 1.5;
+      color: var(--text-color);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-main);
+      color: var(--heading-color);
+      font-style: italic;   
+  }
+
+  a {
+      color: var(--link-color);
+      cursor: pointer;
+      text-decoration: none;
+  }
+
+  a:hover {
+      text-decoration: underline; 
+  }
+
+  nav a {
+      margin-right: 8px;
+  }
+
+  strong, b {
+      color: var(--heading-color);
+  }
+
+  button {
+      margin: 0;
+      cursor: pointer;
+  }
+
+  main {
+      line-height: 1.6;
+  }
+
+  table {
+      width: 100%;
+  }
+
+  hr {
+      border: 0;
+      border-top: 1px dashed;
+  }
+
+  img {
+      max-width: 100%;
+  }
+
+  code {
+    font-family: 'Fira Code', monospace;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 6px;
+    font-size: 0.95em;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    padding: 0;  
+    margin: 0px;  
+    outline: 2px dashed #999;  
+    outline-offset: 4px;  
+}
+
+
+  blockquote {
+      border-left: 1px solid #999;
+      color: var(--blockquote-color);
+      padding-left: 20px;
+      font-style: italic;
+  }
+
+  footer {
+      padding: 25px 0;
+      text-align: center;
+  }
+
+  .title:hover {
+      text-decoration: none;
+  }
+
+  .title h1 {
+      font-size: 1.5em;
+  }
+
+  .inline {
+      width: auto !important;
+  }
+
+    .highlight .keyword, .code .keyword {
+        color: #ff79c6;
+        font-weight: bold;
+    }
+
+    .highlight .string, .code .string {
+        color: #f1fa8c;
+    }
+
+    .highlight .comment, .code .comment {
+        color: #6272a4;
+        font-style: italic;
+    }
+
+    .highlight .number, .code .number {
+        color: #bd93f9;
+    }
+
+   
+  ul.blog-posts {
+      list-style-type: none;
+      padding: unset;
+  }
+
+  ul.blog-posts li {
+      display: flex;
+  }
+
+  ul.blog-posts li span {
+      flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+      color: var(--visited-color);
+  }
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>...</h2>
+</a>
+<nav><a href="/">Home</a>
+
+
+<a href="/blog">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>Project3</h1>
+<p>
+  <i>
+    <time datetime='2025-03-27'>
+      2025-03-27
+    </time>
+  </i>
+</p>
+
+<content>
+  <p><a href="/notebooks/project3.html">Jupyter Notebok</a></p>
+<p><a href="https://www.kaggle.com/datasets/denkuznetz/food-delivery-time-prediction">Dataset Link</a></p>
+<h1 id="introduction">Introduction</h1>
+<h2 id="the-problem">The Problem</h2>
+<p>Food delivery is notoriously inaccurate. The times provided in apps are often wrong by significant apps. Estimation for these types of tasks is incredibly difficult. This project aims to develop a linear regression model that predicts food delivery times based on various factors such as distance, weather, traffic conditions, and courier experience. The main benefit is perhaps on the user side&ndash; as a user you might be able to have a better idea than the in app time estimation! Additionally, food delivery companies may be able to modulate the time estimation. For example: traffic may say time x but the model suggests weather adds another 5 minutes so you bump up the estimation on the user side. This way expecations are met more often than not.</p>
+<h2 id="the-dataset">The Dataset</h2>
+<p>The dataset consists of structured delivery records, capturing essential details affecting food delivery times. Each record represents a completed delivery, including information about environmental conditions, operational factors, and courier experience.
+Key Features</p>
+<ul>
+<li>Order_ID: Unique identifier for each order.</li>
+<li>Distance_km: The total distance (in km) between the restaurant and the delivery destination.</li>
+<li>Weather: Categorical variable representing weather conditions (Clear, Rainy, Snowy, Foggy, Windy).</li>
+<li>Traffic_Level: Categorical variable indicating traffic intensity (Low, Medium, High).</li>
+<li>Time_of_Day: Categorical variable indicating when the delivery occurred (Morning, Afternoon, Evening, Night).</li>
+<li>Vehicle_Type: The type of vehicle used for delivery (Bike, Scooter, Car).</li>
+<li>Preparation_Time_min: The time required to prepare the order before dispatch (in minutes).</li>
+<li>Courier_Experience_yrs: The number of years of experience of the delivery courier.</li>
+<li>Delivery_Time_min (Target Variable): The actual time taken for delivery (in minutes).</li>
+</ul>
+<h1 id="what-is-regression">What is regression?</h1>
+<p>Regression is a statisticaltechnique used to analyze the relationship between a dependent variable (Y) and one or more independent variables (X). It helps in predicting outcomes and understanding trends by fitting a mathematical function to observed data.</p>
+<p>Simple linear regression models Y as a linear function of X, represented by:</p>
+<p>Y=β0+β1X+ϵY=β0​+β1​X+ϵ, where β0​ is the intercept, β1​ is the slope, and ϵ is the error term. The goal is to estimate β0​ and β1​ so that the model best fits the data.</p>
+<p>The Ordinary Least Squares (OLS) method is a standard approach to estimate these parameters by minimizing the sum of squared errors (SSE) between actual and predicted values.</p>
+<p><img src="https://media.datacamp.com/cms/google/ad_4nxd2ntc5orvl4e1t1rcresx09i3gxpkmxhqiw7-jw_ntvim81dbyrd36vl2olqhlgo-5hvgemlyqs_jvtq8vto1k01bswpe5xtco39cvb3eqscoqvzzewzofetqbv2-dnif91c34al0p0be7fdnvc0dqvpa.png" alt="image"></p>
+<p>The estimated coefficients are calculated using the formulas:
+<img src="https://i.imgur.com/YBYBRzm.png" alt=""></p>
+<p>where X bar and Y bar are the means of X and Y, respectively. This ensures that the fitted line minimizes the overall prediction error. We will use OLS later in this project!</p>
+<h1 id="experiment-1">Experiment 1</h1>
+<h2 id="data-understanding-part-1---broad-overview">Data Understanding part 1 - Broad Overview</h2>
+<p>The data consists of four categorical variables (Weather, Traffic_Level, Vehicle_Type, Time_of_Day). These will be one hot encoded when we get to preprocessing.</p>
+<p><code>df.shape</code>-  tells us we have 1000 datapoints</p>
+<p><code>df.isna().sum()</code>  -  shows us that only about 30/1000 of our datapoints contain null values &ndash; This is pretty good and should make our preprocesing quite a bit easier.</p>
+<p>This is enough info to start preprocessing. The dataset is clean so it shouldn&rsquo;t be a long process.</p>
+<h2 id="pre-processing">Pre-processing</h2>
+<p>First let&rsquo;s get rid of Order_ID&ndash; this is not at all useful for our regression.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df<span style="color:#f92672">.</span>drop(columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;Order_ID&#39;</span>], inplace<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span></code></pre></div><p>Next let&rsquo;s get rid of the null values. This is a quick and easy solution as they only comprise ~3% of our data.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>df<span style="color:#f92672">.</span>dropna(inplace<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span></code></pre></div><p>And finally we willone hot encode our categorical variables. That is really all we need to do for this dataset.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>categorical_features <span style="color:#f92672">=</span> [<span style="color:#e6db74">&#39;Weather&#39;</span>, <span style="color:#e6db74">&#39;Traffic_Level&#39;</span>, <span style="color:#e6db74">&#39;Time_of_Day&#39;</span>, <span style="color:#e6db74">&#39;Vehicle_Type&#39;</span>]
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> pd<span style="color:#f92672">.</span>get_dummies(df, columns<span style="color:#f92672">=</span>categorical_features, drop_first<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, dtype<span style="color:#f92672">=</span>int)
+</span></span></code></pre></div><h2 id="data-understanding-part-2---visualizations">Data Understanding part 2 - Visualizations</h2>
+<p>Now that our variables are all ready to go we can create some visualizations to better understand our data. A good place to start is a correlation matrix so we know what might be good for our regression.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>corr_matrix <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>corr()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">10</span>, <span style="color:#ae81ff">6</span>))
+</span></span><span style="display:flex;"><span>sns<span style="color:#f92672">.</span>heatmap(corr_matrix, annot<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>, cmap<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;coolwarm&#39;</span>, fmt<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;.2f&#34;</span>, linewidths<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">&#34;Correlation Matrix of Features&#34;</span>)
+</span></span><span style="display:flex;"><span>plt<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div><p><img src="/images/project3/corr_matrix.png" alt="corr_matrix"></p>
+<p>One thing I wanted to see is the distribution of the categorical variables we created. I made a functin that pretty easily lets me put the variable I am interested in and generate the bar graph with a single line.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">plot_category_distribution</span>(prefix, title):
+</span></span><span style="display:flex;"><span>    category_columns <span style="color:#f92672">=</span> [col <span style="color:#66d9ef">for</span> col <span style="color:#f92672">in</span> df<span style="color:#f92672">.</span>columns <span style="color:#66d9ef">if</span> col<span style="color:#f92672">.</span>startswith(prefix)]
+</span></span><span style="display:flex;"><span>    category_counts <span style="color:#f92672">=</span> df[category_columns]<span style="color:#f92672">.</span>sum()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>figure(figsize<span style="color:#f92672">=</span>(<span style="color:#ae81ff">8</span>, <span style="color:#ae81ff">5</span>))
+</span></span><span style="display:flex;"><span>    sns<span style="color:#f92672">.</span>barplot(x<span style="color:#f92672">=</span>category_counts<span style="color:#f92672">.</span>index, y<span style="color:#f92672">=</span>category_counts<span style="color:#f92672">.</span>values, palette<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;viridis&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>title(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Distribution of </span><span style="color:#e6db74">{</span>title<span style="color:#e6db74">}</span><span style="color:#e6db74">&#34;</span>, fontsize<span style="color:#f92672">=</span><span style="color:#ae81ff">14</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>xlabel(title, fontsize<span style="color:#f92672">=</span><span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>ylabel(<span style="color:#e6db74">&#34;Count&#34;</span>, fontsize<span style="color:#f92672">=</span><span style="color:#ae81ff">12</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>xticks(rotation<span style="color:#f92672">=</span><span style="color:#ae81ff">45</span>)
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>grid(axis<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;y&#34;</span>, linestyle<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;--&#34;</span>, alpha<span style="color:#f92672">=</span><span style="color:#ae81ff">0.7</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    plt<span style="color:#f92672">.</span>show()
+</span></span></code></pre></div><p>In action all it takes is one line.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>plot_category_distribution(<span style="color:#e6db74">&#34;Traffic_Level_&#34;</span>, <span style="color:#e6db74">&#34;Traffic Levels&#34;</span>)
+</span></span></code></pre></div><p><img src="/images/project3/dist_traffic.png" alt="dist_traffic"></p>
+<p><img src="/images/project3/dist_weather.png" alt="dist_time"></p>
+<p>!<img src="/images/project3/dist_time.png" alt="dist_time"></p>
+<p>Traffic seems pretty evenly distributed. Everything is evenly distributed for weather except for rainy weather which is massively represented in this dataset. Nighttime does not have much representation at all</p>
+<h2 id="modeling">Modeling</h2>
+<p>Let&rsquo;s first set our predictor and regressor</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>X <span style="color:#f92672">=</span> df<span style="color:#f92672">.</span>drop(columns<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#39;Delivery_Time_min&#39;</span>])
+</span></span><span style="display:flex;"><span>Y <span style="color:#f92672">=</span> df[<span style="color:#e6db74">&#39;Delivery_Time_min&#39;</span>]
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>X_train, X_test, Y_train, Y_test <span style="color:#f92672">=</span> train_test_split(X,Y, test_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.2</span>, 
+</span></span><span style="display:flex;"><span>                                                    random_state <span style="color:#f92672">=</span><span style="color:#ae81ff">42</span>)
+</span></span><span style="display:flex;"><span>mlr_model <span style="color:#f92672">=</span> sm<span style="color:#f92672">.</span>OLS(Y_train, X_train)<span style="color:#f92672">.</span>fit()
+</span></span><span style="display:flex;"><span>print(mlr_model<span style="color:#f92672">.</span>summary())
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                                 OLS Regression Results                                
+</span></span><span style="display:flex;"><span>=======================================================================================
+</span></span><span style="display:flex;"><span>Dep. Variable:      Delivery_Time_min   R-squared (uncentered):                   0.967
+</span></span><span style="display:flex;"><span>Model:                            OLS   Adj. R-squared (uncentered):              0.967
+</span></span><span style="display:flex;"><span>Method:                 Least Squares   F-statistic:                              1467.
+</span></span><span style="display:flex;"><span>Date:                Thu, 27 Mar 2025   Prob (F-statistic):                        0.00
+</span></span><span style="display:flex;"><span>Time:                        14:17:46   Log-Likelihood:                         -2700.9
+</span></span><span style="display:flex;"><span>No. Observations:                 706   AIC:                                      5430.
+</span></span><span style="display:flex;"><span>Df Residuals:                     692   BIC:                                      5494.
+</span></span><span style="display:flex;"><span>Df Model:                          14                                                  
+</span></span><span style="display:flex;"><span>Covariance Type:            nonrobust                                                  
+</span></span><span style="display:flex;"><span>==========================================================================================
+</span></span><span style="display:flex;"><span>                             coef    std err          t      P&gt;|t|      [0.025      0.975]
+</span></span><span style="display:flex;"><span>------------------------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>Distance_km                3.2521      0.069     46.830      0.000       3.116       3.388
+</span></span><span style="display:flex;"><span>Preparation_Time_min       1.2202      0.050     24.570      0.000       1.123       1.318
+</span></span><span style="display:flex;"><span>Courier_Experience_yrs    -0.1093      0.135     -0.807      0.420      -0.375       0.156
+</span></span><span style="display:flex;"><span>Weather_Foggy             11.1733      1.404      7.958      0.000       8.417      13.930
+</span></span><span style="display:flex;"><span>Weather_Rainy              6.4880      1.090      5.952      0.000       4.348       8.628
+</span></span><span style="display:flex;"><span>Weather_Snowy             10.6316      1.470      7.235      0.000       7.746      13.517
+</span></span><span style="display:flex;"><span>Weather_Windy              5.1637      1.469      3.514      0.000       2.279       8.049
+</span></span><span style="display:flex;"><span>Traffic_Level_Low         -8.2051      1.071     -7.664      0.000     -10.307      -6.103
+</span></span><span style="display:flex;"><span>Traffic_Level_Medium      -2.3149      1.033     -2.241      0.025      -4.343      -0.287
+</span></span><span style="display:flex;"><span>Time_of_Day_Evening        3.7763      1.063      3.553      0.000       1.689       5.863
+</span></span><span style="display:flex;"><span>Time_of_Day_Morning        2.4616      1.042      2.362      0.018       0.415       4.508
+</span></span><span style="display:flex;"><span>Time_of_Day_Night          2.2242      1.580      1.408      0.160      -0.878       5.327
+</span></span><span style="display:flex;"><span>Vehicle_Type_Car           2.2848      1.137      2.009      0.045       0.052       4.518
+</span></span><span style="display:flex;"><span>Vehicle_Type_Scooter       1.0087      0.969      1.041      0.298      -0.894       2.911
+</span></span><span style="display:flex;"><span>==============================================================================
+</span></span><span style="display:flex;"><span>Omnibus:                      335.547   Durbin-Watson:                   1.879
+</span></span><span style="display:flex;"><span>Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2588.219
+</span></span><span style="display:flex;"><span>Skew:                           1.979   Prob(JB):                         0.00
+</span></span><span style="display:flex;"><span>Kurtosis:                      11.504   Cond. No.                         90.1
+</span></span><span style="display:flex;"><span>==============================================================================
+</span></span></code></pre></div><p>Let&rsquo;s remove all the high p values and retrain</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>X <span style="color:#f92672">=</span> X<span style="color:#f92672">.</span>drop([ <span style="color:#e6db74">&#39;Courier_Experience_yrs&#39;</span>, <span style="color:#e6db74">&#39;Traffic_Level_Medium&#39;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;Time_of_Day_Morning&#39;</span>, <span style="color:#e6db74">&#39;Time_of_Day_Night&#39;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;Vehicle_Type_Car&#39;</span>, <span style="color:#e6db74">&#39;Vehicle_Type_Scooter&#39;</span>], axis<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span> OLS Regression Results                                
+</span></span><span style="display:flex;"><span>=======================================================================================
+</span></span><span style="display:flex;"><span>Dep. Variable:      Delivery_Time_min   R-squared (uncentered):                   0.967
+</span></span><span style="display:flex;"><span>Model:                            OLS   Adj. R-squared (uncentered):              0.966
+</span></span><span style="display:flex;"><span>Method:                 Least Squares   F-statistic:                              2538.
+</span></span><span style="display:flex;"><span>Date:                Thu, 27 Mar 2025   Prob (F-statistic):                        0.00
+</span></span><span style="display:flex;"><span>Time:                        14:37:19   Log-Likelihood:                         -2707.9
+</span></span><span style="display:flex;"><span>No. Observations:                 706   AIC:                                      5432.
+</span></span><span style="display:flex;"><span>Df Residuals:                     698   BIC:                                      5468.
+</span></span><span style="display:flex;"><span>Df Model:                           8                                                  
+</span></span><span style="display:flex;"><span>Covariance Type:            nonrobust                                                  
+</span></span><span style="display:flex;"><span>========================================================================================
+</span></span><span style="display:flex;"><span>                           coef    std err          t      P&gt;|t|      [0.025      0.975]
+</span></span><span style="display:flex;"><span>----------------------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>Distance_km              3.2564      0.065     50.424      0.000       3.130       3.383
+</span></span><span style="display:flex;"><span>Preparation_Time_min     1.2216      0.042     28.758      0.000       1.138       1.305
+</span></span><span style="display:flex;"><span>Weather_Foggy           11.3273      1.404      8.069      0.000       8.571      14.083
+</span></span><span style="display:flex;"><span>Weather_Rainy            6.6008      1.076      6.136      0.000       4.489       8.713
+</span></span><span style="display:flex;"><span>Weather_Snowy           10.8798      1.459      7.456      0.000       8.015      13.745
+</span></span><span style="display:flex;"><span>Weather_Windy            5.1021      1.462      3.490      0.001       2.232       7.972
+</span></span><span style="display:flex;"><span>Traffic_Level_Low       -6.6807      0.868     -7.694      0.000      -8.385      -4.976
+</span></span><span style="display:flex;"><span>Time_of_Day_Evening      2.2336      0.922      2.422      0.016       0.423       4.044
+</span></span><span style="display:flex;"><span>==============================================================================
+</span></span><span style="display:flex;"><span>Omnibus:                      334.853   Durbin-Watson:                   1.876
+</span></span><span style="display:flex;"><span>Prob(Omnibus):                  0.000   Jarque-Bera (JB):             2525.174
+</span></span><span style="display:flex;"><span>Skew:                           1.982   Prob(JB):                         0.00
+</span></span><span style="display:flex;"><span>Kurtosis:                      11.374   Cond. No.                         84.4
+</span></span><span style="display:flex;"><span>==============================================================================
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Notes:
+</span></span><span style="display:flex;"><span>[1] R² is computed without centering (uncentered) since the model does not contain a constant.
+</span></span><span style="display:flex;"><span>[2] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</span></span></code></pre></div><h2 id="evaluation">Evaluation</h2>
+<p>After dropping some of the less relevant features the model sems to have slightly improved. Let&rsquo;s do some a simple evaluation of how our model has performed.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mlr_pred <span style="color:#f92672">=</span> mlr_model<span style="color:#f92672">.</span>predict(X_test)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>mlr_mse <span style="color:#f92672">=</span> mean_squared_error(Y_test, mlr_pred)
+</span></span><span style="display:flex;"><span>mlr_rmse <span style="color:#f92672">=</span> np<span style="color:#f92672">.</span>sqrt(mlr_mse)<span style="color:#f92672">.</span>round(<span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>mlr_r2 <span style="color:#f92672">=</span> r2_score(Y_test, mlr_pred)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Multiple Linear Regression Evaluation:</span>
+</span></span><span style="display:flex;"><span>\n\n
+</span></span><span style="display:flex;"><span>Mean Squared Error: {mlr_mse}\n
+</span></span><span style="display:flex;"><span>Root Mean Squared Error: {mlr_rmse}\n
+</span></span><span style="display:flex;"><span>R2 Score: {mlr_r2}<span style="color:#e6db74">&#34;)</span>
+</span></span></code></pre></div><p>OUTPUT:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plaintext" data-lang="plaintext"><span style="display:flex;"><span>Multiple Linear Regression Evaluation:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Mean Squared Error: 71.95332537650762
+</span></span><span style="display:flex;"><span>Root Mean Squared Error: 8.48
+</span></span><span style="display:flex;"><span>R2 Score: 0.8239545493101562
+</span></span></code></pre></div><p>So what exactly does all this mean? Well we have a very strong R2 of 82% which suggests that 82% of the variance can be explained by the features we selected. The RMSE suggests we were typically off by about 8.5 minutes. MSE simply shows the magnitude of the errors that were made.</p>
+<p>Overall this was a pretty good. The model does an good job of prediction though the 9 minute error is a bit annoying to think about. I can imagine myself being frustrated over that. So let&rsquo;s try something else.</p>
+<h1 id="experiment-2">Experiment 2</h1>
+<p>For this experiment let&rsquo;s try a polynomial regression. This may be able to see how our features interact a bit better than just a linear regression.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.preprocessing <span style="color:#f92672">import</span> PolynomialFeatures
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> sklearn.linear_model <span style="color:#f92672">import</span> LinearRegression
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>poly <span style="color:#f92672">=</span> PolynomialFeatures(degree<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>, include_bias<span style="color:#f92672">=</span><span style="color:#66d9ef">False</span>)
+</span></span><span style="display:flex;"><span>X_poly <span style="color:#f92672">=</span> poly<span style="color:#f92672">.</span>fit_transform(X)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>poly_model <span style="color:#f92672">=</span> LinearRegression()
+</span></span><span style="display:flex;"><span>poly_model<span style="color:#f92672">.</span>fit(X_poly, Y)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Y_pred_poly <span style="color:#f92672">=</span> poly_model<span style="color:#f92672">.</span>predict(X_poly)
+</span></span><span style="display:flex;"><span>print(<span style="color:#e6db74">&#34;Polynomial Regression R^2:&#34;</span>, r2_score(Y, Y_pred_poly))
+</span></span></code></pre></div><p>OUTPUT:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Polynomial Regression R^2: 0.7781619907472762
+</span></span></code></pre></div><p>Once again, pretty decent R2 but unfortuantely a bit worse than our simple regression model. Here&rsquo;s how it looks imprinted onto our actual data!</p>
+<p><img src="/images/project3/polynomial_fit.png" alt="polynomial_fit"></p>
+<h1 id="experiment-3">Experiment 3</h1>
+<p>For our next experiment let&rsquo;s go back to the simple mode. This time let&rsquo;s remove the super highly correlated features that may be redundant to see what happens.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>corr_matrix <span style="color:#f92672">=</span> X<span style="color:#f92672">.</span>corr()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>correlated_features <span style="color:#f92672">=</span> set()
+</span></span><span style="display:flex;"><span>threshold <span style="color:#f92672">=</span> <span style="color:#ae81ff">0.8</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(len(corr_matrix<span style="color:#f92672">.</span>columns)):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> j <span style="color:#f92672">in</span> range(i):
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> abs(corr_matrix<span style="color:#f92672">.</span>iloc[i, j]) <span style="color:#f92672">&gt;</span> threshold:
+</span></span><span style="display:flex;"><span>            correlated_features<span style="color:#f92672">.</span>add(corr_matrix<span style="color:#f92672">.</span>columns[i])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>X_uncorrelated <span style="color:#f92672">=</span> X<span style="color:#f92672">.</span>drop(columns<span style="color:#f92672">=</span>correlated_features)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>X_uncorrelated <span style="color:#f92672">=</span> X_uncorrelated<span style="color:#f92672">.</span>loc[Y_train<span style="color:#f92672">.</span>index]
+</span></span><span style="display:flex;"><span>X_uncorrelated <span style="color:#f92672">=</span> X_uncorrelated<span style="color:#f92672">.</span>reset_index(drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>Y_train <span style="color:#f92672">=</span> Y_train<span style="color:#f92672">.</span>reset_index(drop<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>uncorrelated_model <span style="color:#f92672">=</span> sm<span style="color:#f92672">.</span>OLS(Y_train, X_uncorrelated)<span style="color:#f92672">.</span>fit()
+</span></span><span style="display:flex;"><span>print(uncorrelated_model<span style="color:#f92672">.</span>summary())
+</span></span></code></pre></div><p><em>not going to put the whole output again &ndash; you can see it in the full notebook files</em></p>
+<p>Our evaluation output after running this model</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Uncorrelated Model Evaluation:
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Mean Squared Error: 125.6221731181167
+</span></span><span style="display:flex;"><span>Root Mean Squared Error: 11.21
+</span></span><span style="display:flex;"><span>R2 Score: 0.7343825916516834
+</span></span></code></pre></div><p>&hellip; Our model got worse. Well, it was worth a try. I was concerned some features might be basically 1:1 with others that could be creating noise but that doesn&rsquo;t appear to be the case at all.</p>
+<h1 id="impact--conclusion">Impact // Conclusion</h1>
+<h2 id="impact">Impact</h2>
+<p>This project has the potential to improve the food delivery experience for consumers by providing more accurate delivery time predictions. Customers will have more reliable expectations, reducing frustration and enhancing overall satisfaction with food delivery services.</p>
+<p>There are potential ethical concerns regarding data collection and usage. The model relies on structured delivery records, which may include sensitive operational data from delivery services.</p>
+<p>While the model aims to enhance accuracy, there is a risk that users and businesses may over-rely on predictions, leading to frustration when estimates are occasionally incorrect (which seems to happen quite a bit!). Additionally, if companies use the model to adjust expected delivery times for profit-driven reasons—such as artificially inflating estimates to justify higher service fees—this could reduce consumer trust in delivery platforms.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Through this project, we have gained insights into how various factors influence food delivery times. Experimenting with data preprocessing techniques, such as one-hot encoding categorical variables and dropping insignificant predictors, has improved the model’s interpretability and performance. We found that weather, traffic conditions, and preparation time are among the most significant predictors of delivery time.</p>
+<p>By conducting multiple experiments, we also explored the impact of feature selection. Removing features with high p-values slightly improved the model’s performance, suggesting that certain variables, like courier experience, did not significantly contribute to prediction accuracy. Additionally, experimenting with different regression approaches, such as polynomial regression, helped us understand potential nonlinear relationships between features. It also showed that, sometimes, simpler models are able to provide more useful info regarding a dataset.</p>
+
+</content>
+<p>
+  
+</p>
+
+  </main>
+  <footer>
+</footer>
+
+    
+</body>
+
+</html>
