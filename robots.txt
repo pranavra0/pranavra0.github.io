@@ -1,2 +1,2 @@
 User-Agent: *
-Sitemap: http://localhost:1313/sitemap.xml
+Sitemap: https://pranavra0.github.io/sitemap.xml
