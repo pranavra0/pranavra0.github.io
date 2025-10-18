@@ -4,58 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>~</title>
-  
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <header>
-    <h1>Pranav Rao ... UNDER CONSTRUCTION</h1>
+    <h1>Pranav Rao</h1>
     <h2>~</h2>
-    <nav><a href="#">home</a> · <a href="#">notes</a> · <a href="#">about</a></nav>
+    <nav>
+      <a href="#home">home</a> · 
+      <a href="#about">about</a>
+    </nav>
   </header>
 
   <main id="content">Loading...</main>
 
-  <footer>Auto-updates every 5 minutes from Google Docs</footer>
-
-  <script>
-    const DOC_URL = "https://docs.google.com/document/d/e/2PACX-1vRXpeVYutQdexBk9LDvrZb6-LMTxhF0lWrSV4I-vFtPZvlC8vj2r5MhT-euiloJMVKl8Cwf0Va5JzOa/pub?embedded=true";
-    const contentDiv = document.getElementById("content");
-
-    async function fetchContent() {
-      try {
-        const res = await fetch(DOC_URL);
-        const html = await res.text();
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-
-        const styles = doc.querySelectorAll("style");
-        styles.forEach(style => {
-          style.innerHTML = style.innerHTML.replace(/\}/g, '}.gdoc ');
-          document.head.appendChild(style.cloneNode(true));
-        });
-
-        doc.querySelectorAll("script").forEach(s => s.remove());
-
-        const body = doc.querySelector("body");
-        const gdocContainer = document.createElement("div");
-        gdocContainer.classList.add("gdoc");
-        gdocContainer.innerHTML = body.innerHTML;
-
-        contentDiv.innerHTML = "";
-        contentDiv.appendChild(gdocContainer);
-
-      } catch (err) {
-        console.error(err);
-        contentDiv.textContent = "Error loading content.";
-      }
-    }
-
-    fetchContent();
-    setInterval(fetchContent, 5 * 60 * 1000);
-  </script>
-
+  <script src="main.js"></script>
 </body>
 </html>
