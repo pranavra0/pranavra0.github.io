@@ -1,238 +1,61 @@
 <!DOCTYPE html>
-<html lang="en-US">
-
+<html lang="en">
 <head>
-	<meta name="generator" content="Hugo 0.141.0">
-  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link rel="shortcut icon" href="https://pranavra0.github.io/images/favicon.png" />
-<title>...</title>
-<meta name="title" content="..." />
-<meta name="description" content="hello" />
-<meta name="keywords" content="" />
-
-
-<meta property="og:url" content="https://pranavra0.github.io/">
-  <meta property="og:site_name" content="...">
-  <meta property="og:title" content="...">
-  <meta property="og:description" content="Welcome to my blog! You can view the posts I have made in the blog section at the top of the page
-Who am I? Hello! My name is Pranav Rao, and I’m currently a senior at the University of North Carolina at Charlotte, majoring in Computer Science with a concentration in Data Science and a Minor in Mathematics. In my free time, I enjoy exploring new projects, solving puzzles, and spending time with friends.">
-  <meta property="og:locale" content="en_US">
-  <meta property="og:type" content="website">
-
-
-
-
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="...">
-  <meta name="twitter:description" content="Welcome to my blog! You can view the posts I have made in the blog section at the top of the page
-Who am I? Hello! My name is Pranav Rao, and I’m currently a senior at the University of North Carolina at Charlotte, majoring in Computer Science with a concentration in Data Science and a Minor in Mathematics. In my free time, I enjoy exploring new projects, solving puzzles, and spending time with friends.">
-
-
-
-
-  <meta itemprop="name" content="...">
-  <meta itemprop="description" content="Welcome to my blog! You can view the posts I have made in the blog section at the top of the page
-Who am I? Hello! My name is Pranav Rao, and I’m currently a senior at the University of North Carolina at Charlotte, majoring in Computer Science with a concentration in Data Science and a Minor in Mathematics. In my free time, I enjoy exploring new projects, solving puzzles, and spending time with friends.">
-  <meta itemprop="datePublished" content="2025-04-11T16:51:24-04:00">
-  <meta itemprop="dateModified" content="2025-04-11T16:51:24-04:00">
-  <meta itemprop="wordCount" content="115">
-<meta name="referrer" content="no-referrer-when-downgrade" />
-
-  <link rel="alternate" type="application/rss+xml" href="https://pranavra0.github.io/index.xml" title="..." />
-  <style>
-  :root {
-      --width: 800px;
-      --font-main: Times New Roman, serif;
-      --font-secondary: Times, serif;
-      --font-scale: 1.1em;
-      --background-color: #fff;
-      --heading-color: #222;
-      --text-color: #444;
-      --link-color: #3273dc;
-      --visited-color:  #8b6fcb;
-      --code-background-color: #09090b;
-      --code-color: #f8f8f2;
-      --blockquote-color: #222;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-        --background-color: #09090b;
-        --heading-color: #ffffff;
-        --text-color: #cccccc;
-        --link-color: #7abfff;
-        --visited-color: #b693f9;
-        --code-background-color: #2e2e3e;
-        --code-color: #f8f8f2;
-        --blockquote-color: #bbbbbb;
-    }
-}
-
-  body {
-      font-family: var(--font-secondary);
-      font-size: var(--font-scale);
-      margin: auto;
-      padding: 20px;
-      max-width: var(--width);
-      text-align: left;
-      background-color: var(--background-color);
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      line-height: 1.5;
-      color: var(--text-color);
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-      font-family: var(--font-main);
-      color: var(--heading-color);
-      font-style: italic;   
-  }
-
-  a {
-      color: var(--link-color);
-      cursor: pointer;
-      text-decoration: none;
-  }
-
-  a:hover {
-      text-decoration: underline; 
-  }
-
-  nav a {
-      margin-right: 8px;
-  }
-
-  strong, b {
-      color: var(--heading-color);
-  }
-
-  button {
-      margin: 0;
-      cursor: pointer;
-  }
-
-  main {
-      line-height: 1.6;
-  }
-
-  table {
-      width: 100%;
-  }
-
-  hr {
-      border: 0;
-      border-top: 1px dashed;
-  }
-
-  img {
-      max-width: 100%;
-  }
-
-  code {
-    font-family: 'Fira Code', monospace;
-    background-color: var(--code-background-color);
-    color: var(--code-color);
-    border-radius: 6px;
-    font-size: 0.95em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    padding: 0;  
-    margin: 0px;  
-    outline: 2px dashed #999;  
-    outline-offset: 4px;  
-}
-
-
-  blockquote {
-      border-left: 1px solid #999;
-      color: var(--blockquote-color);
-      padding-left: 20px;
-      font-style: italic;
-  }
-
-  footer {
-      padding: 25px 0;
-      text-align: center;
-  }
-
-  .title:hover {
-      text-decoration: none;
-  }
-
-  .title h1 {
-      font-size: 1.5em;
-  }
-
-  .inline {
-      width: auto !important;
-  }
-
-    .highlight .keyword, .code .keyword {
-        color: #ff79c6;
-        font-weight: bold;
-    }
-
-    .highlight .string, .code .string {
-        color: #f1fa8c;
-    }
-
-    .highlight .comment, .code .comment {
-        color: #6272a4;
-        font-style: italic;
-    }
-
-    .highlight .number, .code .number {
-        color: #bd93f9;
-    }
-
-   
-  ul.blog-posts {
-      list-style-type: none;
-      padding: unset;
-  }
-
-  ul.blog-posts li {
-      display: flex;
-  }
-
-  ul.blog-posts li span {
-      flex: 0 0 130px;
-  }
-
-  ul.blog-posts li a:visited {
-      color: var(--visited-color);
-  }
-</style>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>~</title>
+  
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-  <header><a href="/" class="title">
-  <h2>...</h2>
-</a>
-<nav><a href="/">Home</a>
 
+  <header>
+    <h1>Pranav Rao ... UNDER CONSTRUCTION</h1>
+    <h2>~</h2>
+    <nav><a href="#">home</a> · <a href="#">notes</a> · <a href="#">about</a></nav>
+  </header>
 
-<a href="/blog">Blog</a>
+  <main id="content">Loading...</main>
 
-</nav>
-</header>
-  <main>
-<h1 id="welcome-to-my-blog">Welcome to my blog!</h1>
-<p>You can view the posts I have made in the blog section at the top of the page</p>
-<hr>
-<h1 id="who-am-i">Who am I?</h1>
-<p>Hello! My name is Pranav Rao, and I’m currently a senior at the University of North Carolina at Charlotte, majoring in Computer Science with a concentration in Data Science and a Minor in Mathematics. In my free time, I enjoy exploring new  projects, solving puzzles, and spending time with friends.</p>
-<p>I’m passionate about using data to solve real-world problems and build creative solutions. I’m always excited to learn new things and collaborate with others. Feel free to check out some of my other <a href="https://github.com/pranavra0">work</a>, and I look forward to connecting!</p>
-<p><img src="images/boar.png" alt="boar"></p>
+  <footer>Auto-updates every 5 minutes from Google Docs</footer>
 
+  <script>
+    const DOC_URL = "https://docs.google.com/document/d/e/2PACX-1vRXpeVYutQdexBk9LDvrZb6-LMTxhF0lWrSV4I-vFtPZvlC8vj2r5MhT-euiloJMVKl8Cwf0Va5JzOa/pub?embedded=true";
+    const contentDiv = document.getElementById("content");
 
-  </main>
-  <footer>
-</footer>
+    async function fetchContent() {
+      try {
+        const res = await fetch(DOC_URL);
+        const html = await res.text();
 
-    
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        const styles = doc.querySelectorAll("style");
+        styles.forEach(style => {
+          style.innerHTML = style.innerHTML.replace(/\}/g, '}.gdoc ');
+          document.head.appendChild(style.cloneNode(true));
+        });
+
+        doc.querySelectorAll("script").forEach(s => s.remove());
+
+        const body = doc.querySelector("body");
+        const gdocContainer = document.createElement("div");
+        gdocContainer.classList.add("gdoc");
+        gdocContainer.innerHTML = body.innerHTML;
+
+        contentDiv.innerHTML = "";
+        contentDiv.appendChild(gdocContainer);
+
+      } catch (err) {
+        console.error(err);
+        contentDiv.textContent = "Error loading content.";
+      }
+    }
+
+    fetchContent();
+    setInterval(fetchContent, 5 * 60 * 1000);
+  </script>
+
 </body>
-
 </html>

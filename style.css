@@ -1,0 +1,66 @@
+/* === Base layout tweaks === */
+body {
+    background-color: #fdfdfd;
+    color: #111;
+    font-family: "ETBook", "Georgia", "Times New Roman", serif;
+    max-width: 700px;
+    margin: 5rem auto;
+    padding: 0 1.5rem;
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  h1, h2, h3 {
+    font-weight: 400;
+    font-family: "ETBook", "Georgia", "Times New Roman", serif;
+  }
+  
+  h1 { font-size: 2.2rem; margin-bottom: 0.2em; }
+  h2 { font-size: 1.4rem; color: #555; margin-top: 0; }
+  
+  a {
+    color: #0055aa;
+    text-decoration: none;
+    border-bottom: 1px solid #bbb;
+  }
+  a:hover { border-bottom-color: #0055aa; }
+  
+  header { margin-bottom: 3rem; }
+  nav { font-size: 0.9rem; color: #666; }
+  
+  #content { margin-top: 2em; }
+  
+  footer {
+    margin-top: 3em;
+    font-size: 0.8em;
+    color: #888;
+    text-align: center;
+  }
+  
+  /* Google Doc contianer styling */
+  .gdoc * {
+    background: transparent !important;
+    font-family: "ETBook", "Georgia", "Times New Roman", serif !important;
+    color: inherit !important;
+    max-width: 100% !important;
+  }
+  
+  .gdoc p { margin: 0.8em 0; text-align: justify; }
+  .gdoc h1, .gdoc h2, .gdoc h3 { font-weight: 400; color: #333; }
+  .gdoc a {
+    color: #0055aa;
+    text-decoration: none;
+    border-bottom: 1px dotted #aaa;
+  }
+  .gdoc a:hover { border-bottom: 1px solid #0055aa; }
+  
+  /* === Dark mode based on user preference === */
+  @media (prefers-color-scheme: dark) {
+    body { background-color: #111; color: #e2e2e2; }
+    h2, h3 { color: #ccc; }
+    a { color: #9ccfff; border-bottom: 1px dotted #555; }
+    a:hover { border-bottom: 1px solid #9ccfff; }
+    footer { color: #777; }
+    .gdoc h1, .gdoc h2, .gdoc h3 { color: #e2e2e2; }
+  }
+  
