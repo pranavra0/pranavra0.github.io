@@ -5,7 +5,7 @@ body {
     font-family: "ETBook", "Georgia", "Times New Roman", serif;
     max-width: 700px;
     margin: 5rem auto;
-    padding: 0 1.5rem;
+    padding: 0 2rem;
     line-height: 1.6;
     transition: background-color 0.3s, color 0.3s;
   }
@@ -25,10 +25,10 @@ body {
   }
   a:hover { border-bottom-color: #0055aa; }
   
-  header { margin-bottom: 3rem; }
+  header { margin-bottom: 1rem; }
   nav { font-size: 0.9rem; color: #666; }
   
-  #content { margin-top: 2em; }
+  #content { margin-top: 1em; }
   
   footer {
     margin-top: 3em;
@@ -44,8 +44,16 @@ body {
     color: inherit !important;
     max-width: 100% !important;
   }
+
+  .gdoc > div[class^="c"] {
+    padding: 0 !important;           /* remove all padding */
+    margin: 0 !important;            /* remove extra margin */
+    max-width: 100% !important;      /* fit to your content width */
+    background-color: transparent !important; /* remove white background */
+}
   
   .gdoc p { margin: 0.8em 0; text-align: justify; }
+  .gdoc p:first-child { margin-top: 0; } 
   .gdoc h1, .gdoc h2, .gdoc h3 { font-weight: 400; color: #333; }
   .gdoc a {
     color: #0055aa;
