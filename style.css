@@ -95,3 +95,59 @@ nav {
 .gdoc a:hover {
   border-bottom: 1px solid #fff;
 }
+
+
+/*project styling*/
+
+.projects {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.project-card {
+  background: #1f1d2b;
+  border: 1.5px dashed #3c3950;
+  padding: 1.5rem;
+}
+
+.project-img {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.project-card h2 {
+  margin-top: 0.2rem;
+  color: #fff;
+}
+
+.project-link {
+  display: inline-block;
+  margin-top: 0.5rem; 
+  color: #5de4c7;
+}
+
+.read-more {
+  display: inline-block;
+  background: none;
+  border: 1px solid #5de4c7;
+  color: #5de4c7;
+  border-radius: 5px;
+  padding: 0.3rem 0.6rem;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-left: 0.5rem;
+}
+
+.read-more:hover {
+  background: #5de4c7;
+  color: #181621;
+}
+
+.long-desc {
+  margin-top: 1rem;
+}
+
+.hidden {
+  display: none;
+}

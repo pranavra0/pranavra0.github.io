@@ -1,0 +1,34 @@
+[
+  {
+    "title": "SYN - Sign Languge Recognition",
+    "description": "1st Place @ CAIR Hackathon!",
+    "longDescription": "Full-stack web app for real time ASL recognition using webcam input. Model built with a custom dataset and MediaPipe Hands. Model served via REST API. ",
+    "image": "",
+    "link": "https://github.com/LavaV9/CAIRHackathon"
+  },
+  
+  {
+    "title": "2024 Election Model",
+    "description": "A highly accurate prediction model for the 2024 election",
+    "longDescription": "R program that used Selenium to scrape polling data from aggregators. Accurately predicted vote share in 6 of 7 swing states. Generated probabilities in line with major betting markets and mainstream modelers.",
+    "image": "",
+    "link": "https://github.com/pranavra0/2024ElectionModel"
+  },
+  
+  {
+    "title": "First Person Platformer",
+    "description": "A simple platformer game I made to test out Godot's capabilities",
+    "longDescription": "Pretty fun gameplay mechanics implemented like grappling hooks and wallrunning. Eventually I grew disullusioned with how Godot handles 3D in general and I dropped the project.",
+    "image": "",
+    "link": "https://github.com/pranavra0/FirstPersonPlatformer"
+  },
+  
+  {
+    "title": "FLP File Transfer",
+    "description": "A website I made to make Fruity Loops file transfers a bit easier",
+    "longDescription": "Allows uploading and downloading (if you have a key!) of files alongside detailed dependencies for the FLP project file. No more worrying about if you will be able to run the FLP file!",
+    "image": "",
+    "link": "https://github.com/pranavra0/flp-ft/tree/master"
+  }
+
+]

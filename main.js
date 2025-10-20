@@ -4,19 +4,20 @@ const DOC_URL = "https://docs.google.com/document/d/e/2PACX-1vRXpeVYutQdexBk9LDv
 
 // page definitions
 const pages = {
-  home: DOC_URL,
-  about: "about.txt",
-  contact: "contact.txt",
+  home: { path: DOC_URL, type: "gdoc" },
+  about: { path: "about.txt", type: "text" },
+  contact: { path: "contact.txt", type: "text" },
+  projects: { path: "projects.json", type: "projects" },
 };
 
 window.addEventListener("hashchange", loadPage);
 window.addEventListener("load", loadPage);
 
 async function loadPage() {
-  const page = location.hash.replace("#", "") || "home";
-  const src = pages[page];
+  const pageName = location.hash.replace("#", "") || "home";
+  const page = pages[pageName];
 
-  if (!src) {
+  if (!page) {
     contentDiv.innerHTML = "<p>Page not found.</p>";
     return;
   }
@@ -24,63 +25,90 @@ async function loadPage() {
   contentDiv.textContent = "Loading...";
 
   try {
-    if (src.includes("docs.google.com")) {
-      await loadGoogleDoc(src);
-    } else {
-      await loadTextFile(src);
-    }
+    const data = await fetchContent(page.path, page.type);
+    renderers[page.type](data);
   } catch (err) {
     console.error(err);
     contentDiv.textContent = "Error loading content.";
   }
 }
 
-async function loadGoogleDoc(url) {
-  const res = await fetch(url);
-  const html = await res.text();
+async function fetchContent(path, type) {
+  if (type === "gdoc") {
+    const res = await fetch(path);
+    return await res.text(); // raw HTML
+  }
 
+  const res = await fetch(path);
+  if (!res.ok) throw new Error("Failed to fetch " + path);
+
+  if (type === "projects") return res.json();
+  return res.text();
+}
+
+const renderers = {
+  text: text => {
+    text = text
+      .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>')
+      .replace(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g, '<a href="mailto:$1">$1</a>');
+    contentDiv.innerHTML = `<pre>${text}</pre>`;
+  },
+
+  gdoc: html => {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, "text/html");
-
   doc.querySelectorAll("script").forEach(s => s.remove());
-
+  document.querySelectorAll("style[data-gdoc]").forEach(s => s.remove());
   const styles = doc.querySelectorAll("style");
   styles.forEach(style => {
-    style.innerHTML = style.innerHTML.replace(/\}/g, '}.gdoc ');
-    document.head.appendChild(style.cloneNode(true));
+    const cloned = style.cloneNode(true);
+    cloned.setAttribute("data-gdoc", "");
+    cloned.innerHTML = cloned.innerHTML.replace(/\}/g, '}.gdoc ');
+    document.head.appendChild(cloned);
   });
-
   const body = doc.querySelector("body");
   const gdocContainer = document.createElement("div");
   gdocContainer.classList.add("gdoc");
   gdocContainer.innerHTML = body.innerHTML;
-
   contentDiv.innerHTML = "";
   contentDiv.appendChild(gdocContainer);
-}
+},
 
-async function loadTextFile(path) {
-  const res = await fetch(path);
-  let text = await res.text();
+projects: projects => {
+  const container = document.createElement("div");
+  container.classList.add("projects");
 
-  // link and email detection
-  text = text
-    // Links (http/https)
-    .replace(
-      /(https?:\/\/[^\s]+)/g,
-      '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
-    )
-    // Emails
-    .replace(
-      /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g,
-      '<a href="mailto:$1">$1</a>'
-    );
+  projects.forEach(p => {
+    const card = document.createElement("div");
+    card.classList.add("project-card");
 
-  // Markdown support if file ends with .md
-  if (path.endsWith(".md") && window.marked) {
-    text = marked.parse(text);
-    contentDiv.innerHTML = `<div class="markdown">${text}</div>`;
-  } else {
-    contentDiv.innerHTML = `<pre>${text}</pre>`;
-  }
-}
+    if (p.image && p.image.trim() !== "") {
+      const img = document.createElement("img");
+      img.src = p.image;
+      img.alt = p.title;
+      img.classList.add("project-img");
+      img.onerror = () => img.remove();
+      card.appendChild(img);
+    }
+
+    card.innerHTML += `
+      <h2>${p.title}</h2>
+      <p>${p.description}</p>
+      <div class="long-desc hidden">${p.longDescription}</div>
+      <a href="${p.link}" target="_blank" class="project-link">View project</a>
+      <button class="read-more">Read more</button>
+    `;
+
+    card.querySelector(".read-more").onclick = e => {
+      const desc = card.querySelector(".long-desc");
+      desc.classList.toggle("hidden");
+      e.target.textContent = desc.classList.contains("hidden") ? "Read more" : "Hide";
+    };
+
+    container.appendChild(card);
+  });
+
+  contentDiv.innerHTML = "";
+  contentDiv.appendChild(container);
+},
+};
