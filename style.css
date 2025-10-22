@@ -1,7 +1,24 @@
 
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --link-color: #007aff;
+  --border-color: #d0d0d0;
+}
+
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --link-color: #007aff;
+    --border-color: #3c3950;
+  }
+}
+
 body {
-  background-color: #181621; 
-  color: #d8d6e0;
+  background-color: var(--bg-color); 
+  color: var(--text-color);
   font-family: "Helvetica Neue", Helvetica, sans-serif;
   max-width: 700px;
   margin: 5rem auto;
@@ -14,23 +31,23 @@ h1, h2, h3 {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 100;
   letter-spacing: -0.03em;
-  color: #ffff;
+  color: var(--text-color);
 }
 
 a {
-  color: #5de4c7; 
+  color: var(--link-color); 
   text-decoration: none;
-  border-bottom: 1px dotted #5de4c7;
+  border-bottom: 1px dotted var(--link-color); 
   transition: 0.15s;
 }
 a:hover {
-  color: #fff;
-  border-bottom: 1px solid #fff;
+  color: var(--text-color);
+  border-bottom: 1px solid var(--text-color);
 }
 
 header {
   margin-bottom: 1rem;
-  border-bottom: 1px dashed #3c3950;
+  border-bottom: 1px dashed var(--border-color);
   padding-bottom: 0.5rem;
 }
 
@@ -66,28 +83,22 @@ header h1 {
   flex-shrink: 0; 
 }
 
-/*header art*/
-.header-art {
-  flex-shrink: 0;
-  width: 800px;
-  max-width: 100%;
-  height: 100px;
+/*footer stuff*/
+footer {
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px dashed var(--border-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.header-art svg {
+
+.footer-art {
   width: 100%;
-  height: 100%;
+  max-width: 600px; /* optimal width  */
+  height: auto;
+  opacity: 0.85;
 }
-
-.header-art path {
-  fill: none;
-  stroke: #5de4c7;
-  stroke-width: 3;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 500;
-  stroke-dashoffset: 500;
-}
-
 
 nav {
   font-size: 1rem;
@@ -156,8 +167,8 @@ nav {
 }
 
 .project-card {
-  background: #1f1d2b;
-  border: 1.5px dashed #3c3950;
+  background: var(--bg-color);
+  border: 1.5px dashed var(--border-color);
   padding: 1.5rem;
 }
 
@@ -168,20 +179,20 @@ nav {
 
 .project-card h2 {
   margin-top: 0.2rem;
-  color: #fff;
+  color: var(--text-color);
 }
 
 .project-link {
   display: inline-block;
   margin-top: 0.5rem; 
-  color: #5de4c7;
+  color: var(--link-color);
 }
 
 .read-more {
   display: inline-block;
   background: none;
-  border: 1px solid #5de4c7;
-  color: #5de4c7;
+  border: 1px solid var(--link-color);
+  color: var(--link-color);
   border-radius: 5px;
   padding: 0.3rem 0.6rem;
   cursor: pointer;
@@ -190,7 +201,7 @@ nav {
 }
 
 .read-more:hover {
-  background: #5de4c7;
+  background: var(--link-color);
   color: #181621;
 }
 
