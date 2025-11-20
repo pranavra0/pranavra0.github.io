@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SyncPlayer Pro</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --bg-dark: #09090b;
+            --bg-panel: #18181b;
+            --text-main: #e4e4e7;
+            --text-muted: #a1a1aa;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #27272a;
+            --glass: rgba(24, 24, 27, 0.7);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            user-select: none;
+        }
+
+        /* --- UTILITIES --- */
+        .hidden { display: none !important; }
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .items-center { align-items: center; }
+        .justify-between { justify-content: space-between; }
+        .justify-center { justify-content: center; }
+        .grow { flex-grow: 1; }
+        .gap-2 { gap: 0.5rem; }
+        .gap-4 { gap: 1rem; }
+        .text-sm { font-size: 0.875rem; }
+        .text-xs { font-size: 0.75rem; }
+        .font-mono { font-family: monospace; }
+        .font-bold { font-weight: 700; }
+        .cursor-pointer { cursor: pointer; }
+
+        /* --- COMPONENTS --- */
+        
+        svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+        
+        .btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+        }
+        .btn:hover { background: rgba(255,255,255,0.1); color: white; }
+        .btn:active { transform: scale(0.96); }
+        
+        .btn-icon { padding: 6px; border-radius: 50%; }
+
+        /* --- LAYOUT AREAS --- */
+
+        #main-area {
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background: #000;
+        }
+
+        #header {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            padding: 0 20px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: opacity 0.3s;
+        }
+
+        .logo { font-weight: 800; font-size: 1.1rem; color: white; display: flex; align-items: center; gap: 8px; }
+        .badge { background: rgba(255,255,255,0.15); font-size: 0.6rem; padding: 2px 4px; border-radius: 4px; }
+
+        #video-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        video { width: 100%; height: 100%; object-fit: contain; }
+
+        #sub-overlay {
+            position: absolute;
+            bottom: 80px;
+            left: 0; right: 0;
+            text-align: center;
+            pointer-events: none;
+            padding: 0 40px;
+            transition: all 0.1s;
+        }
+        #sub-text {
+            display: inline-block;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-size: 1.75rem;
+            font-weight: 500;
+            line-height: 1.4;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+        }
+
+        /* Loading Spinner */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #loading-state {
+            position: absolute;
+            inset: 0;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            color: var(--text-muted);
+            gap: 16px;
+        }
+
+        #empty-state {
+            text-align: center;
+            border: 2px dashed var(--border);
+            padding: 40px;
+            border-radius: 16px;
+            color: var(--text-muted);
+        }
+        #empty-state.drag-active { border-color: var(--accent); background: rgba(99, 102, 241, 0.1); }
+
+        #controls {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 20px 20px 10px;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.6), transparent);
+            z-index: 10;
+            transition: opacity 0.3s;
+        }
+        
+        #main-area:not(:hover) #controls.playing { opacity: 0; }
+        #main-area:not(:hover) #header.playing { opacity: 0; }
+
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            margin-bottom: 12px;
+            transition: height 0.1s;
+        }
+        .progress-container:hover { height: 8px; }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            width: 0%;
+            position: relative;
+        }
+        .progress-thumb {
+            position: absolute;
+            right: -6px; top: 50%; transform: translateY(-50%);
+            width: 12px; height: 12px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .progress-container:hover .progress-thumb { opacity: 1; }
+
+        .controls-row { display: flex; align-items: center; justify-content: space-between; }
+        
+        .play-btn {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: white;
+            color: black;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .play-btn:hover { transform: scale(1.05); }
+
+        .pill {
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 4px 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        #sidebar {
+            width: 350px;
+            background: var(--bg-dark);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            z-index: 20;
+        }
+        #sidebar.collapsed { width: 0; border: none; }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-dark);
+        }
+        
+        #sub-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+        #sub-list::-webkit-scrollbar { width: 6px; }
+        #sub-list::-webkit-scrollbar-track { background: transparent; }
+        #sub-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        #sub-list::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        .sub-item {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            transition: background 0.1s;
+            font-size: 0.9rem;
+        }
+        .sub-item:hover { background: var(--bg-panel); color: var(--text-main); }
+        
+        .sub-item.active {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.3);
+            color: white;
+            position: relative;
+        }
+        .sub-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 8px; bottom: 8px;
+            width: 3px;
+            background: var(--accent);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .sub-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-family: monospace;
+            margin-bottom: 4px;
+            opacity: 0.7;
+        }
+        
+        .sync-btn {
+            font-size: 0.65rem;
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.2s;
+            border: none; cursor: pointer;
+        }
+        .sub-item:hover .sync-btn { opacity: 1; }
+
+        #drag-overlay {
+            position: absolute; inset: 0;
+            background: rgba(99, 102, 241, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 100;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        select {
+            background: transparent;
+            color: white;
+            border: none;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        option { background: var(--bg-dark); }
+    </style>
+</head>
+<body>
+
+    <input type="file" id="video-input" accept="video/*" class="hidden">
+    <input type="file" id="sub-input" accept=".srt,.vtt" class="hidden">
+
+    <div id="drag-overlay" class="hidden">
+        <div class="flex items-center gap-4">
+            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Drop Video or Subtitle file
+        </div>
+    </div>
+
+    <div id="main-area">
+        
+        <div id="header">
+            <div class="logo">
+                <div style="background: var(--accent); padding: 4px; border-radius: 6px; display:flex;">
+                    <svg viewBox="0 0 24 24" style="color:white; width:16px; height:16px;"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                </div>
+                <span>EOPStop <span class="badge">気合</span></span>
+            </div>
+            <div class="flex gap-2">
+                <button class="btn" onclick="document.getElementById('video-input').click()">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg>
+                    Video
+                </button>
+                <button class="btn" onclick="document.getElementById('sub-input').click()">
+                    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Subs
+                </button>
+                <div style="width:1px; background:rgba(255,255,255,0.1); margin:0 4px;"></div>
+                <button class="btn btn-icon" id="toggle-sidebar-btn">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="video-container">
+            <div id="empty-state">
+                <svg viewBox="0 0 24 24" style="width:48px; height:48px; opacity:0.5; margin:0 auto 16px; display:block;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <h3>Drag & Drop Video Here</h3>
+                <p style="font-size:0.8rem; margin-top:8px; opacity:0.7;">Supports .mp4, .webm, .mkv</p>
+            </div>
+            
+            <div id="loading-state" class="hidden">
+                <span class="loader"></span>
+                <p>Analyzing Media...</p>
+            </div>
+
+            <!-- preload="metadata" prevents buffering entire file -->
+            <video id="main-video" class="hidden" preload="metadata" playsinline></video>
+            
+            <div id="sub-overlay" class="hidden">
+                <span id="sub-text"></span>
+            </div>
+        </div>
+
+        <div id="controls" class="hidden">
+            <div class="progress-container" id="progress-bar">
+                <div class="progress-fill" id="progress-fill">
+                    <div class="progress-thumb"></div>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <div class="flex items-center gap-4">
+                    <div class="play-btn" id="play-pause-btn">
+                        <svg viewBox="0 0 24 24" id="play-icon" style="fill:black; stroke:none;"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                        <svg viewBox="0 0 24 24" id="pause-icon" class="hidden" style="fill:black; stroke:none;"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                    </div>
+                    
+                    <div class="font-mono text-sm" style="opacity:0.8;">
+                        <span id="time-current">00:00:00</span> / <span id="time-total">00:00:00</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="pill">
+                        <svg viewBox="0 0 24 24" style="width:14px; height:14px; color:var(--accent);"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        <span class="font-mono text-xs font-bold" id="offset-display">0ms</span>
+                        <div style="display:flex; gap:4px; margin-left:4px;">
+                            <button class="btn-icon" style="width:20px; height:20px; padding:0;" onclick="adjustOffset(-50)">
+                                <svg viewBox="0 0 24 24" style="width:12px;"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </button>
+                            <button class="btn-icon" style="width:20px; height:20px; padding:0;" onclick="adjustOffset(50)">
+                                <svg viewBox="0 0 24 24" style="width:12px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="pill">
+                        <span class="text-xs font-bold">x</span>
+                        <select id="speed-select">
+                            <option value="0.5">0.5</option>
+                            <option value="0.75">0.75</option>
+                            <option value="1" selected>1.0</option>
+                            <option value="1.25">1.25</option>
+                            <option value="1.5">1.5</option>
+                            <option value="2">2.0</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="sidebar">
+        <div class="sidebar-header flex justify-between items-center">
+            <div>
+                <h2 class="text-sm font-bold text-main">SUBTITLES</h2>
+                <p class="text-xs text-muted" id="sub-count">0 cues</p>
+            </div>
+            <button class="btn btn-icon" onclick="clearSubs()" title="Clear Subtitles">
+                <svg viewBox="0 0 24 24" style="width:16px;"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+        </div>
+        <div id="sub-list">
+            <div style="padding:20px; text-align:center; opacity:0.5; font-size:0.8rem;">
+                No subtitles loaded.<br>Drag & drop .srt file
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            videoUrl: null,
+            subs: [],
+            offset: 0,
+            currentSubIndex: -1,
+            isPlaying: false,
+            sidebarOpen: true
+        };
+
+        const els = {
+            video: document.getElementById('main-video'),
+            emptyState: document.getElementById('empty-state'),
+            loadingState: document.getElementById('loading-state'),
+            subOverlay: document.getElementById('sub-overlay'),
+            subText: document.getElementById('sub-text'),
+            controls: document.getElementById('controls'),
+            header: document.getElementById('header'),
+            subList: document.getElementById('sub-list'),
+            subCount: document.getElementById('sub-count'),
+            progressBar: document.getElementById('progress-bar'),
+            progressFill: document.getElementById('progress-fill'),
+            timeCurrent: document.getElementById('time-current'),
+            timeTotal: document.getElementById('time-total'),
+            playBtn: document.getElementById('play-pause-btn'),
+            playIcon: document.getElementById('play-icon'),
+            pauseIcon: document.getElementById('pause-icon'),
+            dragOverlay: document.getElementById('drag-overlay'),
+            offsetDisplay: document.getElementById('offset-display'),
+            speedSelect: document.getElementById('speed-select'),
+            sidebar: document.getElementById('sidebar'),
+            videoInput: document.getElementById('video-input'),
+            subInput: document.getElementById('sub-input')
+        };
+
+        const timeToMs = (str) => {
+            if (!str) return 0;
+            const [time, msStr] = str.split(/[,.]/);
+            const [h, m, s] = time.split(':').map(Number);
+            const ms = msStr ? parseInt(msStr.padEnd(3, '0').slice(0,3)) : 0;
+            return (h*3600000) + (m*60000) + (s*1000) + ms;
+        };
+
+        const msToTime = (ms) => {
+            if (!Number.isFinite(ms)) return "00:00:00";
+            const date = new Date(ms);
+            const h = Math.floor(ms / 3600000).toString().padStart(2, '0');
+            const m = date.getUTCMinutes().toString().padStart(2, '0');
+            const s = date.getUTCSeconds().toString().padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        };
+
+        const msToTimeFull = (ms) => {
+            if (!Number.isFinite(ms)) return "00:00:00.000";
+            const h = Math.floor(ms / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((ms % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((ms % 60000) / 1000).toString().padStart(2, '0');
+            const mill = Math.floor(ms % 1000).toString().padStart(3, '0');
+            return `${h}:${m}:${s}.${mill}`;
+        };
+
+        const parseSRT = (text) => {
+            const subs = [];
+            const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            const blocks = normalized.split('\n\n');
+            
+            blocks.forEach(block => {
+                const lines = block.trim().split('\n');
+                if (lines.length >= 2) {
+                    const timeIdx = lines.findIndex(l => l.includes('-->'));
+                    if (timeIdx !== -1) {
+                        const [start, end] = lines[timeIdx].split('-->').map(s => s.trim());
+                        const content = lines.slice(timeIdx + 1).join('\n').replace(/<[^>]*>/g, '');
+                        subs.push({
+                            start: timeToMs(start),
+                            end: timeToMs(end),
+                            text: content,
+                            id: Math.random().toString(36).substr(2,9)
+                        });
+                    }
+                }
+            });
+            return subs;
+        };
+
+        const loadVideo = (file) => {
+            // UI Feedback
+            els.emptyState.classList.add('hidden');
+            els.loadingState.classList.remove('hidden');
+            els.video.classList.add('hidden');
+            
+            //  Revoke old URL to free memory
+            if (state.videoUrl) URL.revokeObjectURL(state.videoUrl);
+
+            const url = URL.createObjectURL(file);
+            state.videoUrl = url;
+            els.video.src = url;
+            state.isPlaying = false;
+            updatePlayIcon();
+        };
+
+        const onVideoReady = () => {
+            // Remove loading state only when metadata is ready
+            els.loadingState.classList.add('hidden');
+            els.video.classList.remove('hidden');
+            els.controls.classList.remove('hidden');
+            
+            // Make the first frame render immediately
+            if (els.video.duration > 0) {
+                els.video.currentTime = 1e-9; 
+                els.timeTotal.textContent = msToTime(els.video.duration * 1000);
+            }
+        };
+
+        // Listen for readiness
+        els.video.addEventListener('loadedmetadata', onVideoReady);
+
+        const loadSubs = (file) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                state.subs = parseSRT(e.target.result);
+                renderSubList();
+            };
+            reader.readAsText(file);
+        };
+
+        const renderSubList = () => {
+            els.subCount.textContent = `${state.subs.length} CUES`;
+            els.subList.innerHTML = '';
+            
+            if (state.subs.length === 0) {
+                els.subList.innerHTML = '<div style="padding:20px; text-align:center; opacity:0.5;">No subtitles loaded.</div>';
+                return;
+            }
+
+            state.subs.forEach((sub, idx) => {
+                const div = document.createElement('div');
+                div.className = 'sub-item';
+                div.id = `sub-${idx}`;
+                div.innerHTML = `
+                    <div class="sub-meta">
+                        <span>${msToTimeFull(sub.start)}</span>
+                        <button class="sync-btn" onclick="syncHere(event, ${sub.start})">SYNC HERE</button>
+                    </div>
+                    <div>${sub.text}</div>
+                `;
+                div.onclick = () => seekTo(sub.start + state.offset);
+                els.subList.appendChild(div);
+            });
+        };
+
+        els.video.addEventListener('timeupdate', () => {
+            const currentMs = els.video.currentTime * 1000;
+            const durationMs = els.video.duration * 1000;
+            
+            const pct = (currentMs / durationMs) * 100;
+            els.progressFill.style.width = `${pct}%`;
+            els.timeCurrent.textContent = msToTime(currentMs);
+            
+            updateActiveSub(currentMs);
+        });
+
+        els.video.addEventListener('ended', () => {
+            state.isPlaying = false;
+            updatePlayIcon();
+        });
+
+        const updateActiveSub = (time) => {
+            const effectiveTime = time; 
+            
+            const newIndex = state.subs.findIndex(s => {
+                const start = s.start + state.offset;
+                const end = s.end + state.offset;
+                return effectiveTime >= start && effectiveTime <= end;
+            });
+
+            if (newIndex !== state.currentSubIndex) {
+                if (state.currentSubIndex !== -1) {
+                    const oldEl = document.getElementById(`sub-${state.currentSubIndex}`);
+                    if (oldEl) oldEl.classList.remove('active');
+                }
+
+                if (newIndex !== -1) {
+                    const newEl = document.getElementById(`sub-${newIndex}`);
+                    if (newEl) {
+                        newEl.classList.add('active');
+                        newEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                    }
+                    els.subText.innerText = state.subs[newIndex].text;
+                    els.subOverlay.classList.remove('hidden');
+                } else {
+                    els.subOverlay.classList.add('hidden');
+                }
+
+                state.currentSubIndex = newIndex;
+            }
+        };
+
+        const togglePlay = () => {
+            if (!state.videoUrl) return;
+            if (els.video.paused) {
+                els.video.play();
+                state.isPlaying = true;
+                els.controls.classList.add('playing');
+                els.header.classList.add('playing');
+            } else {
+                els.video.pause();
+                state.isPlaying = false;
+                els.controls.classList.remove('playing');
+                els.header.classList.remove('playing');
+            }
+            updatePlayIcon();
+        };
+
+        const updatePlayIcon = () => {
+            if (state.isPlaying) {
+                els.playIcon.classList.add('hidden');
+                els.pauseIcon.classList.remove('hidden');
+            } else {
+                els.playIcon.classList.remove('hidden');
+                els.pauseIcon.classList.add('hidden');
+            }
+        };
+
+        const seekTo = (ms) => {
+            if (els.video && Number.isFinite(ms)) {
+                els.video.currentTime = ms / 1000;
+            }
+        };
+
+        window.adjustOffset = (delta) => {
+            state.offset += delta;
+            renderOffset();
+            updateActiveSub(els.video.currentTime * 1000);
+        };
+
+        window.syncHere = (e, subStartMs) => {
+            e.stopPropagation();
+            const currentVideoTime = els.video.currentTime * 1000;
+            state.offset = currentVideoTime - subStartMs;
+            renderOffset();
+            updateActiveSub(currentVideoTime);
+        };
+
+        const renderOffset = () => {
+            const sign = state.offset > 0 ? '+' : '';
+            els.offsetDisplay.textContent = `${sign}${Math.round(state.offset)}ms`;
+            els.offsetDisplay.style.color = state.offset !== 0 ? 'var(--accent)' : 'var(--text-muted)';
+        };
+
+        window.clearSubs = () => {
+            state.subs = [];
+            state.currentSubIndex = -1;
+            state.offset = 0;
+            renderSubList();
+            renderOffset();
+            els.subOverlay.classList.add('hidden');
+        };
+
+        els.playBtn.addEventListener('click', togglePlay);
+        els.video.addEventListener('click', togglePlay);
+        
+        els.progressBar.addEventListener('click', (e) => {
+            if (!state.videoUrl) return;
+            const rect = els.progressBar.getBoundingClientRect();
+            const pct = (e.clientX - rect.left) / rect.width;
+            const targetTime = pct * els.video.duration;
+            if (Number.isFinite(targetTime)) els.video.currentTime = targetTime;
+        });
+
+        els.speedSelect.addEventListener('change', (e) => {
+            els.video.playbackRate = parseFloat(e.target.value);
+        });
+
+        document.getElementById('toggle-sidebar-btn').addEventListener('click', () => {
+            state.sidebarOpen = !state.sidebarOpen;
+            if (state.sidebarOpen) {
+                els.sidebar.classList.remove('collapsed');
+            } else {
+                els.sidebar.classList.add('collapsed');
+            }
+        });
+
+        window.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            els.dragOverlay.classList.remove('hidden');
+        });
+        
+        window.addEventListener('dragleave', (e) => {
+            if (e.relatedTarget === null) {
+                els.dragOverlay.classList.add('hidden');
+            }
+        });
+
+        window.addEventListener('drop', (e) => {
+            e.preventDefault();
+            els.dragOverlay.classList.add('hidden');
+            if (e.dataTransfer.files.length) {
+                Array.from(e.dataTransfer.files).forEach(file => {
+                    if (file.type.startsWith('video/')) loadVideo(file);
+                    if (file.name.endsWith('.srt') || file.name.endsWith('.vtt')) loadSubs(file);
+                });
+            }
+        });
+
+        els.videoInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) loadVideo(e.target.files[0]);
+        });
+        els.subInput.addEventListener('change', (e) => {
+            if (e.target.files[0]) loadSubs(e.target.files[0]);
+        });
+
+        window.addEventListener('keydown', (e) => {
+            if (e.code === 'Space') { e.preventDefault(); togglePlay(); }
+            if (e.code === 'ArrowLeft') seekTo((els.video.currentTime * 1000) - 5000);
+            if (e.code === 'ArrowRight') seekTo((els.video.currentTime * 1000) + 5000);
+            if (e.key === '[') adjustOffset(-50);
+            if (e.key === ']') adjustOffset(50);
+        });
+
+    </script>
+</body>
+</html>
