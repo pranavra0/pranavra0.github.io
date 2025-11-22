@@ -1,40 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css">
-  <title>Pranav Rao</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRANAV RAO</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <div class="header-top">
-    <h1>PRANAV RAO</h1>
-  </div>
-
-<nav>
-    <a href="#home">HOME</a> · 
-    <a href="#about">ABOUT</a> ·
-    <a href="#projects">PROJECTS</a> ·
-    <a href="#contact">CONTACT</a> · 
-    
-    <details style="display: inline-block; position: relative; vertical-align: top;">
-        <summary style="cursor: pointer; list-style: none;">MORE</summary>
+    <!-- NAV BAR -->
+    <nav class="nav">
+        <a href="#projects" class="nav-item">PROJECTS</a>
+        <a href="#about" class="nav-item">ABOUT</a>
+        <a href="#contact" class="nav-item">CONTACT</a>
         
-        <div style="position: absolute; top: 100%; left: 50%; transform: translateX(-50%); background: #fff; border: 1px solid #000; padding: 10px; margin-top: 5px; z-index: 100; white-space: nowrap;">
-            <a href="/other/eopstop/" target="_blank" style="text-decoration: none; color: black;">SUBTITLE SYNC PLAYER</a>
+        <div class="dropdown-wrapper nav-item">
+            <span>MORE</span>
+            <div class="dropdown-menu">
+                <a href="/other/eopstop/index.html" class="dropdown-item">EOPStop</a>
+            </div>
         </div>
-    </details>
-</nav>
 
-</header>
+        <!--  THEME TOGGLE -->
+        <div class="nav-item push-right" id="theme-toggle">
+            [ MODE: DARK ]
+        </div>
+    </nav>
 
-  <main id="content">Loading...</main>
+    <main class="container">
+        
+        <header>
+            <h1>Pranav Rao</h1>
+        </header>
 
-  <footer>
-  <img src="images/header_drawing.svg" alt="Footer art" class="footer-art">
-</footer>
-  <script src="main.js"></script>
+        <!-- ABOUT -->
+        <fieldset id="about">
+            <legend>About</legend>
+            <div class="pad-box">
+                <p>
+                    I am a Computer Science student at UNC Charlotte and this is my website! 
+                </p>
+            </div>
+        </fieldset>
+
+        <!-- PROJECTS -->
+        <fieldset id="projects">
+            <legend>Selected Work</legend>
+            <div class="pad-box">
+                <div id="project-list" class="project-grid">
+                    <p style="color: var(--dim-color);">> Loading projects.json...</p>
+                </div>
+            </div>
+        </fieldset>
+
+
+        <!-- CONTACT -->
+        <fieldset id="contact">
+            <legend>Contact</legend>
+            <div class="pad-box">
+                <div class="terminal-menu">
+                    
+                    <a href="mailto:raopranav117@gmail.com" class="menu-item">
+                        <span class="icon-box">@</span>
+                        <span class="menu-text">Email</span>
+                    </a>
+
+                    <a href="https://www.linkedin.com/in/raopranav117/" class="menu-item">
+                        <span class="icon-box">&rightarrow;</span>
+                        <span class="menu-text">LinkedIn</span>
+                    </a>
+
+                    <a href="#" class="menu-item">
+                        <span class="icon-box">></span>
+                        <span class="menu-text">GitHub</span>
+                    </a>
+
+                </div>
+            </div>
+        </fieldset>
+
+    </main>
+
+    <footer>
+        PRANAV RAO © 2025 // STATIC BUILD
+    </footer>
+
+    <script>
+        // --- THEME TOGGLE LOGIC ---
+        const toggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        body.setAttribute('data-theme', currentTheme);
+        updateButtonText(currentTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            let theme = body.getAttribute('data-theme');
+            let newTheme = theme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateButtonText(newTheme);
+        });
+
+        function updateButtonText(theme) {
+            toggleBtn.textContent = theme === 'dark' ? '[ MODE: DARK ]' : '[ MODE: LIGHT ]';
+        }
+
+        // --- PROJECT LOADING LOGIC ---
+        async function loadProjects() {
+            try {
+                const response = await fetch('projects.json');
+                const projects = await response.json();
+                const container = document.getElementById('project-list');
+                
+                if (!projects || projects.length === 0) {
+                    container.innerHTML = '<p>> No projects found.</p>';
+                    return;
+                }
+
+                container.innerHTML = ''; 
+
+                projects.forEach(project => {
+                    // Fallback image
+                    const imgSrc = project.image ? project.image : 'https://placehold.co/600x400/222/FFF?text=NO+IMG';
+
+                    const card = `
+                        <div class="project-card">
+                            <div class="project-img-container">
+                                <img src="${imgSrc}" alt="${project.title}" class="project-img">
+                            </div>
+                            <div class="project-info">
+                                <div class="project-title">${project.title}</div>
+                                <div class="project-desc">${project.description}</div>
+                                <div class="project-long-desc">${project.longDescription}</div>
+                                <a href="${project.link}" target="_blank" class="project-link-btn">
+                                    [ VIEW SOURCE ]
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('project-list').innerHTML = '<p style="color:red;">> Error loading project data.</p>';
+            }
+        }
+
+        loadProjects();
+    </script>
+
 </body>
 </html>
