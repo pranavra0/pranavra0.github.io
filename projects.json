@@ -3,7 +3,7 @@
     "title": "SYN - Sign Languge Recognition",
     "description": "1st Place @ CAIR Hackathon!",
     "longDescription": "Full-stack web app for real time ASL recognition using webcam input. Model built with a custom dataset and MediaPipe Hands. Model served via REST API. ",
-    "image": "",
+    "image": "/images/SYN_proj_image.png",
     "link": "https://github.com/LavaV9/CAIRHackathon"
   },
   

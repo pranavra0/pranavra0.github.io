@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRANAV RAO</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,6 +19,7 @@
             <span>MORE</span>
             <div class="dropdown-menu">
                 <a href="/other/eopstop/index.html" class="dropdown-item">EOPStop</a>
+                <a href="https://pranavra0.github.io/boids" class="dropdown-item">Boids</a>
             </div>
         </div>
 
@@ -133,7 +135,17 @@
                             <div class="project-info">
                                 <div class="project-title">${project.title}</div>
                                 <div class="project-desc">${project.description}</div>
-                                <div class="project-long-desc">${project.longDescription}</div>
+                                
+                                <details class="read-more-dropdown">
+                                    <summary class="read-more-summary">
+                                        <span class="read-more-arrow">▶</span>
+                                        READ MORE
+                                    </summary>
+                                    <div class="read-more-content">
+                                        ${project.longDescription}
+                                    </div>
+                                </details>
+
                                 <a href="${project.link}" target="_blank" class="project-link-btn">
                                     [ VIEW SOURCE ]
                                 </a>

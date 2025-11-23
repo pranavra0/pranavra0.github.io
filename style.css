@@ -70,12 +70,12 @@ a {
     display: flex;
     align-items: center;
     cursor: pointer;
-    transition: background-color 0.2s, color 0.2s;
+    transition: background-color;
 }
 
 .nav-item:hover, .nav-item.active {
     background-color: var(--accent-color);
-    color: #000; /* Always black text on accent for contrast */
+    color: #000;
 }
 
 .push-right {
@@ -95,21 +95,20 @@ a {
     border: 1px solid var(--border-color);
     min-width: 160px;
     z-index: 200;
-    box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-wrapper:hover .dropdown-menu { display: block; }
 
 .dropdown-item {
     display: block;
-    padding: 10px 15px;
+    padding: 1px 15px;
     color: var(--fg-color);
     border-bottom: 1px solid var(--block-gray);
 }
 
 .dropdown-item:hover { 
-    background-color: var(--block-gray);
-    color: var(--accent-color); 
+    background-color: var(--accent-color);
+    color: #000;
 }
 
 /* --- MAIN LAYOUT --- */
@@ -168,7 +167,7 @@ legend {
     border: 1px solid transparent; 
     display: flex;
     flex-direction: row;
-    transition: transform 0.2s ease, border-color 0.2s ease;
+    transition: transform;
 }
 
 /* Image Container */
@@ -184,13 +183,10 @@ legend {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(100%);
-    transition: filter 0.3s ease;
     opacity: 0.8;
 }
 
 .project-card:hover .project-img {
-    filter: grayscale(0%);
     opacity: 1;
 }
 
@@ -249,7 +245,7 @@ legend {
 /* --- FOOTER --- */
 footer {
     margin-top: auto;
-    padding: 40px 0;
+    padding: 10px 0;
     text-align: center;
     color: var(--dim-color);
     font-size: 11px;
@@ -266,7 +262,7 @@ footer {
     .project-img-container { width: 100%; height: 150px; }
 }
 
-/* --- TERMINAL MENU (CONTACT SECTION) --- */
+/* --- CONTACT SECTION --- */
 
 .terminal-menu {
     display: flex;
@@ -281,7 +277,7 @@ footer {
     text-decoration: none;
     color: var(--fg-color);
     border-bottom: 1px solid var(--bg-color); /* Separator line */
-    transition: color 0.2s ease, background-color 0.2s ease;
+    transition: color;
 }
 
 /* Remove border from the last item */
@@ -293,8 +289,8 @@ footer {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;    
+    width: 30px;
+    height: 23px;    
     font-size: 18px;
     font-weight: bold;
     margin-right: 15px;
@@ -315,3 +311,59 @@ footer {
     background-color: var(--accent-color);
     color: #000000; 
 }
+
+
+/* --- READ MORE DROPDOWN --- */
+
+/* Main container using the details element */
+.read-more-dropdown {
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+/* The clickable header/trigger area */
+.read-more-summary {
+    list-style: none; 
+    padding: 4px 8px; 
+    color: var(--fg-color);
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color;
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+.read-more-summary::-webkit-details-marker {
+    display: none;
+}
+
+.read-more-summary:hover {
+    background-color: var(--accent-color);
+    color: #000000;
+}
+
+/* Arrow icon styling */
+.read-more-arrow {
+    margin-right: 8px; /* Slightly reduced margin */
+    display: inline-block;
+    transition: transform;
+    font-size: 9px; /* Smaller arrow */
+}
+
+.read-more-dropdown[open] .read-more-arrow {
+    transform: rotate(90deg);
+}
+
+/* The expanded content area */
+.read-more-content {
+    padding: 8px 4px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--fg-color);
+}
+
+
