@@ -1,12 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRANAV RAO</title>
     <link rel="icon" type="image/x-icon" href="/images/favicon.png">
     <link rel="stylesheet" href="style.css">
+
+    <!-- HTML Meta Tags -->
+    <meta name="description" content="My personal website">
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://pranavra0.github.io/">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="PRANAV RAO">
+    <meta property="og:description" content="My personal website">
+    <meta property="og:image" content="https://pranavrao.github.io/images/og_embed.png">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="pranavra0.github.io">
+    <meta property="twitter:url" content="https://pranavra0.github.io/">
+    <meta name="twitter:title" content="PRANAV RAO">
+    <meta name="twitter:description" content="My personal website">
+    <meta name="twitter:image" content="https://pranavrao.github.io/images/og_embed.png">
+
+    <!-- Meta Tags Generated via https://www.opengraph.xyz -->
 </head>
+
 <body>
 
     <!-- NAV BAR -->
@@ -14,7 +36,7 @@
         <a href="#projects" class="nav-item">PROJECTS</a>
         <a href="#about" class="nav-item">ABOUT</a>
         <a href="#contact" class="nav-item">CONTACT</a>
-        
+
         <div class="dropdown-wrapper nav-item">
             <span>MORE</span>
             <div class="dropdown-menu">
@@ -30,7 +52,7 @@
     </nav>
 
     <main class="container">
-        
+
         <header>
             <h1>Pranav Rao</h1>
         </header>
@@ -40,7 +62,7 @@
             <legend>About</legend>
             <div class="pad-box">
                 <p>
-                    I am a Computer Science student at UNC Charlotte and this is my website! 
+                    I am a Computer Science student at UNC Charlotte and this is my website!
                 </p>
             </div>
         </fieldset>
@@ -61,7 +83,7 @@
             <legend>Contact</legend>
             <div class="pad-box">
                 <div class="terminal-menu">
-                    
+
                     <a href="mailto:raopranav117@gmail.com" class="menu-item">
                         <span class="icon-box">@</span>
                         <span class="menu-text">Email</span>
@@ -84,7 +106,7 @@
     </main>
 
     <footer>
-        PRANAV RAO © 2025 
+        PRANAV RAO © 2025
     </footer>
 
     <script>
@@ -99,7 +121,7 @@
         toggleBtn.addEventListener('click', () => {
             let theme = body.getAttribute('data-theme');
             let newTheme = theme === 'dark' ? 'light' : 'dark';
-            
+
             body.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             updateButtonText(newTheme);
@@ -115,13 +137,13 @@
                 const response = await fetch('projects.json');
                 const projects = await response.json();
                 const container = document.getElementById('project-list');
-                
+
                 if (!projects || projects.length === 0) {
                     container.innerHTML = '<p>> No projects found.</p>';
                     return;
                 }
 
-                container.innerHTML = ''; 
+                container.innerHTML = '';
 
                 projects.forEach(project => {
                     // Fallback image
@@ -164,4 +186,5 @@
     </script>
 
 </body>
+
 </html>
