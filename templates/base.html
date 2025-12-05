@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home | PRANAV RAO</title>
+    <title>{{ title }} | PRANAV RAO</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -18,15 +18,8 @@
     </header>
 
     <main>
-        
-    <article>
-        <h1>Home</h1>
-        
-        
-        <p>Welcome! </p>
-<p>I am a Computer Science graduate from UNC Charlotte and this is my website. </p>
-    </article>
-
+        {% block content %}
+        {% endblock %}
     </main>
 
 </body>

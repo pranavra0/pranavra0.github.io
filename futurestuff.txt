@@ -1,0 +1,14 @@
+
+Things I might add in the future if the site needs it 
+
+
+Adding a blog 
+Add a date field to your markdown front matter.
+in the main loop collect all metadata into a list called posts
+Sort posts by date.
+Create a blog index template that iterates over posts
+    
+dynamic ish navbar 
+Create a global list of pages in the loop.
+Pass that list to template.render(nav=pages, ...)
+    
