@@ -1,8 +1,4 @@
----
-title: Projects
-template: default.html
----
-Here are a few things I am working on.
+Here are a few things I have worked on.
 
 ### 1. SYN -  Sign Language Recognition 
 

@@ -1,8 +1,3 @@
----
-title: Projects
-template: default.html
----
-
 Various projects and things that I made for myself / for fun 
 
 - [Boids](https://pranavra0.github.io/boids/) - Flock Simulation
