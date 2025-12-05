@@ -1,4 +1,4 @@
-# [pranavra0.github.io/](pranavra0.github.io/)
+# pranavra0.github.io
 
 --- 
 
