@@ -2,51 +2,53 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Pranav Rao</title>
+    <meta name="description" content="Pranav Rao">
+    <meta property="og:title" content="Pranav Rao">
+    <meta property="og:description" content="Pranav Rao">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Pranav Rao">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pranav Rao">
+    <meta name="twitter:description" content="Pranav Rao">
+    <link rel="stylesheet" href="/assets/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
+
 <body>
 
-<main>
-    <section class="intro">
-        <h1>Pranav Rao</h1>
-        
-        <p>
-            I am a recent graduate from the UNC Charlotte. 
-            <br></br>
-            I am currently working as a Tech Fellow at <a href = "https://bluecypress.io">Blue Cypress</a>
-        </p>
+    <header>
+    <h1>Pranav Rao</h1>
+    <p>
+        Recent graduate from UNC Charlotte.<br>
+        Tech Fellow at <a href="https://bluecypress.io">Blue Cypress</a>.
+    </p>
+</header>
 
-        <nav class="button-group">
+<nav class="home-stack">
 
-            <a href="/projects.html" class="btn">
-                <span>Projects</span>
-            </a>
+    <a href="/projects/" class="btn-home">
+        <span>Projects</span>
+    </a>
 
-            <a href="https://typst.app/project/r7zenpFFvIyfrFVtpYwOCe" class="btn">
-<svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="Typst--Streamline-Simple-Icons" height="24" width="24">
-  <path d="M12.654 17.846c0 1.114 0.16 1.861 0.479 2.242 0.32 0.381 0.901 0.572 1.743 0.572 0.872 0 1.99 -0.44 3.356 -1.319l0.871 1.45C16.547 22.931 14.44 24 12.785 24c-1.656 0 -2.964 -0.395 -3.922 -1.187 -0.959 -0.82 -1.438 -2.256 -1.438 -4.307V6.989H5.246l-0.349 -1.626 2.528 -0.791V2.418L12.654 0v4.835l5.142 -0.395 -0.48 2.857 -4.662 -0.176v10.725Z" fill="currentColor" stroke-width="1"></path>
-</svg>                <span>Resume</span>
-            </a>
+    <a href="https://typst.app/project/r7zenpFFvIyfrFVtpYwOCe" target="_blank" class="btn-home">
+    <span>Resume</span>
+</a>
 
-            <a href="https://github.com/pranavra0/" class="btn">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-                <span>pranavra0</span>
-            </a>
 
-            <a href="https://www.linkedin.com/in/raopranav117/" class="btn">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
-                <span>raopranav117</span>
-            </a>
+    <a href="https://github.com/pranavra0/" target="_blank"  class="btn-home">
+        <span>GitHub</span>
+    </a>
 
-            <a href="mailto:raopranav117@gmail.com" class="btn">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>Email</span>
-            </a>
-        </nav>
-    </section>
-</main>
+    <a href="https://www.linkedin.com/in/raopranav117/" target="_blank"  class="btn-home">
+        <span>LinkedIn</span>
+    </a>
 
+    <a href="mailto:raopranav117@gmail.com" class="btn-home">
+        <span>Email</span>
+    </a>
+
+</nav>
 </body>
 </html>
