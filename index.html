@@ -1,54 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Pranav Rao</title>
-    <meta name="description" content="Pranav Rao">
-    <meta property="og:title" content="Pranav Rao">
-    <meta property="og:description" content="Pranav Rao">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Pranav Rao">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Pranav Rao">
-    <meta name="twitter:description" content="Pranav Rao">
-    <link rel="stylesheet" href="/assets/style.css">
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
-
 <body>
-
-    <header>
-    <h1>Pranav Rao</h1>
-    <p>
-        Recent graduate from UNC Charlotte.<br>
-        Tech Fellow at <a href="https://bluecypress.io">Blue Cypress</a>.
-    </p>
-</header>
-
-<nav class="home-stack">
-
-    <a href="/projects/" class="btn-home">
-        <span>Projects</span>
-    </a>
-
-    <a href="https://typst.app/project/r7zenpFFvIyfrFVtpYwOCe" target="_blank" class="btn-home">
-    <span>Resume</span>
-</a>
-
-
-    <a href="https://github.com/pranavra0/" target="_blank"  class="btn-home">
-        <span>GitHub</span>
-    </a>
-
-    <a href="https://www.linkedin.com/in/raopranav117/" target="_blank"  class="btn-home">
-        <span>LinkedIn</span>
-    </a>
-
-    <a href="mailto:raopranav117@gmail.com" class="btn-home">
-        <span>Email</span>
-    </a>
-
-</nav>
+  <h1>Pranav Rao</h1>
+<p>UNC Charlotte (2023-2025)</p>
+<p>Tech Fellow at <a href="https://bluecypress.io">Blue Cypress</a></p>
+<h1>Projects</h1>
+<div class="grid">
+  <div class="card" 
+       hx-get="/projects/election_model/" 
+       hx-target="#modal-inner" 
+       hx-select="#project-detail" 
+       onclick="openModal()"><div class="card-title">2024 Election Model</div>
+      <div class="card-subtitle">A Monte Carlo election forecast.</div>
+      <div class="card-tags">R / Selenium</div>
+  </div>
+  <div class="card" 
+       hx-get="/projects/forum/" 
+       hx-target="#modal-inner" 
+       hx-select="#project-detail" 
+       onclick="openModal()"><div class="card-title">Forum Experiment</div>
+      <div class="card-subtitle">A classic forum recreation</div>
+      <div class="card-tags">Go / MongoDB</div>
+  </div>
+  <div class="card" 
+       hx-get="/projects/orchestrator/" 
+       hx-target="#modal-inner" 
+       hx-select="#project-detail" 
+       onclick="openModal()"><div class="card-title">The Orchestrator</div>
+      <div class="card-subtitle">Container orchestration from scratch for small projects.</div>
+      <div class="card-tags">Python / MongoDB</div>
+  </div>
+  <div class="card" 
+       hx-get="/projects/syn/" 
+       hx-target="#modal-inner" 
+       hx-select="#project-detail" 
+       onclick="openModal()"><div class="card-title">SYN</div>
+      <div class="card-subtitle">CAIR Hackathon Winner - Sign Language Recognition Model</div>
+      <div class="card-tags">Python / React</div>
+  </div>
+  <div class="card" 
+       hx-get="/projects/aplatformer/" 
+       hx-target="#modal-inner" 
+       hx-select="#project-detail" 
+       onclick="openModal()"><div class="card-title">A Platformer</div>
+      <div class="card-subtitle">My first foray into gamedev</div>
+      <div class="card-tags">GDScript</div>
+  </div>
+  <div class="card" 
+       hx-get="/projects/embedst/" 
+       hx-target="#modal-inner" 
+       hx-select="#project-detail" 
+       onclick="openModal()"><div class="card-title">Embedst</div>
+      <div class="card-subtitle">A stateless Typst renderer for rich embeds</div>
+      <div class="card-tags">Typescript / Typst</div>
+  </div>
+</div>
+<div id="modal" class="modal" onclick="closeModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="close-btn" onclick="closeModal()">[close]</button>
+        <div id="modal-inner">
+            </div>
+    </div>
+</div>
+<script>
+    const modal = document.getElementById('modal');
+    function openModal() { modal.style.display = 'flex'; }
+    function closeModal() { modal.style.display = 'none'; }
+    
+    // Close on Escape key for better UX
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape") closeModal();
+    });
+</script>
+<h1>Contact</h1>
+<div style="margin-top: 1rem;">
+    <a href="https://github.com/pranavra0/" class="btn-home" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a href="https://www.linkedin.com/in/raopranav117/" class="btn-home" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a href="mailto:raopranav117@gmail.com" class="btn-home">Email</a>
+    <a href="https://typst.app/project/r7zenpFFvIyfrFVtpYwOCe" class="btn-home" target="_blank" rel="noopener noreferrer">Resume</a>
+</div>
 </body>
 </html>
