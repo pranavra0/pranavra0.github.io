@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin" />
   <title>Forum Experiment</title>
   <script src="https://unpkg.com/htmx.org@1.9.10"></script>
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div id="project-detail">
+  <div id="project-detail" style="view-transition-name: card--projects/forum/">
+    
+    <div style="margin-bottom: 2rem;">
+        <a href="/">&larr; Back to Home</a>
+    </div>
+
     <h1 style="margin-bottom: 0;">Forum Experiment</h1>
     <p style="opacity: 0.7; margin-top: 0.2rem; margin-bottom: 2rem;">A classic forum recreation</p>
 
