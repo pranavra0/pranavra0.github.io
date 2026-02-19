@@ -39,7 +39,8 @@ color: var(--link-color);
 
 a:hover {
   color: var(--link-color);
-  border: 5px dashed var(--link-color);
+  outline: 5px dashed var(--link-color);
+  outline-offset: -1px; /* Keeps the outline flush with the card */
   background: rgba(255, 255, 0, 0.1); 
 }
 
@@ -109,4 +110,60 @@ aspect-ratio: 16 / 9;
 display: block;
 margin: 1.5rem 0;
 border: none;
+}
+
+.btn-nuclear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background-color: var(--text-color);
+  color: var(--bg-color);
+  border: 2px solid var(--text-color);
+  font-weight: 700;
+  text-decoration: none;
+  
+  transition: transform 0.2s cubic-bezier(1, -0.07, 0.57, 1.56);
+}
+
+/* Hover State */
+.btn-nuclear:hover {
+  transform: scale(2.5); 
+  z-index: 10;
+  
+  color: #ffffff;
+  -webkit-text-stroke: 0.05rem #000000;
+  outline: none; 
+  
+  /* THE FIX: Hide the white border so it doesn't frame the caution tape */
+  border-color: none; 
+}
+.btn-nuclear:hover:not(:active) {
+  background: repeating-linear-gradient(
+    45deg,
+    #ffff00 0rem,
+    #ffff00 0.625rem,
+    #000000 0.625rem,
+    #000000 1.25rem
+  );
+}
+
+.btn-nuclear:active {
+  animation: blink-red-white 0.15s infinite;
+}
+
+/* The Keyframes for the Blink Animation */
+@keyframes blink-red-white {
+  0%, 100% { background-color: red; }
+  50% { background-color: white; }
+}
+
+.btn-nuclear:hover:not(:active)::after {
+  content: '?';
+  margin-left: 0.25rem;
+}
+.btn-nuclear:active::after {
+  content: '!!';
+  margin-left: 0.25rem;
+  font-style: italic;
 }
