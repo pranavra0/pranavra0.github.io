@@ -1,169 +1,343 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Metal&display=swap');
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..700&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS
+============================================================ */
 :root {
---font-main: "IBM Plex Sans", sans-serif;
---max-width: 800px;
---line-height: 1.6;
+  /* --- Font stack --- */
+  --fo-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+             Roboto, Helvetica, Arial, sans-serif;
+  --fo-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+             Courier, monospace;
 
---bg-color: #000000;
---text-color: #ffffff;
---link-color: #ffff00;
+  /* --- Variable font weight axes --- */
+  --wgreg: "wght" 400;
+  --wgmed: "wght" 525;
+  --wgbld: "wght" 575;
+  --wghev: "wght" 600;
 
---border-style: 1px solid #333;
---card-padding: 0.75rem;
---card-hover-bg: rgba(255, 255, 255, 0.1);
+  /* --- Type sizes --- */
+  --fs-10: 10px;  --fs-12: 12px;  --fs-14: 14px;
+  --fs-16: 16px;  --fs-18: 18px;  --fs-21: 21px;
+  --fs-24: 24px;  --fs-28: 28px;  --fs-32: 32px;
 
---title-size: 0.95rem;
---subtitle-size: 0.85rem;
---tag-size: 0.7rem;
---tag-opacity: 0.5;
+  /* --- Optical letter-spacing (from source) --- */
+  --ls-12-med: -0.225px;
+  --ls-14-reg: -0.132px;  --ls-14-med: -0.25px;
+  --ls-16-reg: -0.198px;  --ls-16-med: -0.228px;
+  --ls-18-med: -0.43px;
+  --ls-21-reg: -0.364px;
+  --ls-24-reg: -0.464px;
+  --ls-28-reg: -0.598px;
+  --ls-32-med: -0.84px;
+
+  /* --- Border radius --- */
+  --radius-xxsm: 7px;   --radius-xsm: 9px;
+  --radius-sm:  11px;   --radius-md:  13px;
+  --radius-lg:  15px;   --radius-xl:  25px;
+  --radius-pill: 33px;  --radius-full: 40px;
+
+  /* --- Color palette (sRGB approx. of display-p3 originals) --- */
+  --steel1400: #000000;  --steel1300: #1e2428;  --steel1200: #2a3237;
+  --steel1100: #454e52;  --steel1000: #6d7a7c;  --steel900:  #818e91;
+  --steel800:  #919ea1;  --steel700:  #919ea1;  --steel600:  #c3cac9;
+  --steel500:  #e6eded;  --steel400:  #edf0f0;  --steel300:  #f2f4f4;
+  --steel200:  #f6f7f7;  --steel100:  #fafafa;  --steel0:    #ffffff;
+
+  --sky400: #bdfaff;  --sky300: #e0feff;  --sky200: #e9fffd;
+  --sky100: #f1fffc;  --sky0f:  #f9fcfb;
+
+  --aqua800: #0d82d0;  --aqua700: #0e92e4;  --aqua600: #1899e9;
+  --aqua500: #179cee;  --aqua400: #39b5ef;  --aqua300: #3abdfa;
+  --aqua200: #42c3ff;  --aqua100: #56c4ff;
+
+  --cobalt600: #074d92;  --cobalt500: #1253b0;  --cobalt400: #1f5bc3;
+  --cobalt300: #0b68cc;  --cobalt200: #0c6dcf;  --cobalt100: #0d71d4;
+  --royal200:  #2f1eed;  --royal100:  #0040f1;
+
+  --iris500: #a46fc9;  --iris200: #fff2ff;
+
+  /* --- Semantic tokens --- */
+  --primary:    var(--steel1300);
+  --secondary:  var(--steel1200);
+  --tertiary:   var(--steel1000);
+  --quaternary: var(--steel900);
+  --quinary:    var(--steel800);
+  --bg0: var(--steel0);    /* page background  */
+  --bg1: var(--steel100);  /* subtle surface    */
+  --bg2: var(--steel200);
+  --bg3: var(--steel300);  /* tag background    */
+
+  --link:        var(--cobalt100);
+  --link-hover:  var(--cobalt300);
+  --link-active: var(--cobalt500);
+
+  /* --- Shadows --- */
+  --shadow-sm:
+    0px 0px 1px rgba(0,0,0,.07),
+    0px 1px 1px rgba(0,0,0,.07),
+    0px 2px 3px rgba(0,0,0,.07);
+  --shadow-card:
+    0 1px 1px rgba(0,0,0,.06),
+    0 2px 5px rgba(0,0,0,.06),
+    0 6px 12px -1px rgba(31,91,195,.075),
+    0 12px 20px -3px rgba(31,91,195,.072);
+  --shadow-card-hover:
+    0 2px 4px rgba(0,0,0,.08),
+    0 4px 10px rgba(0,0,0,.07),
+    0 8px 18px -1px rgba(31,91,195,.12),
+    0 16px 28px -3px rgba(31,91,195,.1);
+
+  --font-main:      var(--fo-sans);
+  --max-width:      800px;
+  --line-height:    1.6;
+  --bg-color:       var(--bg0);
+  --text-color:     var(--primary);
+  --link-color:     var(--cobalt100);
+  --border-style:   1px solid var(--steel400);
+  --card-padding:   0.75rem;
+  --card-hover-bg:  rgba(58,189,250,.06);
+  --title-size:     0.95rem;
+  --subtitle-size:  0.85rem;
+  --tag-size:       0.7rem;
+  --tag-opacity:    0.6;
 }
 
+/* ============================================================
+   RESET & BASE
+============================================================ */
 *, *::before, *::after {
-box-sizing: border-box;
+  box-sizing: border-box;
+  font-optical-sizing: auto;
 }
 
 body {
-font-family: var(--font-main);
-max-width: var(--max-width);
-margin: 0 auto;
-padding: 2rem 1rem;
-line-height: var(--line-height);
-background-color: var(--bg-color);
-color: var(--text-color);
+  font-family: var(--fo-sans);
+  font-size: var(--fs-16);
+  font-variation-settings: var(--wgreg);
+  letter-spacing: var(--ls-16-reg);
+  line-height: 1.6;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--sky0f);     /* Eli's warm near-white page bg */
+  color: var(--primary);
+  -webkit-font-smoothing: antialiased;
 }
 
+/* ============================================================
+   LINKS
+============================================================ */
 a {
-color: var(--link-color);
+  color: var(--link);
+  text-decoration: none;
+  transition: color .15s ease;
 }
 
 a:hover {
-  color: var(--link-color);
-  outline: 5px dashed var(--link-color);
-  outline-offset: -1px; /* Keeps the outline flush with the card */
-  background: rgba(255, 255, 0, 0.1); 
+  color: var(--link-hover);
+  /* Replaces the dashed yellow outline with a soft cobalt glow */
+  outline: none;
+  background: none;
 }
 
+/* ============================================================
+   PAGE TRANSITIONS
+============================================================ */
 @view-transition {
-navigation: auto;
+  navigation: auto;
 }
 
+/* ============================================================
+   GRID
+============================================================ */
 .grid {
-display: grid;
-grid-auto-rows: 1fr;
-grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
-gap: 0.5rem;
-margin: 1.5rem 0;
+  display: grid;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 180px), 1fr));
+  gap: 0.5rem;
+  margin: 1.5rem 0;
 }
 
+/* ============================================================
+   CARD
+
+============================================================ */
 .card {
-text-decoration: none;
-color: var(--text-color);
-border: var(--border-style);
-padding: var(--card-padding);
-display: flex;
-flex-direction: column;
-transition: background-color 0.2s ease;
+  text-decoration: none;
+  color: var(--secondary);
+  border: 1px solid rgba(195,202,201,.4);
+  border-radius: var(--radius-xl);
+  padding: var(--card-padding);
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg,
+    rgba(189,250,255,.22) 0%,
+    rgba(241,255,252,.18) 45%,
+    rgba(250,252,251,.95) 100%
+  );
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow .2s ease,
+    background .2s ease,
+    transform .15s ease,
+    border-color .15s ease;
 }
 
+.card:hover {
+  background: linear-gradient(180deg,
+    rgba(189,250,255,.38) 0%,
+    rgba(230,255,252,.28) 45%,
+    rgba(248,252,255,.98) 100%
+  );
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(58,189,250,.35);
+  transform: translateY(-1px);
+  color: var(--secondary);
+  outline: none;
+}
+
+.card:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   CARD TYPOGRAPHY
+============================================================ */
 .card-title {
-font-weight: 700;
-font-size: var(--title-size);
-line-height: 1.25;
+  font-variation-settings: var(--wgbld);
+  font-size: var(--title-size);
+  letter-spacing: var(--ls-16-med);
+  line-height: 1.25;
+  color: var(--secondary);
 }
 
 .card-subtitle {
-font-size: var(--subtitle-size);
-line-height: 1.2;
-opacity: 0.8;
+  font-size: var(--subtitle-size);
+  font-variation-settings: var(--wgreg);
+  letter-spacing: var(--ls-14-reg);
+  line-height: 1.3;
+  color: var(--tertiary);
+  opacity: 1;            /* opacity already handled by color choice */
+  margin-top: 3px;
 }
 
 .card-tags {
-font-size: var(--tag-size);
-text-transform: uppercase;
-letter-spacing: 0.05em;
-opacity: var(--tag-opacity);
-margin-top: auto;
-padding-top: 0.5rem;
+  font-size: var(--tag-size);
+  font-variation-settings: var(--wgmed);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--quaternary);
+  opacity: var(--tag-opacity);
+  margin-top: auto;
+  padding-top: 0.5rem;
 }
 
+
 .btn-home {
-display: inline-block;
-margin-right: 1rem;
-text-decoration: underline;
-color: var(--link-color);
-font-weight: 500;
+  display: inline-block;
+  margin-right: 0.5rem;
+  text-decoration: none;
+  color: var(--quaternary);
+  font-size: var(--fs-14);
+  font-variation-settings: var(--wgreg);
+  letter-spacing: var(--ls-14-reg);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  transition: color .15s ease, background .15s ease;
+  font-weight: normal;
+}
+
+.btn-home:hover {
+  color: var(--link-hover);
+  background: linear-gradient(180deg, var(--sky300), rgba(225,254,255,.92));
+  box-shadow:
+    inset 0 2px 3px rgba(47,30,237,.24),
+    inset 0 1px 1px rgba(47,30,237,.24),
+    inset 0 0 1px rgba(0,64,241,.14);
 }
 
 .project-body img,
 .project-body video {
-max-width: 100%;
-height: auto;
-display: block;
-border: 1px dashed #ffffff;
-margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  /* Replaces the dashed white border with a rounded container */
+  border: 1px solid var(--steel400);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
+  margin: 1.5rem 0;
 }
 
 .project-body iframe {
-width: 100%;
-aspect-ratio: 16 / 9;
-display: block;
-margin: 1.5rem 0;
-border: none;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+  margin: 1.5rem 0;
+  border: none;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-card);
 }
 
 .btn-nuclear {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  background-color: var(--text-color);
-  color: var(--bg-color);
-  border: 2px solid var(--text-color);
-  font-weight: 700;
-  text-decoration: none;
-  
-  transition: transform 0.2s cubic-bezier(1, -0.07, 0.57, 1.56);
+  gap: 6px;
+  padding: 0.55rem 1.1rem;
+
+  background: linear-gradient(180deg, var(--aqua300), var(--aqua600));
+  box-shadow:
+    0 1px 2px  rgba(13,113,212,.24),
+    0 3px 6px -1px rgba(24,153,233,.16),
+    0 4px 8px -1px rgba(57,181,239,.12),
+    inset 0 -1px 1px   rgba(47,30,237,.06),
+    inset 0 -1px .75px rgba(11,104,204,.44);
+
+  border: none;
+  border-radius: var(--radius-md);
+
+  color: white !important;
+  font-family: var(--fo-sans);
+  font-size: var(--fs-16);
+  font-variation-settings: var(--wgmed);
+  letter-spacing: var(--ls-16-med);
+  line-height: 19px;
+  text-shadow: 0 1px 1px rgba(11,104,204,.56);
+  text-decoration: none !important;
+
+  cursor: pointer;
+  transition: background .15s ease, box-shadow .15s ease, transform .1s ease;
 }
 
-/* Hover State */
+.btn-nuclear::before,
+.btn-nuclear::after { content: none; }
+
 .btn-nuclear:hover {
-  transform: scale(2.5); 
-  z-index: 10;
-  
-  color: #ffffff;
-  -webkit-text-stroke: 0.05rem #000000;
-  outline: none; 
-  
-  /* THE FIX: Hide the white border so it doesn't frame the caution tape */
-  border-color: none; 
-}
-.btn-nuclear:hover:not(:active) {
-  background: repeating-linear-gradient(
-    45deg,
-    #ffff00 0rem,
-    #ffff00 0.625rem,
-    #000000 0.625rem,
-    #000000 1.25rem
-  );
+  background: linear-gradient(180deg, var(--aqua200), var(--aqua500));
+  box-shadow:
+    0 1.5px 2.5px rgba(13,113,212,.24),
+    0 4px 7px  -1px rgba(24,153,233,.16),
+    0 5px 10px -1px rgba(57,181,239,.13);
+  transform: translateY(-1px);
+  color: white !important;
+  outline: none;
 }
 
 .btn-nuclear:active {
-  animation: blink-red-white 0.15s infinite;
+  background: linear-gradient(180deg, var(--aqua600), var(--aqua400));
+  box-shadow:
+    inset 0 1.5px 2px rgba(7,77,146,.24),
+    inset 0 1px 2px   rgba(31,91,195,.32);
+  transform: translateY(0);
+  color: var(--sky300) !important;
+  animation: none;
 }
 
-/* The Keyframes for the Blink Animation */
 @keyframes blink-red-white {
-  0%, 100% { background-color: red; }
-  50% { background-color: white; }
-}
-
-.btn-nuclear:hover:not(:active)::after {
-  content: '?';
-  margin-left: 0.25rem;
-}
-.btn-nuclear:active::after {
-  content: '!!';
-  margin-left: 0.25rem;
-  font-style: italic;
+  0%, 100% { background: linear-gradient(180deg, var(--aqua300), var(--aqua600)); }
+  50%       { background: linear-gradient(180deg, var(--aqua200), var(--aqua500)); }
 }
