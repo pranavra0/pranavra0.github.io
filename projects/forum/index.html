@@ -5,18 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="view-transition" content="same-origin" />
   <title>Forum Experiment</title>
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div id="project-detail" style="view-transition-name: card--projects/forum/">
-    
-    <div style="margin-bottom: 2rem;">
-        <a href="/">&larr; Back to Home</a>
-    </div>
+  <div class="page-wrapper">
+    <header>
+      <nav>
+        <a href="/" class="">home</a>
+        <a href="/projects/" class="active">projects</a>
+      </nav>
+    </header>
 
-    <h1 style="margin-bottom: 0;">Forum Experiment</h1>
-    <p style="opacity: 0.7; margin-top: 0.2rem; margin-bottom: 2rem;">A classic forum recreation</p>
+    <main>
+      <div class="project-detail">
+    <a href="/" class="back-link">&larr; back to home</a>
+
+    <h1 class="dropshadow lowercase">Forum Experiment</h1>
+    <p class="subtitle">A classic forum recreation</p>
 
     <div class="project-body">
         <p>I was inspired by old forums and particularly how old websites managed state. I decided to use Go to create a mostly server side forum. This was also my first time using HTML Templating which significantly changed how I view web development.</p>
@@ -33,11 +40,18 @@
 
     </div>
 
-    <div style="margin-top: 2rem; border-top: 1px dashed currentColor; padding-top: 1rem;">
-        <a href="https://github.com/pranavra0/forum" target="_blank" style="margin-right: 1rem;">
+    <div class="links">
+        <a href="https://github.com/pranavra0/forum" target="_blank" rel="noopener noreferrer">
             GitHub &rarr;
         </a>
     </div>
 </div>
+
+    </main>
+
+    <footer>
+      <div class="footer-name">PP</div>
+    </footer>
+  </div>
 </body>
 </html>

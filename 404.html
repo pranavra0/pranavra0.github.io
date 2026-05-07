@@ -5,16 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="view-transition" content="same-origin" />
   <title>Page Not Found</title>
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div class="not-found-container" style="text-align:center; padding: 5rem 1rem;">
-    <h1 style="font-size: 4rem; margin-bottom: 1rem;">404</h1>
-    <a href="/">
-       &larr; Return Home
-    </a>
+  <div class="page-wrapper">
+    <header>
+      <nav>
+        <a href="/" class="">home</a>
+        <a href="/projects/" class="">projects</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="not-found">
+    <h1 class="dropshadow">404</h1>
+    <a href="/">&larr; return home</a>
 </div>
 
+    </main>
+
+    <footer>
+      <div class="footer-name">PP</div>
+    </footer>
+  </div>
 </body>
 </html>

@@ -5,18 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="view-transition" content="same-origin" />
   <title>2024 Election Model</title>
-  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <div id="project-detail" style="view-transition-name: card--projects/election_model/">
-    
-    <div style="margin-bottom: 2rem;">
-        <a href="/">&larr; Back to Home</a>
-    </div>
+  <div class="page-wrapper">
+    <header>
+      <nav>
+        <a href="/" class="">home</a>
+        <a href="/projects/" class="active">projects</a>
+      </nav>
+    </header>
 
-    <h1 style="margin-bottom: 0;">2024 Election Model</h1>
-    <p style="opacity: 0.7; margin-top: 0.2rem; margin-bottom: 2rem;">A Monte Carlo election forecast.</p>
+    <main>
+      <div class="project-detail">
+    <a href="/" class="back-link">&larr; back to home</a>
+
+    <h1 class="dropshadow lowercase">2024 Election Model</h1>
+    <p class="subtitle">A Monte Carlo election forecast.</p>
 
     <div class="project-body">
         <p>This was my attempt at creating my own Presidential election model. I scraped RCP using Selenium, with the simulation being a state-level Monte Carlo election forecast.</p>
@@ -24,11 +31,18 @@
 
     </div>
 
-    <div style="margin-top: 2rem; border-top: 1px dashed currentColor; padding-top: 1rem;">
-        <a href="https://github.com/pranavra0/2024ElectionModel" target="_blank" style="margin-right: 1rem;">
+    <div class="links">
+        <a href="https://github.com/pranavra0/2024ElectionModel" target="_blank" rel="noopener noreferrer">
             View on GitHub &rarr;
         </a>
     </div>
 </div>
+
+    </main>
+
+    <footer>
+      <div class="footer-name">PP</div>
+    </footer>
+  </div>
 </body>
 </html>
