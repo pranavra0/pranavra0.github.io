@@ -44,5 +44,17 @@
       <div class="footer-name">PP</div>
     </footer>
   </div>
+
+  <script>
+    // Random slant for email hover on each entry
+    (function() {
+      const email = document.querySelector('h2 a.caution-hover');
+      if (!email) return;
+      email.addEventListener('mouseenter', function() {
+        const deg = (Math.random() * 10 - 5).toFixed(2);
+        this.style.setProperty('--slant', deg + 'deg');
+      });
+    })();
+  </script>
 </body>
 </html>

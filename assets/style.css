@@ -236,15 +236,32 @@ p a:hover,
 	border-color: transparent;
 }
 
-/* Email link inside inverted h2 */
+/* Email link inside inverted h2 — random slant on each hover */
 h2 a.caution-hover {
 	color: var(--color-text-inverted);
 	border-bottom: none;
 	padding: 0.25rem 0.5rem;
+	--slant: -2deg;
+}
+
+h2 a.caution-hover::before {
+	inset: -0.4em -0.6em;
+	transform: rotate(var(--slant)) scale(0.95);
+	background: repeating-linear-gradient(
+		125deg,
+		var(--tape-yellow) 0px,
+		var(--tape-yellow) 10px,
+		var(--tape-black) 10px,
+		var(--tape-black) 23px
+	);
 }
 
 h2 a.caution-hover:hover {
 	color: #ffffff !important;
+}
+
+h2 a.caution-hover:hover::before {
+	transform: rotate(var(--slant)) scale(1);
 }
 
 /* ============================================================
