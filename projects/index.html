@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
   <div class="page-wrapper">
@@ -15,12 +16,21 @@
       <nav>
         <a href="/" class="">home</a>
         <a href="/projects/" class="active">projects</a>
+        <a href="/blog/" class="">blog</a>
       </nav>
     </header>
 
     <main>
       <h1 class="mb-3 dropshadow lowercase">projects</h1>
 <div class="projects-grid">
+  <a href="/projects/r2/" class="project-card" style="background-color: #B7410E">
+      <h4>r2</h4>
+      <div class="tagline">A dynamic cacheable capability scoped Rust runtime</div>
+      <div class="tags">Rust</div>
+      <div class="card-fade">
+        <span>view project &rarr;</span>
+      </div>
+  </a>
   <a href="/projects/forum/" class="project-card">
       <h4>Forum Experiment</h4>
       <div class="tagline">A classic forum recreation</div>
@@ -78,6 +88,8 @@
     </footer>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
   <script>
     // Random slant for email hover on each entry
     (function() {

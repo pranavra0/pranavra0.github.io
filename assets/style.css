@@ -12,9 +12,6 @@
 	--color-accent: #66b3ff;
 	--color-border: #333333;
 	--color-shadow: rgba(0, 0, 0, 0.5);
-	--card-stripe-1: #282828;
-	--card-stripe-2: #171717;
-
 	--tape-yellow: #FFD700;
 	--tape-black: #000000;
 	--tape-stripe: repeating-linear-gradient(
@@ -430,10 +427,10 @@ h2 a.caution-hover:hover::before {
 	z-index: 0;
 	background: repeating-linear-gradient(
 		135deg,
-		var(--card-stripe-1) 0px,
-		var(--card-stripe-1) 10px,
-		var(--card-stripe-2) 10px,
-		var(--card-stripe-2) 20px
+		rgba(255, 255, 255, 0.07) 0px,
+		rgba(255, 255, 255, 0.07) 10px,
+		rgba(0, 0, 0, 0.12) 10px,
+		rgba(0, 0, 0, 0.12) 20px
 	);
 	opacity: 0;
 }
@@ -596,6 +593,260 @@ section {
 }
 
 /* ============================================================
+   BLOG GRID & CARDS
+   ============================================================ */
+.blog-grid {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	width: 100%;
+	max-width: 800px;
+}
+
+.blog-card {
+	position: relative;
+	padding: 1.5rem 1.5rem 4.5rem;
+	border-radius: 2px;
+	overflow: hidden;
+	background-color: var(--color-background-secondary);
+	box-shadow: 0 1px 3px var(--color-shadow);
+	cursor: pointer;
+	transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.blog-card:hover {
+	box-shadow: 0 2px 6px var(--color-shadow);
+	transform: translateY(-2px);
+}
+
+.blog-card .blog-card-link {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	text-decoration: none;
+	border-bottom: none;
+	color: transparent;
+	background: none;
+}
+
+.blog-card .blog-card-link:hover {
+	background: none;
+}
+
+.blog-card h4 {
+	font-size: clamp(1.5rem, 4vw, 3rem);
+	font-weight: 600;
+	line-height: 1.1;
+	margin-bottom: 0.5rem;
+	position: relative;
+	z-index: 2;
+	text-transform: lowercase;
+}
+
+.blog-card time {
+	font-size: 0.75rem;
+	color: var(--color-text-muted);
+	position: relative;
+	z-index: 2;
+}
+
+.blog-card .blog-preview {
+	margin-top: 0.75rem;
+	font-size: 0.9rem;
+	line-height: 1.6;
+	color: var(--color-text-muted);
+	position: relative;
+	z-index: 2;
+}
+
+.blog-card .blog-preview {
+	max-height: 6.5rem;
+	overflow: hidden;
+}
+
+.blog-card .blog-preview p {
+	margin: 0;
+}
+
+.blog-card .card-fade {
+	pointer-events: none;
+	position: absolute;
+	inset-x: 0;
+	bottom: 0;
+	height: 5rem;
+	display: flex;
+	align-items: flex-end;
+	justify-content: center;
+	background: linear-gradient(to top, var(--color-background-secondary) 25%, transparent);
+	z-index: 3;
+}
+
+.blog-card .card-fade span {
+	font-size: 0.875rem;
+	text-decoration: underline;
+	padding-bottom: 1rem;
+	color: var(--color-text);
+}
+
+/* ============================================================
+   POST DETAIL PAGE
+   ============================================================ */
+.post-detail {
+	max-width: 800px;
+}
+
+.post-detail h1 {
+	font-size: clamp(2rem, 6vw, 6rem);
+	margin-bottom: 0.5rem;
+}
+
+.post-meta {
+	font-size: 0.85rem;
+	color: var(--color-text-muted);
+	margin-bottom: 2rem;
+}
+
+/* ============================================================
+   PROSE (markdown content)
+   ============================================================ */
+.prose {
+	color: var(--color-text);
+	line-height: 1.7;
+}
+
+.prose h1 {
+	font-size: 2rem;
+	font-weight: 700;
+	margin-top: 1.5rem;
+	margin-bottom: 0.5rem;
+	line-height: 1.2;
+	background: none;
+	color: var(--color-text);
+	display: block;
+	padding: 0;
+}
+
+.prose h2 {
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin-top: 1.25rem;
+	margin-bottom: 0.5rem;
+	background: none;
+	color: var(--color-text);
+	display: block;
+	padding: 0;
+}
+
+.prose h3 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-top: 1rem;
+	margin-bottom: 0.5rem;
+	color: var(--color-text);
+}
+
+.prose h4 {
+	font-size: 1.1rem;
+	font-weight: 600;
+	margin-top: 0.75rem;
+	margin-bottom: 0.5rem;
+	color: var(--color-text);
+}
+
+.prose p {
+	margin-bottom: 1rem;
+	line-height: 1.7;
+	color: var(--color-text);
+}
+
+.prose a {
+	color: var(--tape-yellow);
+	text-decoration: none;
+	border-bottom: 2px solid var(--tape-yellow);
+	padding: 0 0.1em;
+}
+
+.prose a:hover {
+	color: #ffffff;
+	background: var(--tape-stripe);
+	border-color: transparent;
+}
+
+.prose strong {
+	font-weight: 700;
+	color: var(--color-text);
+}
+
+.prose em {
+	font-style: italic;
+	color: var(--color-text);
+}
+
+.prose ul,
+.prose ol {
+	margin-left: 1.5rem;
+	margin-bottom: 1rem;
+	color: var(--color-text);
+}
+
+.prose ul {
+	list-style-type: disc;
+}
+
+.prose ol {
+	list-style-type: decimal;
+}
+
+.prose li {
+	color: var(--color-text);
+}
+
+.prose blockquote {
+	border-left: 4px solid var(--color-text);
+	padding-left: 1rem;
+	margin: 1rem 0;
+	font-style: italic;
+	opacity: 0.85;
+	color: var(--color-text);
+}
+
+.prose code {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 0.2rem 0.4rem;
+	border-radius: 2px;
+	font-size: 0.9em;
+	color: var(--color-text);
+}
+
+.prose pre {
+	background: rgba(255, 255, 255, 0.1);
+	padding: 1rem;
+	border-radius: 2px;
+	overflow-x: auto;
+	margin-bottom: 1rem;
+	color: var(--color-text);
+}
+
+.prose pre code {
+	padding: 0;
+}
+
+.prose img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	border-radius: 2px;
+	box-shadow: 0 1px 3px var(--color-shadow);
+	margin: 1.5rem 0;
+}
+
+.prose hr {
+	border: none;
+	border-top: 2px solid var(--color-border);
+	margin: 2rem 0;
+}
+
+/* ============================================================
    RESPONSIVE
    ============================================================ */
 @media (max-width: 768px) {
@@ -617,4 +868,57 @@ section {
 	.project-card h4 {
 		font-size: 1.5rem;
 	}
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+	.page-wrapper {
+		padding: 30px 1rem 1.5rem;
+	}
+
+	nav {
+		margin-bottom: 30px;
+	}
+
+	footer {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1rem;
+	}
+
+	.card h4,
+	.project-card h4 {
+		font-size: 1.5rem;
+	}
+}
+
+/* ============================================================
+   TABLES (markdown)
+   ============================================================ */
+.prose table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 1.5rem 0;
+	font-size: 0.9rem;
+}
+
+.prose th,
+.prose td {
+	padding: 0.5rem 0.75rem;
+	text-align: left;
+	border-bottom: 1px solid var(--color-border);
+}
+
+.prose th {
+	font-weight: 600;
+	color: var(--color-text-muted);
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+.prose tr:last-child td {
+	border-bottom: none;
 }

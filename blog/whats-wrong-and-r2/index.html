@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="view-transition" content="same-origin" />
+  <title>What's Wrong & r2</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/assets/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+</head>
+<body>
+  <div class="page-wrapper">
+    <header>
+      <nav>
+        <a href="/" class="">home</a>
+        <a href="/projects/" class="">projects</a>
+        <a href="/blog/" class="active">blog</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="post-detail">
+    <a href="/blog/" class="back-link">&larr; back to blog</a>
+
+    <h1 class="dropshadow lowercase">What's Wrong & r2</h1>
+    <div class="post-meta">
+        <time>May 9, 2026</time>
+    </div>
+
+    <div class="prose">
+        <p>The microservices vs monolith debate is one of software's most recurring arguments. Both camps are wrong; not about the tradeoffs, but about what causes them. The forced choice is a language-level failure.</p>
+<p>No mainstream language lets you say: evaluate this expression on a different node, with redundancy, and flow the result back transparently. So we use microservices as a blunt instrument — deployment boundary as a substitute for a language feature. And when that's too painful, we give up and build a monolith. Neither side is asking why the choice exists at all.</p>
+<p>Microservices give you:</p>
+<ul>
+<li>Forced interface discipline between components</li>
+<li>Independent scaling per service</li>
+<li>Redundancy at the service level across availability zones</li>
+</ul>
+<p>Monoliths give you:</p>
+<ul>
+<li>Coupling you can actually reason about</li>
+<li>One deployment artifact, far simpler operationally</li>
+<li>Refactoring across components without a network contract</li>
+</ul>
+<p>Rust's traits and Go's interfaces are getting this partially right at the type-system level. Decoupling interface from implementation without carving everything into network-connected processes. But neither gives you distributed evaluation. The real fix is a language where &quot;run this on three nodes and return the first result&quot; is a library call, not an infrastructure project. Something like Plan 9's networked philosophy (in a perfect world where it was good). <a href="https://www.unison-lang.org/">Unison</a> is the closest existing attempt but its type system is too static.</p>
+<h2>DevOps is an abstraction problem</h2>
+<p>Build systems, package managers, init systems, and cluster orchestrators all manage the same thing: dependency graphs, execution order, caching, and side effects. We  (well, not me) built separate, incompatible, broken tools for each domain.</p>
+<p>Model the problem correctly: <strong>Excel</strong>, <strong>React</strong>, <strong>Haskell</strong> (Read Build Systems a la Carte, friend)</p>
+<p>Don't hand-roll shell scripts or use Dockerfiles.</p>
+<p>Excel, React, and Haskell model computation as a DAG with explicit data flow. Same inputs produce same outputs. Caching is principled. Make's dependency model is fragile. Shell scripts have no dependency model — they're sequences of mutations. Dockerfiles are worse: they represent a build as a <em>linked list of snapshots</em>. The actual structure is a DAG. Are we serious with this linked list situation? This is why invalidating one layer ruins everything downstream and why hermetic builds are so hard to achieve in practice.</p>
+<p>Terraform is duct tape — HCL over infrastructure APIs that have no principled model. The various tools in the ecosystem like Kubernetes, Ansible, Vagrant, Sentinel, Jenkins blah blah all evaporate if the correct substrate exists.</p>
+<p>Nix is gooderer: packages as pure functions of their inputs, the whole system as a derivation graph. But Nix requires build graphs to be fully serialized before evaluation, which is a real limitation. And at runtime, NixOS behaves nearly identically to any other Linux distribution — it's Nix all the way to the shell, then POSIX the rest of the way down.</p>
+<h3>The thunk solution</h3>
+<p>Building LLVM has ~50,000 compilation units. Enumerating the entire build graph upfront before any evaluation is expensive. You want to represent LLVM as a single node that, when forced, expands into 50,000 nodes. That's a thunk. Nix handles this awkwardly via &quot;dynamic derivations&quot; and a socket mechanism. A lazily-evaluated language gets it for free — the graph expands on demand, evaluation handles it, no special-casing needed.</p>
+<h2>Static is a perspective, not a foundation</h2>
+<p>Data is dynamic. Hardware is dynamic. Storage degrades, peripherals come and go, topology changes. Static subsets exist within dynamic systems. But the top level is always dynamic; staticness is relative to a frame of reference, not a global property.</p>
+<p>Managing dynamic systems with static languages requires emulating a dynamic language inside them (see r2!). That emulation is always more cumbersome and more error-prone than just having a dynamic language. PS/2 was a static interface — one rigid protocol, no hotplug so USB replaced it.</p>
+<p>The ideal system is a dynamic, lazy, pure-by-default language that <em>is</em> the OS — not a language running on an OS. Everything is an expression: users, services, the filesystem. Process management falls out of lazy evaluation semantics. Capabilities replace Unix's ambient authority model: every expression is passed only what it needs, can request more from its parent, and resource limits (CPU, memory) are first-class. A cross-node semaphore with evenly distributed entries should be a few lines of normal code, not a multi-week integration project.</p>
+<p>Self, Plan 9, and the best parts of Nix each had the right instinct in one dimension. None got all the way there. Kubernetes, Terraform, Dockerfiles, Make, and shell scripts all exist because the OS and language layer below them failed to model the actual problem. The fix isn't another abstraction layer. It's going back to the foundation.</p>
+<h2>r2: a first attempt</h2>
+<p>r2 is a Rust runtime for content-addressed lazy computation with explicit object-capability effects. It's not a programming language, not a Kubernetes replacement, not production-ready. It's the first layer — a proof that the substrate can be built correctly.</p>
+<p>The thesis: build systems, package managers, init systems, deployment tools, and cluster orchestrators are fragmented solutions to the same problem. r2 tries to unify them under one runtime model.</p>
+<h3>How it works</h3>
+<p>Everything is a graph node. Every node has a stable SHA-256 hash. Evaluation happens by forcing nodes lazily — you ask for the result of a node, and only the necessary subgraph gets evaluated.</p>
+<ul>
+<li><strong>Value</strong>: Literal: Int, Text, Bytes, Tree, Artifact</li>
+<li><strong>Thunk</strong>: Lazy indirection to another node</li>
+<li><strong>Apply</strong>: Pure function application over graph nodes</li>
+<li><strong>HostCall</strong>: Effectful call, gated by a registered capability</li>
+<li><strong>Action</strong>: Hermetic external command with declared inputs/outputs</li>
+<li><strong>ReadCell</strong>: Reads a mutable cell; the runtime's escape hatch for live state</li>
+</ul>
+<p>Effects are typed. Every node knows whether it's pure, hermetic, or live, and the runtime enforces consistency — using a <code>Live</code> capability in a pure context produces a structured <code>EffectMismatch</code> failure.</p>
+<ul>
+<li><strong>Pure</strong>: Deterministic, no outside world access. Always cacheable.</li>
+<li><strong>Hermetic</strong>: Effectful but deterministic given declared inputs. Cacheable by action hash.</li>
+<li><strong>Live</strong>: Touches the open world — network, clock. Not permanently cacheable.</li>
+</ul>
+<p>No ambient authority. The runtime only knows host functions explicitly registered via <code>CapSet</code> — no global filesystem, network, <code>PATH</code>, or shell by default. Missing capabilities produce structured <code>UnknownCapability</code> failures. This isn't a nice-to-have; it's the enforcement mechanism that makes caching trustworthy.</p>
+<p>Cells provide the mutable-state escape hatch for live services and temporal data. A <code>ReadCell</code> node records the cell version it read; when the cell updates, downstream nodes become stale. It's the same model as a spreadsheet — controlled mutation that propagates invalidation through the graph.</p>
+<h3>In code</h3>
+<pre><code class="language-rust">let mut rt = Runtime::new(&quot;.r2&quot;)?;
+
+rt.register(&quot;+&quot;, HostFn::pure(|args| match args {
+    [Value::Int(a), Value::Int(b)] =&gt; Ok(Value::Int(a + b)),
+    _ =&gt; Err(FailureKind::TypeError(&quot;+ expects two ints&quot;.into())),
+}));
+
+let a = rt.int(20)?;
+let b = rt.int(22)?;
+let sum = rt.thunk(rt.call(&quot;+&quot;, vec![a, b])?)?;
+
+let first  = rt.force(sum.clone())?;  // cache_hit: false
+let second = rt.force(sum)?;           // cache_hit: true
+</code></pre>
+<p>Hermetic builds work the same way — import a source tree, declare tool inputs and output paths, force the action node. Outputs are content-addressed and cached. Running the same compilation twice hits the cache. Changing one source file invalidates only the affected subgraph.</p>
+<pre><code class="language-rust">let src    = rt.import_tree(&quot;./src&quot;)?;
+let cc     = rt.import_tool(&quot;/bin/cc&quot;)?;
+let action = rt.action(ActionSpec {
+    program: &quot;/bin/cc&quot;.into(),
+    tool: cc,
+    inputs:  vec![ActionInput { path: &quot;src&quot;.into(), hash: src }],
+    outputs: vec![&quot;main.o&quot;.into()],
+    ..Default::default()
+})?;
+
+let result = rt.force(action)?;
+</code></pre>
+<p>The full code is at <a href="https://github.com/pranavra0/r2">github.com/pranavra0/r2</a>.</p>
+
+    </div>
+</div>
+
+    </main>
+
+    <footer>
+      <div class="footer-name">PP</div>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+  <script>
+    // Random slant for email hover on each entry
+    (function() {
+      const email = document.querySelector('h2 a.caution-hover');
+      if (!email) return;
+      email.addEventListener('mouseenter', function() {
+        const deg = (Math.random() * 10 - 5).toFixed(2);
+        this.style.setProperty('--slant', deg + 'deg');
+      });
+    })();
+  </script>
+</body>
+</html>
