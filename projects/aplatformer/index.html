@@ -3,61 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="view-transition" content="same-origin" />
   <title>A Platformer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <header>
-      <nav>
-        <a href="/" class="">home</a>
-        <a href="/projects/" class="active">projects</a>
-        <a href="/blog/" class="">blog</a>
-      </nav>
-    </header>
+  <main>
+    <div id="maincontent" style="margin-top:70px">
+      <p><a href="/projects/">&larr; back to projects</a></p>
 
-    <main>
-      <div class="project-detail">
-    <a href="/" class="back-link">&larr; back to home</a>
+      <h1>A Platformer</h1>
+      <p><em>My first foray into gamedev</em> &mdash; GDScript</p>
 
-    <h1 class="dropshadow lowercase">A Platformer</h1>
-    <p class="subtitle">My first foray into gamedev</p>
+      <p>A very unfinished first person movement platformer game. Features time trials, state mandated grappling hook / wallrunning, and level system.</p>
 
-    <div class="project-body">
-        <p>A very unfinished first person movement platformer game. Features time trials, state mandated grappling hook / wallrunning, and level system.</p>
-<iframe width="560" height="315" src="https://www.youtube.com/embed/loRJ_gppPcs?si=6rS9EG5aFmBKpWnL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe width="560" height="315" src="https://www.youtube.com/embed/loRJ_gppPcs?si=6rS9EG5aFmBKpWnL" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+      <p><a href="https://github.com/pranavra0/FirstPersonPlatformer">GitHub &rarr;</a></p>
     </div>
+  </main>
 
-    <div class="links">
-        <a href="https://github.com/pranavra0/FirstPersonPlatformer" target="_blank" rel="noopener noreferrer">
-            GitHub &rarr;
-        </a>
-    </div>
-</div>
-
-    </main>
-
-    <footer>
-      <div class="footer-name">PP</div>
-    </footer>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  <script>
-    // Random slant for email hover on each entry
-    (function() {
-      const email = document.querySelector('h2 a.caution-hover');
-      if (!email) return;
-      email.addEventListener('mouseenter', function() {
-        const deg = (Math.random() * 10 - 5).toFixed(2);
-        this.style.setProperty('--slant', deg + 'deg');
-      });
-    })();
-  </script>
+  <footer>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/projects/">Projects</a> ·
+      <a href="/blog/">Blog</a>
+    </nav>
+  </footer>
 </body>
 </html>

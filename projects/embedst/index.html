@@ -3,65 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="view-transition" content="same-origin" />
   <title>Embedst</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <header>
-      <nav>
-        <a href="/" class="">home</a>
-        <a href="/projects/" class="active">projects</a>
-        <a href="/blog/" class="">blog</a>
-      </nav>
-    </header>
+  <main>
+    <div id="maincontent" style="margin-top:70px">
+      <p><a href="/projects/">&larr; back to projects</a></p>
 
-    <main>
-      <div class="project-detail">
-    <a href="/" class="back-link">&larr; back to home</a>
+      <h1>Embedst</h1>
+      <p><em>A stateless Typst renderer for rich embeds</em> &mdash; Typescript / Typst</p>
 
-    <h1 class="dropshadow lowercase">Embedst</h1>
-    <p class="subtitle">A stateless Typst renderer for rich embeds</p>
+      <p>I made this site to quickly generate and send expressions via Typst on social media platforms. In addition to that, it is useful in illustrating the simplicity of Typst to someone who might not have otherwise cared.</p>
 
-    <div class="project-body">
-        <p>I made this site to quickly generate and send expressions via Typst on social media platforms. In addition to that, it is useful in illustrating the simplicity of Typst to someone who might not have otherwise cared.</p>
-<p><img src="/assets/embedst/embedst.png" alt="Embedst Screenshot"></p>
+      <p><img src="/assets/embedst/embedst.png" alt="Embedst Screenshot"></p>
 
+      <p>
+        <a href="https://github.com/pranavra0/FirstPersonPlatformer">GitHub &rarr;</a>
+        &nbsp;/&nbsp;
+        <a href="https://embedst.vercel.app">Use it here &rarr;</a>
+      </p>
     </div>
+  </main>
 
-    <div class="links">
-        <a href="https://github.com/pranavra0/FirstPersonPlatformer" target="_blank" rel="noopener noreferrer">
-            GitHub &rarr;
-        </a>
-        <a href="https://embedst.vercel.app" target="_blank" rel="noopener noreferrer">
-            Use it here &rarr;
-        </a>
-    </div>
-</div>
-
-    </main>
-
-    <footer>
-      <div class="footer-name">PP</div>
-    </footer>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  <script>
-    // Random slant for email hover on each entry
-    (function() {
-      const email = document.querySelector('h2 a.caution-hover');
-      if (!email) return;
-      email.addEventListener('mouseenter', function() {
-        const deg = (Math.random() * 10 - 5).toFixed(2);
-        this.style.setProperty('--slant', deg + 'deg');
-      });
-    })();
-  </script>
+  <footer>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/projects/">Projects</a> ·
+      <a href="/blog/">Blog</a>
+    </nav>
+  </footer>
 </body>
 </html>

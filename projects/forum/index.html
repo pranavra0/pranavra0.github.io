@@ -3,71 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="view-transition" content="same-origin" />
   <title>Forum Experiment</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <header>
-      <nav>
-        <a href="/" class="">home</a>
-        <a href="/projects/" class="active">projects</a>
-        <a href="/blog/" class="">blog</a>
-      </nav>
-    </header>
+  <main>
+    <div id="maincontent" style="margin-top:70px">
+      <p><a href="/projects/">&larr; back to projects</a></p>
 
-    <main>
-      <div class="project-detail">
-    <a href="/" class="back-link">&larr; back to home</a>
+      <h1>Forum Experiment</h1>
+      <p><em>A classic forum recreation</em> &mdash; Go / MongoDB</p>
 
-    <h1 class="dropshadow lowercase">Forum Experiment</h1>
-    <p class="subtitle">A classic forum recreation</p>
+      <p>I was inspired by old forums and particularly how old websites managed state. I decided to use Go to create a mostly server side forum. This was also my first time using HTML Templating which significantly changed how I view web development.</p>
 
-    <div class="project-body">
-        <p>I was inspired by old forums and particularly how old websites managed state. I decided to use Go to create a mostly server side forum. This was also my first time using HTML Templating which significantly changed how I view web development.</p>
-<h3>Features</h3>
-<ul>
-<li>Accounts: Simple auth</li>
-<li>Simple but robust backend</li>
-<li>CLI based moderation tools</li>
-<li>Replies: Nested threading that's actually good for conversation flow</li>
-</ul>
-<p><img src="/assets/forumexperiment_images/homepage.png" alt="Homepage screenshot"></p>
-<p><img src="/assets/forumexperiment_images/search.png" alt="Search page screenshot"></p>
-<p><img src="/assets/forumexperiment_images/threadview.png" alt="Thread view screenshot"></p>
+      <h3>Features</h3>
+      <ul>
+        <li>Accounts: Simple auth</li>
+        <li>Simple but robust backend</li>
+        <li>CLI based moderation tools</li>
+        <li>Replies: Nested threading that's actually good for conversation flow</li>
+      </ul>
 
+      <p><img src="/assets/forumexperiment_images/homepage.png" alt="Homepage screenshot"></p>
+      <p><img src="/assets/forumexperiment_images/search.png" alt="Search page screenshot"></p>
+      <p><img src="/assets/forumexperiment_images/threadview.png" alt="Thread view screenshot"></p>
+
+      <p><a href="https://github.com/pranavra0/forum">GitHub &rarr;</a></p>
     </div>
+  </main>
 
-    <div class="links">
-        <a href="https://github.com/pranavra0/forum" target="_blank" rel="noopener noreferrer">
-            GitHub &rarr;
-        </a>
-    </div>
-</div>
-
-    </main>
-
-    <footer>
-      <div class="footer-name">PP</div>
-    </footer>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  <script>
-    // Random slant for email hover on each entry
-    (function() {
-      const email = document.querySelector('h2 a.caution-hover');
-      if (!email) return;
-      email.addEventListener('mouseenter', function() {
-        const deg = (Math.random() * 10 - 5).toFixed(2);
-        this.style.setProperty('--slant', deg + 'deg');
-      });
-    })();
-  </script>
+  <footer>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/projects/">Projects</a> ·
+      <a href="/blog/">Blog</a>
+    </nav>
+  </footer>
 </body>
 </html>

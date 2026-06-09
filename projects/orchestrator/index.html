@@ -3,67 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="view-transition" content="same-origin" />
   <title>The Orchestrator</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <header>
-      <nav>
-        <a href="/" class="">home</a>
-        <a href="/projects/" class="active">projects</a>
-        <a href="/blog/" class="">blog</a>
-      </nav>
-    </header>
+  <main>
+    <div id="maincontent" style="margin-top:70px">
+      <p><a href="/projects/">&larr; back to projects</a></p>
 
-    <main>
-      <div class="project-detail">
-    <a href="/" class="back-link">&larr; back to home</a>
+      <h1>The Orchestrator</h1>
+      <p><em>Container orchestration from scratch for small projects</em> &mdash; Python / MongoDB</p>
 
-    <h1 class="dropshadow lowercase">The Orchestrator</h1>
-    <p class="subtitle">Container orchestration from scratch for small projects.</p>
+      <p>This was for my software engineering capstone project. I was frustrated with how overkill Kubernetes felt for smaller projects, so I decided to attempt to make my own orchestrator.</p>
 
-    <div class="project-body">
-        <p>This was for my software engineering capstone project. I was frustrated with how overkill Kubernetes felt for smaller projects, so I decided to attempt to make my own orchestrator.</p>
-<p>It was definitely much harder than I initially assumed, but it illustrates how orchestrators work and serves as a solid system for very small-scale projects.</p>
-<h3>Screenshots</h3>
-<p><img src="/assets/orchestrator/1.png" alt="Home View">
-<em>The main container management view</em></p>
-<p><img src="/assets/orchestrator/2.png" alt="Jobs View">
-<em>The background jobs scheduler</em></p>
+      <p>It was definitely much harder than I initially assumed, but it illustrates how orchestrators work and serves as a solid system for very small-scale projects.</p>
 
+      <h3>Screenshots</h3>
+
+      <p><img src="/assets/orchestrator/1.png" alt="Home View"></p>
+      <p><em>The main container management view</em></p>
+
+      <p><img src="/assets/orchestrator/2.png" alt="Jobs View"></p>
+      <p><em>The background jobs scheduler</em></p>
+
+      <p><a href="https://github.com/pranavra0/4155Capstone">View on GitHub &rarr;</a></p>
     </div>
+  </main>
 
-    <div class="links">
-        <a href="https://github.com/pranavra0/4155Capstone" target="_blank" rel="noopener noreferrer">
-            View on GitHub &rarr;
-        </a>
-    </div>
-</div>
-
-    </main>
-
-    <footer>
-      <div class="footer-name">PP</div>
-    </footer>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  <script>
-    // Random slant for email hover on each entry
-    (function() {
-      const email = document.querySelector('h2 a.caution-hover');
-      if (!email) return;
-      email.addEventListener('mouseenter', function() {
-        const deg = (Math.random() * 10 - 5).toFixed(2);
-        this.style.setProperty('--slant', deg + 'deg');
-      });
-    })();
-  </script>
+  <footer>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/projects/">Projects</a> ·
+      <a href="/blog/">Blog</a>
+    </nav>
+  </footer>
 </body>
 </html>

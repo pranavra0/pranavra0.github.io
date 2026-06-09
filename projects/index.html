@@ -3,103 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="view-transition" content="same-origin" />
   <title>Projects</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <header>
-      <nav>
-        <a href="/" class="">home</a>
-        <a href="/projects/" class="active">projects</a>
-        <a href="/blog/" class="">blog</a>
-      </nav>
-    </header>
+  <main>
+    <div id="maincontent" style="margin-top:70px">
+      <h1>Projects</h1>
 
-    <main>
-      <h1 class="mb-3 dropshadow lowercase">projects</h1>
-<div class="projects-grid">
-  <a href="/projects/r2/" class="project-card" style="background-color: #B7410E">
-      <h4>r2</h4>
-      <div class="tagline">A dynamic cacheable capability scoped Rust runtime</div>
-      <div class="tags">Rust</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-  <a href="/projects/forum/" class="project-card">
-      <h4>Forum Experiment</h4>
-      <div class="tagline">A classic forum recreation</div>
-      <div class="tags">Go / MongoDB</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-  <a href="/projects/embedst/" class="project-card">
-      <h4>Embedst</h4>
-      <div class="tagline">A stateless Typst renderer for rich embeds</div>
-      <div class="tags">Typescript / Typst</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-  <a href="/projects/syn/" class="project-card">
-      <h4>SYN</h4>
-      <div class="tagline">CAIR Hackathon Winner - Sign Language Recognition Model</div>
-      <div class="tags">Python / React</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-  <a href="/projects/election_model/" class="project-card">
-      <h4>2024 Election Model</h4>
-      <div class="tagline">A Monte Carlo election forecast.</div>
-      <div class="tags">R / Selenium</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-  <a href="/projects/aplatformer/" class="project-card">
-      <h4>A Platformer</h4>
-      <div class="tagline">My first foray into gamedev</div>
-      <div class="tags">GDScript</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-  <a href="/projects/orchestrator/" class="project-card">
-      <h4>The Orchestrator</h4>
-      <div class="tagline">Container orchestration from scratch for small projects.</div>
-      <div class="tags">Python / MongoDB</div>
-      <div class="card-fade">
-        <span>view project &rarr;</span>
-      </div>
-  </a>
-</div>
+      <h2><a href="/projects/forum/">Forum Experiment</a></h2>
+      <p><em>A classic forum recreation</em> &mdash; Go / MongoDB</p>
 
-    </main>
+      <h2><a href="/projects/embedst/">Embedst</a></h2>
+      <p><em>A stateless Typst renderer for rich embeds</em> &mdash; Typescript / Typst</p>
 
-    <footer>
-      <div class="footer-name">PP</div>
-    </footer>
-  </div>
+      <h2><a href="/projects/syn/">SYN</a></h2>
+      <p><em>CAIR Hackathon Winner - Sign Language Recognition Model</em> &mdash; Python / React</p>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  <script>
-    // Random slant for email hover on each entry
-    (function() {
-      const email = document.querySelector('h2 a.caution-hover');
-      if (!email) return;
-      email.addEventListener('mouseenter', function() {
-        const deg = (Math.random() * 10 - 5).toFixed(2);
-        this.style.setProperty('--slant', deg + 'deg');
-      });
-    })();
-  </script>
+      <h2><a href="/projects/election_model/">2024 Election Model</a></h2>
+      <p><em>A Monte Carlo election forecast</em> &mdash; R / Selenium</p>
+
+      <h2><a href="/projects/aplatformer/">A Platformer</a></h2>
+      <p><em>My first foray into gamedev</em> &mdash; GDScript</p>
+
+      <h2><a href="/projects/orchestrator/">The Orchestrator</a></h2>
+      <p><em>Container orchestration from scratch for small projects</em> &mdash; Python / MongoDB</p>
+    </div>
+  </main>
+
+  <footer>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/projects/">Projects</a> ·
+      <a href="/blog/">Blog</a>
+    </nav>
+  </footer>
 </body>
 </html>

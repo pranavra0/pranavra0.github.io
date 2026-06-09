@@ -3,58 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="view-transition" content="same-origin" />
   <title>Blog</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="/assets/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
 </head>
 <body>
-  <div class="page-wrapper">
-    <header>
-      <nav>
-        <a href="/" class="">home</a>
-        <a href="/projects/" class="">projects</a>
-        <a href="/blog/" class="active">blog</a>
-      </nav>
-    </header>
+  <main>
+    <div id="maincontent" style="margin-top:70px">
+      <h1>Blog</h1>
 
-    <main>
-      <h1 class="mb-3 dropshadow lowercase">blog</h1>
-<div class="blog-grid">
-  <article class="blog-card">
-    <a href="/blog/whats-wrong-and-r2/" class="blog-card-link" aria-label="Read full post: What's Wrong & r2"></a>
-    <h4>What's Wrong & r2</h4>
-    <time>May 9, 2026</time>
-    <div class="blog-preview">
-      <p>The microservices vs monolith debate is one of software's most recurring arguments. Both camps are wrong; not about the tradeoffs, but about what causes them. The forced choice is a language-level failure. No mainstream language lets you say: evaluate this expression on a different node, with redund...</p>
+      <h2><a href="/blog/whats-wrong-and-r2/">What's wrong</a></h2>
+      <p><em>May 9, 2026</em></p>
+
     </div>
-    <div class="card-fade">
-      <span>read full post: What's Wrong & r2 &rarr;</span>
-    </div>
-  </article>
-</div>
+  </main>
 
-    </main>
-
-    <footer>
-      <div class="footer-name">PP</div>
-    </footer>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script>hljs.highlightAll();</script>
-  <script>
-    // Random slant for email hover on each entry
-    (function() {
-      const email = document.querySelector('h2 a.caution-hover');
-      if (!email) return;
-      email.addEventListener('mouseenter', function() {
-        const deg = (Math.random() * 10 - 5).toFixed(2);
-        this.style.setProperty('--slant', deg + 'deg');
-      });
-    })();
-  </script>
+  <footer>
+    <nav>
+      <a href="/">Home</a> ·
+      <a href="/projects/">Projects</a> ·
+      <a href="/blog/">Blog</a>
+    </nav>
+  </footer>
 </body>
 </html>
