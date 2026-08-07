@@ -85,6 +85,26 @@
       drift: 0.004,
       strength: 1.0,
     },
+    caustics: {
+      scale: 4.6,
+      warpScale: 1.15,
+      warpAmount: 0.72,
+      speed: 0.18,
+      contrast: 1.35,
+      intensity: 1.0,
+      rippleScale: 4.2,
+      rippleSpeed: 2.8,
+      rippleDecay: 0.90,
+    },
+    windowLight: {
+      beamWidth: 0.17,
+      beamLength: 1.18,
+      slant: 0.18,
+      sway: 0.022,
+      parallax: 0.085,
+      softness: 0.018,
+      intensity: 1.0,
+    },
     shadows: {
       penumbraBase: 0.006,
       penumbraDepth: 0.055,
@@ -294,6 +314,138 @@
         rootDepthVariation: 0.40,
       },
     },
+    caustics: {
+      scene: "caustics",
+      structure: {
+        layers: [],
+      },
+      render: {
+        pixelScale: 2.25,
+        widthScale: 0.10,
+      },
+      palette: {
+        light: "#bcefe7",
+        mid: "#367f83",
+        shadow: "#102f39",
+        background: "#061419",
+        structure: "#061419",
+        ink: "#061419",
+        glow: "#83d8d1",
+        atmosphere: "#2d6570",
+      },
+      detailField: {
+        scale: 8.0,
+        driftX: 0.01,
+        driftY: 0.004,
+      },
+      macroField: {
+        scale: 0.25,
+        drift: 0.01,
+        strength: 0.24,
+      },
+      caustics: {
+        scale: 4.8,
+        warpScale: 1.2,
+        warpAmount: 0.86,
+        speed: 0.20,
+        contrast: 1.48,
+        intensity: 1.25,
+        rippleScale: 4.0,
+        rippleSpeed: 3.0,
+        rippleDecay: 0.86,
+      },
+      tone: {
+        base: 0.035,
+        range: 0.86,
+        lightStart: 0.28,
+        lightEnd: 0.70,
+        fringeStart: 0.20,
+        fringePeak: 0.33,
+        fringeEnd: 0.55,
+        fringeReturn: 0.39,
+        centerDip: 0.0,
+        variation: 0.03,
+      },
+      composition: {
+        centerRadius: 0.12,
+        centerFalloff: 0.38,
+        centerShadow: 0.08,
+        centerDetailVisibility: 0.30,
+        centerVisibility: 0.08,
+      },
+      motion: {
+        windBase: 0.9,
+        windPulse: 0.16,
+        windPulseSpeed: 0.20,
+        windFlutter: 0.06,
+        windFlutterSpeed: 0.10,
+      },
+    },
+    windowLight: {
+      scene: "windowLight",
+      structure: {
+        layers: [],
+      },
+      render: {
+        pixelScale: 2.25,
+        widthScale: 0.10,
+      },
+      palette: {
+        light: "#f4d8a3",
+        mid: "#9a6849",
+        shadow: "#272333",
+        background: "#0b0d16",
+        structure: "#0b0d16",
+        ink: "#0b0d16",
+        glow: "#e7a85e",
+        atmosphere: "#77536a",
+      },
+      detailField: {
+        scale: 7.0,
+        driftX: 0.004,
+        driftY: 0.002,
+      },
+      macroField: {
+        scale: 0.28,
+        drift: 0.004,
+        strength: 0.28,
+      },
+      windowLight: {
+        beamWidth: 0.135,
+        beamLength: 0.72,
+        slant: 0.30,
+        sway: 0.026,
+        parallax: 0.14,
+        softness: 0.026,
+        intensity: 1.0,
+      },
+      tone: {
+        base: 0.055,
+        range: 0.66,
+        lightStart: 0.27,
+        lightEnd: 0.68,
+        fringeStart: 0.20,
+        fringePeak: 0.34,
+        fringeEnd: 0.56,
+        fringeReturn: 0.41,
+        centerDip: 0.0,
+        variation: 0.035,
+      },
+      composition: {
+        centerRadius: 0.10,
+        centerFalloff: 0.32,
+        centerShadow: 0.05,
+        centerDetailVisibility: 0.18,
+        centerVisibility: 0.10,
+      },
+      motion: {
+        windBase: 0.22,
+        windPulse: 0.04,
+        windPulseSpeed: 0.12,
+        windFlutter: 0.02,
+        windFlutterSpeed: 0.08,
+      },
+    },
     alienValley: {
       structure: {
         layers: [
@@ -350,6 +502,31 @@
     uniform float uMacroScale;
     uniform float uMacroDrift;
     uniform float uMacroStrength;
+    uniform float uSceneType;
+    uniform float uCausticScale;
+    uniform float uCausticWarpScale;
+    uniform float uCausticWarpAmount;
+    uniform float uCausticSpeed;
+    uniform float uCausticContrast;
+    uniform float uCausticIntensity;
+    uniform float uRippleX;
+    uniform float uRippleY;
+    uniform float uRippleAge;
+    uniform float uRippleScale;
+    uniform float uRippleSpeed;
+    uniform float uRippleDecay;
+    uniform float uPointerX;
+    uniform float uPointerY;
+    uniform float uPointerVelocityX;
+    uniform float uPointerVelocityY;
+    uniform float uWindowBeamWidth;
+    uniform float uWindowBeamLength;
+    uniform float uWindowSlant;
+    uniform float uWindowSway;
+    uniform float uWindowParallax;
+    uniform float uWindowSoftness;
+    uniform float uWindowIntensity;
+    uniform float uWindowSunPhase;
 
     uniform float uPenumbraBase;
     uniform float uPenumbraDepth;
@@ -406,6 +583,107 @@
         amplitude *= 0.5;
       }
       return value;
+    }
+
+    vec2 worley(vec2 point) {
+      vec2 cell = floor(point);
+      vec2 fraction = fract(point);
+      float first = 8.0;
+      float second = 8.0;
+
+      for (int x = -1; x <= 1; x++) {
+        for (int y = -1; y <= 1; y++) {
+          vec2 offset = vec2(float(x), float(y));
+          vec2 jitter = vec2(
+            hash(cell + offset + vec2(19.1, 7.7)),
+            hash(cell + offset + vec2(43.3, 11.9))
+          );
+          float distanceToCell = length(offset + jitter - fraction);
+          if (distanceToCell < first) {
+            second = first;
+            first = distanceToCell;
+          } else if (distanceToCell < second) {
+            second = distanceToCell;
+          }
+        }
+      }
+
+      return vec2(first, second);
+    }
+
+    float causticField(vec2 uv, float aspect) {
+      vec2 point = uv * vec2(aspect, 1.0) * uCausticScale;
+      point += vec2(uTime * uCausticSpeed, -uTime * uCausticSpeed * 0.67);
+
+      vec2 warp = vec2(
+        fbm(point * uCausticWarpScale + vec2(17.0, 3.0)),
+        fbm(point * uCausticWarpScale + vec2(41.0, 29.0))
+      ) - 0.5;
+      point += warp * uCausticWarpAmount;
+
+      vec2 rippleCenter = vec2(uRippleX, uRippleY);
+      vec2 rippleDelta = (uv - rippleCenter) * vec2(aspect, 1.0);
+      float rippleDistance = length(rippleDelta);
+      float rippleFade = exp(-uRippleAge * uRippleDecay) * exp(-rippleDistance * 2.4);
+      float rippleWave = sin(
+        rippleDistance * uRippleScale * 14.0 - uRippleAge * uRippleSpeed * 8.0
+      ) * rippleFade;
+      point += normalize(rippleDelta + vec2(0.0001)) * rippleWave * 0.20;
+
+      vec2 pointer = vec2(uPointerX, uPointerY);
+      vec2 pointerDelta = (uv - pointer) * vec2(aspect, 1.0);
+      vec2 pointerVelocity = vec2(uPointerVelocityX * aspect, uPointerVelocityY);
+      float pointerSpeed = clamp(length(pointerVelocity) * 0.10, 0.0, 1.0);
+      vec2 direction = normalize(pointerVelocity + vec2(0.0001));
+      float behind = dot(pointerDelta, -direction);
+      float lateral = abs(dot(pointerDelta, vec2(-direction.y, direction.x)));
+      float streamLength = 0.10 + pointerSpeed * 0.45;
+      float stream = smoothstep(0.0, 0.04, behind)
+        * smoothstep(streamLength, 0.0, behind)
+        * exp(-lateral * 34.0)
+        * pointerSpeed;
+      point += direction * stream * 0.16;
+
+      vec2 broad = worley(point);
+      vec2 fine = worley(point * 1.83 + vec2(9.0, 4.0));
+      float broadNetwork = 1.0 - smoothstep(0.025, 0.16, broad.y - broad.x);
+      float fineNetwork = 1.0 - smoothstep(0.018, 0.11, fine.y - fine.x);
+      float intersections = broadNetwork * fineNetwork;
+      float field = broadNetwork * 0.42 + fineNetwork * 0.32 + intersections * 1.25;
+      field += stream * 0.32;
+      return pow(clamp(field * uCausticIntensity, 0.0, 1.0), 1.0 / uCausticContrast);
+    }
+
+    float windowLightField(vec2 uv, float aspect) {
+      vec2 wall = vec2((uv.x - 0.5) * aspect, uv.y - 0.5);
+      float sunAngle = sin(uWindowSunPhase * 6.2831853);
+      float slant = uWindowSlant + sunAngle * 0.10 + uParallax * 0.04;
+      wall.x += wall.y * slant + uParallax * uWindowParallax;
+
+      float field = 0.0;
+      for (int index = 0; index < 5; index++) {
+        float bandIndex = float(index);
+        float sway = sin(uTime * 0.12 + bandIndex * 2.7) * uWindowSway;
+        float centerX = -0.94 + bandIndex * 0.46 + sway;
+        float centerY = 0.04 + sin(bandIndex * 2.1 + uTime * 0.08) * uWindowSway * 0.7;
+        float width = uWindowBeamWidth * (0.84 + hash(vec2(bandIndex, 8.2)) * 0.24);
+        float horizontal = 1.0 - smoothstep(
+          width - uWindowSoftness,
+          width + uWindowSoftness,
+          abs(wall.x - centerX)
+        );
+        float vertical = 1.0 - smoothstep(
+          uWindowBeamLength - uWindowSoftness,
+          uWindowBeamLength + uWindowSoftness,
+          abs(wall.y - centerY)
+        );
+        float beam = horizontal * vertical;
+        beam *= 0.88 + 0.12 * sin(uTime * 0.09 + bandIndex * 1.8 + sunAngle);
+        field = max(field, beam);
+      }
+
+      float broadGlow = 1.0 - smoothstep(0.38, 0.95, abs(wall.x + wall.y * slant + 0.20));
+      return clamp((field + broadGlow * 0.08) * uWindowIntensity, 0.0, 1.0);
     }
 
     float bayer4(vec2 coordinate) {
@@ -515,6 +793,15 @@
       float shadow = max(structureInShadow, detailsInShadow * uDetailShadowStrength);
       shadow = max(shadow, (1.0 - centerClear) * uCenterShadow);
       float tone = uToneBase + (1.0 - shadow) * uToneRange;
+      if (uSceneType > 1.5) {
+        float windowLight = windowLightField(uv, aspect);
+        windowLight *= mix(0.20, 1.0, centerClear);
+        tone = uToneBase + windowLight * uToneRange;
+      } else if (uSceneType > 0.5) {
+        float caustic = causticField(uv, aspect);
+        caustic *= mix(0.18, 1.0, centerClear);
+        tone = uToneBase + caustic * uToneRange;
+      }
       float structurePresence = 1.0 - smoothstep(-0.005, 0.018, structure.x);
       float glowLight = structurePresence * isGlow * (1.0 - smoothstep(0.05, 0.42, structure.y));
       tone = mix(tone, uToneBase + shadow * uToneRange, glowLight);
@@ -871,6 +1158,13 @@
       segmentCount: 0,
       wind: config.motion.windBase,
       parallax: 0,
+      rippleX: 0.5,
+      rippleY: 0.5,
+      rippleAge: 100.0,
+      pointerX: 0.5,
+      pointerY: 0.5,
+      pointerVelocityX: 0,
+      pointerVelocityY: 0,
       colors: null,
     };
 
@@ -932,7 +1226,7 @@
     };
 
     const draw = (time) => {
-      const { detailField, macroField, shadows, tone, composition } = config;
+      const { detailField, macroField, shadows, tone, composition, caustics, windowLight } = config;
       gl.useProgram(program);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, segmentTexture);
@@ -945,6 +1239,31 @@
       set1f("uTime", time);
       set1f("uWind", state.wind);
       set1f("uParallax", state.parallax);
+      set1f("uSceneType", config.scene === "windowLight" ? 2 : config.scene === "caustics" ? 1 : 0);
+      set1f("uRippleX", state.rippleX);
+      set1f("uRippleY", state.rippleY);
+      set1f("uRippleAge", state.rippleAge);
+      set1f("uCausticScale", caustics.scale);
+      set1f("uCausticWarpScale", caustics.warpScale);
+      set1f("uCausticWarpAmount", caustics.warpAmount);
+      set1f("uCausticSpeed", caustics.speed);
+      set1f("uCausticContrast", caustics.contrast);
+      set1f("uCausticIntensity", caustics.intensity);
+      set1f("uRippleScale", caustics.rippleScale);
+      set1f("uRippleSpeed", caustics.rippleSpeed);
+      set1f("uRippleDecay", caustics.rippleDecay);
+      set1f("uPointerX", state.pointerX);
+      set1f("uPointerY", state.pointerY);
+      set1f("uPointerVelocityX", state.pointerVelocityX);
+      set1f("uPointerVelocityY", state.pointerVelocityY);
+      set1f("uWindowBeamWidth", windowLight.beamWidth);
+      set1f("uWindowBeamLength", windowLight.beamLength);
+      set1f("uWindowSlant", windowLight.slant);
+      set1f("uWindowSway", windowLight.sway);
+      set1f("uWindowParallax", windowLight.parallax);
+      set1f("uWindowSoftness", windowLight.softness);
+      set1f("uWindowIntensity", windowLight.intensity);
+      set1f("uWindowSunPhase", (Date.now() % 86400000) / 86400000);
       gl.uniform3fv(uniform("uLight"), state.colors.light);
       gl.uniform3fv(uniform("uMid"), state.colors.mid);
       gl.uniform3fv(uniform("uShadow"), state.colors.shadow);
@@ -1026,6 +1345,8 @@
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let targetParallax = 0;
+    let targetPointerX = 0.5;
+    let targetPointerY = 0.5;
     let animationFrame = 0;
     let currentTime = 0;
     let previousTime = 0;
@@ -1035,6 +1356,14 @@
     const drawOnce = () => renderer.draw(0);
     const onPointerMove = (event) => {
       targetParallax = (event.clientX / Math.max(window.innerWidth, 1) - 0.5) * 2;
+      targetPointerX = event.clientX / Math.max(window.innerWidth, 1);
+      targetPointerY = 1 - event.clientY / Math.max(window.innerHeight, 1);
+    };
+    const onClick = (event) => {
+      renderer.state.rippleX = event.clientX / Math.max(window.innerWidth, 1);
+      renderer.state.rippleY = 1 - event.clientY / Math.max(window.innerHeight, 1);
+      renderer.state.rippleAge = 0;
+      if (reducedMotion.matches) drawOnce();
     };
     const onResize = () => {
       clearTimeout(resizeTimer);
@@ -1045,6 +1374,14 @@
       const elapsed = previousTime ? Math.min(0.05, (timestamp - previousTime) / 1000) : 0.016;
       previousTime = timestamp;
       currentTime += elapsed;
+      const pointerSmoothing = 1 - Math.exp(-elapsed * 8.0);
+      const previousPointerX = renderer.state.pointerX;
+      const previousPointerY = renderer.state.pointerY;
+      renderer.state.pointerX += (targetPointerX - renderer.state.pointerX) * pointerSmoothing;
+      renderer.state.pointerY += (targetPointerY - renderer.state.pointerY) * pointerSmoothing;
+      renderer.state.pointerVelocityX = (renderer.state.pointerX - previousPointerX) / Math.max(elapsed, 0.001);
+      renderer.state.pointerVelocityY = (renderer.state.pointerY - previousPointerY) / Math.max(elapsed, 0.001);
+      renderer.state.rippleAge = Math.min(100.0, renderer.state.rippleAge + elapsed);
       renderer.state.parallax += (targetParallax - renderer.state.parallax) * config.motion.parallaxSmoothing;
       renderer.state.wind = config.motion.windBase
         + config.motion.windPulse * Math.sin(currentTime * config.motion.windPulseSpeed)
@@ -1098,12 +1435,14 @@
         clearTimeout(resizeTimer);
         window.removeEventListener("resize", onResize);
         window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("click", onClick);
         renderer.loseContext();
       },
     };
 
     window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("click", onClick, { passive: true });
     reducedMotion.addEventListener?.("change", () => {
       if (reducedMotion.matches) {
         window.cancelAnimationFrame(animationFrame);
