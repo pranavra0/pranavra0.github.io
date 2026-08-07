@@ -11,9 +11,7 @@
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <svg class="scribble" aria-hidden="true" focusable="false">
-    <path fill="none"></path>
-  </svg>
+  <canvas class="dappled-background" aria-hidden="true"></canvas>
 
   <main>
     <h1>Pranav Rao</h1>
@@ -44,16 +42,6 @@
     </nav>
   </main>
 
-  <script>
-    const path = document.querySelector(".scribble path");
-    const randomPoint = (max) => Math.floor(Math.random() * max);
-    let drawing = `M ${randomPoint(1500)} ${randomPoint(1000)}`;
-
-    for (let i = 0; i < 40; i += 1) {
-      drawing += ` L ${randomPoint(1500)} ${randomPoint(1000)}`;
-    }
-
-    path.setAttribute("d", drawing);
-  </script>
+  <script src="/assets/dappled.js"></script>
 </body>
 </html>
