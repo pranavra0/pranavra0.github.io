@@ -108,6 +108,7 @@
     composition: {
       centerX: 0.50,
       centerY: 0.50,
+      centerAspect: 1.0,
       centerRadius: 0.05,
       centerFalloff: .25,
       centerShadow: 1.0,
@@ -250,10 +251,7 @@
         variation: 0.06,
       },
       composition: {
-        centerShadow: 0.0,
-        centerDetailVisibility: 1.0,
-        centerStructureVisibility: 1.0,
-        centerVisibility: 1.0,
+        centerAspect: 1.5,
       },
       motion: {
         windBase: 0.35,
@@ -361,6 +359,7 @@
     uniform float uDetailParallax;
     uniform float uCenterX;
     uniform float uCenterY;
+    uniform float uCenterAspect;
     uniform float uCenterRadius;
     uniform float uCenterFalloff;
     uniform float uCenterShadow;
@@ -502,7 +501,7 @@
       float detailsInShadow = detailShadow(position, detailDepth) * isStructure;
       float centerWarp = (fbm(position * uCenterWarpScale + uSeed + vec2(211.0, 37.0)) - 0.5) * uCenterWarpAmount;
       vec2 centerDelta = uv - vec2(uCenterX, uCenterY);
-      float centerDistance = length(vec2(centerDelta.x * aspect, centerDelta.y)) + centerWarp;
+      float centerDistance = length(vec2(centerDelta.x * aspect / max(uCenterAspect, 0.001), centerDelta.y)) + centerWarp;
       float centerClear = smoothstep(uCenterRadius, uCenterFalloff, centerDistance);
       structureInShadow *= mix(uCenterStructureVisibility, 1.0, centerClear);
       detailsInShadow *= mix(uCenterDetailVisibility, 1.0, centerClear);
@@ -976,6 +975,7 @@
 
       set1f("uCenterX", composition.centerX);
       set1f("uCenterY", composition.centerY);
+      set1f("uCenterAspect", composition.centerAspect);
       set1f("uCenterRadius", composition.centerRadius);
       set1f("uCenterFalloff", composition.centerFalloff);
       set1f("uCenterShadow", composition.centerShadow);
