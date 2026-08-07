@@ -15,6 +15,7 @@
    *
    *   dappled.set({ noise: { leafScale: 11 } });
    *   dappled.set({ tree: { forkProbability: 0.4 } });
+   *   dappled.set({ landscape: { layerCount: 5, ringEnabled: true } });
    *   dappled.setScene("quiet");
    *   dappled.reseed();
    */
@@ -36,10 +37,14 @@
    * tone                    Mapping from physical-ish light to palette tones.
    * composition             Keeps the central title area intentionally quiet.
    * motion                  Wind and parallax response.
-   * tree                    The grammar and geometry of the generated branches.
+   * structure                Composable scene geometry: tree or landscape.
+   * tree                    The grammar and geometry of generated branches.
    */
   const DEFAULT_CONFIG = {
     scene: "canopy",
+    structure: {
+      type: "tree",
+    },
     render: {
       pixelScale: 2.5,
       widthScale: 0.08,
@@ -141,24 +146,33 @@
       rootDepth: 0.08,
       rootDepthVariation: 1.25,
     },
+    landscape: {
+      layerCount: 4,
+      segmentsPerLayer: 48,
+      horizon: 0.22,
+      layerSpacing: 0.15,
+      amplitude: 0.12,
+      frequency: 1.35,
+      roughness: 0.58,
+      width: 0.018,
+      widthVariation: 0.42,
+      depthMinimum: 0.26,
+      depthStep: 0.22,
+      ringEnabled: false,
+      ringCount: 0,
+      ringSegments: 64,
+      ringRadius: 1.18,
+      ringRadiusStep: 0.085,
+      ringCenterY: -0.46,
+      ringJitter: 0.018,
+      ringWidth: 0.014,
+    },
   };
 
   // Presets are deliberately small. Unspecified values inherit from DEFAULT_CONFIG.
   const SCENE_PRESETS = {
     canopy: {
       tree: { rootEdges: ["left", "right", "top"] },
-    },
-    quiet: {
-      render: { pixelScale: 2.5 },
-      noise: { leafScale: 9.5, leafShadowStrength: 0.34, canopyStrength: 0.70 },
-      tone: { range: 0.52 },
-      tree: { count: 2, rootEdges: ["left", "right"], forkProbability: 0.58, rootWidth: 0.016 },
-    },
-    dense: {
-      render: { pixelScale: 1.5 },
-      noise: { leafScale: 6.0, leafShadowStrength: 0.58, leafSoftness: 0.08 },
-      shadows: { penumbraDepth: 0.08 },
-      tree: { count: 5, forkProbability: 0.84, secondSideProbability: 0.42, rootWidth: 0.028 },
     },
   };
 
@@ -203,6 +217,7 @@
     uniform float uCanopyScale;
     uniform float uCanopyDrift;
     uniform float uCanopyStrength;
+    uniform float uHaloMode;
 
     uniform float uPenumbraBase;
     uniform float uPenumbraDepth;
@@ -360,6 +375,11 @@
       float shadow = max(branchesInShadow, leavesInShadow * uLeafShadowStrength);
       shadow = max(shadow, (1.0 - centerClear) * uCenterShadow);
       float tone = uToneBase + (1.0 - shadow) * uToneRange;
+      float structurePresence = 1.0 - smoothstep(-0.005, 0.018, branches.x);
+      float ringLight = structurePresence * (1.0 - smoothstep(0.05, 0.42, branches.y));
+      if (uHaloMode > 0.5) {
+        tone = mix(tone, uToneBase + shadow * uToneRange, ringLight);
+      }
       tone += (canopyVariation - 0.5) * uToneVariation * uCanopyStrength;
       tone -= (1.0 - centerClear) * uCenterDip;
       tone = clamp(tone, 0.0, 1.0);
@@ -515,6 +535,74 @@
 
     return { segments, positionScale: aspect + 2.0 };
   }
+  /**
+   * Generate a layered horizon and optional ringworld arcs.
+   * Both are packed as depth-aware segments, making landscapes composable
+   * with the same shader and runtime controls as tree canopies.
+   */
+  function growLandscape(seed, aspect, landscapeConfig) {
+    const random = randomGenerator(seed);
+    const segments = [];
+    const landscape = landscapeConfig;
+    const points = Math.max(8, Math.round(landscape.segmentsPerLayer));
+    const addPolyline = (pointsForLine, width, depth) => {
+      for (let index = 1; index < pointsForLine.length; index += 1) {
+        const previous = pointsForLine[index - 1];
+        const current = pointsForLine[index];
+        const previousWidth = width * (0.78 + random() * landscape.widthVariation);
+        const currentWidth = width * (0.78 + random() * landscape.widthVariation);
+        segments.push([
+          previous[0],
+          previous[1],
+          current[0],
+          current[1],
+          previousWidth,
+          currentWidth,
+          clamp(depth + (random() - 0.5) * 0.10, 0.02, 0.98),
+        ]);
+      }
+    };
+
+    for (let layerIndex = 0; layerIndex < landscape.layerCount; layerIndex += 1) {
+      const depth = landscape.depthMinimum + layerIndex * landscape.depthStep;
+      const baseY = landscape.horizon - layerIndex * landscape.layerSpacing;
+      const phase = random() * Math.PI * 2;
+      const pointsForLayer = [];
+
+      for (let pointIndex = 0; pointIndex <= points; pointIndex += 1) {
+        const progress = pointIndex / points;
+        const x = -0.08 + progress * (aspect + 0.16);
+        const wave = Math.sin(progress * Math.PI * 2 * landscape.frequency + phase) * landscape.amplitude;
+        const detail = Math.sin(progress * Math.PI * 5.3 + phase * 1.7) * landscape.amplitude * 0.32;
+        const roughness = (random() - 0.5) * landscape.amplitude * landscape.roughness;
+        pointsForLayer.push([x, baseY + wave + detail + roughness]);
+      }
+      addPolyline(pointsForLayer, landscape.width, depth);
+    }
+
+    if (landscape.ringEnabled) {
+      const centerX = aspect * 0.5;
+      const ringCount = Math.max(1, Math.round(landscape.ringCount));
+      const ringPoints = Math.max(12, Math.round(landscape.ringSegments));
+      for (let ringIndex = 0; ringIndex < ringCount; ringIndex += 1) {
+        const radius = landscape.ringRadius + ringIndex * landscape.ringRadiusStep;
+        const arc = [];
+        for (let pointIndex = 0; pointIndex <= ringPoints; pointIndex += 1) {
+          const progress = pointIndex / ringPoints;
+          const angle = Math.PI - progress * Math.PI;
+          const jitter = (random() - 0.5) * landscape.ringJitter;
+          arc.push([
+            centerX + Math.cos(angle) * radius * aspect,
+            landscape.ringCenterY + Math.sin(angle) * radius + jitter,
+          ]);
+        }
+        addPolyline(arc, landscape.ringWidth, 0.12 + ringIndex * 0.08);
+      }
+    }
+
+    return { segments: segments.slice(0, MAX_SEGMENTS), positionScale: aspect + 2.0 };
+  }
+
 
   const hexToRgb = (value, fallback) => {
     let hex = String(value || "").trim().replace(/^#/, "");
@@ -589,9 +677,9 @@
       config,
       width: 1,
       height: 1,
-      treeSeed: mulberrySeed(),
+      sceneSeed: mulberrySeed(),
       noiseSeed: [Math.random() * 1000, Math.random() * 1000],
-      tree: null,
+      structure: null,
       segmentCount: 0,
       wind: config.motion.windBase,
       parallax: 0,
@@ -615,11 +703,13 @@
     };
 
     const rebuild = () => {
-      state.tree = growTree(state.treeSeed, state.width / state.height, config.tree);
+      state.structure = config.structure.type === "landscape"
+        ? growLandscape(state.sceneSeed, state.width / state.height, config.landscape)
+        : growTree(state.sceneSeed, state.width / state.height, config.tree);
       packedSegments.fill(0);
-      state.tree.segments.forEach((segment, index) => {
+      state.structure.segments.forEach((segment, index) => {
         const offset = index * 16;
-        const scale = state.tree.positionScale;
+        const scale = state.structure.positionScale;
         encode((segment[0] + 1) / scale, offset);
         encode((segment[1] + 1) / scale, offset + 2);
         encode((segment[2] + 1) / scale, offset + 4);
@@ -628,7 +718,7 @@
         encode(segment[5] / config.render.widthScale, offset + 10);
         encode(segment[6], offset + 12);
       });
-      state.segmentCount = state.tree.segments.length;
+      state.segmentCount = state.structure.segments.length;
       gl.bindTexture(gl.TEXTURE_2D, segmentTexture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 4, MAX_SEGMENTS, 0, gl.RGBA, gl.UNSIGNED_BYTE, packedSegments);
     };
@@ -659,7 +749,7 @@
       gl.uniform2f(uniform("uResolution"), state.width, state.height);
       gl.uniform2f(uniform("uSeed"), state.noiseSeed[0], state.noiseSeed[1]);
       set1f("uSegmentCount", state.segmentCount);
-      set1f("uPositionScale", state.tree.positionScale);
+      set1f("uPositionScale", state.structure.positionScale);
       set1f("uWidthScale", config.render.widthScale);
       set1f("uTime", time);
       set1f("uWind", state.wind);
@@ -681,6 +771,7 @@
       set1f("uCanopyScale", noise.canopyScale);
       set1f("uCanopyDrift", noise.canopyDrift);
       set1f("uCanopyStrength", noise.canopyStrength);
+      set1f("uHaloMode", config.structure.type === "landscape" && config.landscape.ringEnabled ? 1 : 0);
 
       set1f("uPenumbraBase", shadows.penumbraBase);
       set1f("uPenumbraDepth", shadows.penumbraDepth);
@@ -781,7 +872,10 @@
       getConfig: () => clone(config),
       set(partial) {
         overrides = merge(overrides, partial);
-        apply(merge(DEFAULT_CONFIG, SCENE_PRESETS[sceneName], overrides), Boolean(partial.tree || partial.render));
+        apply(
+          merge(DEFAULT_CONFIG, SCENE_PRESETS[sceneName], overrides),
+          Boolean(partial.tree || partial.landscape || partial.structure || partial.render),
+        );
         return api;
       },
       setScene(name) {
@@ -794,7 +888,7 @@
         return api;
       },
       reseed() {
-        renderer.state.treeSeed = mulberrySeed();
+        renderer.state.sceneSeed = mulberrySeed();
         renderer.state.noiseSeed = [Math.random() * 1000, Math.random() * 1000];
         renderer.rebuild();
         if (reducedMotion.matches) drawOnce();
