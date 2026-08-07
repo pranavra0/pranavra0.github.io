@@ -6,44 +6,55 @@
    *
    *   config       what the scene should look like
    *   tree         a seeded, recursive branch generator
-   *   shader       noise, shadows, dithering, and tone mapping
+   *   landscape    a seeded horizon generator
+   *   shader       semantic materials, noise, dithering, and tone mapping
    *   renderer     WebGL buffers and uniforms
    *   controller   animation, input, resize, and the public API
    *
    * Start tuning in SCENE_PRESETS or through window.dappled.set().
    * For example:
    *
-   *   dappled.set({ noise: { leafScale: 11 } });
+   *   dappled.set({ detailField: { scale: 11 } });
    *   dappled.set({ tree: { forkProbability: 0.4 } });
-   *   dappled.set({ landscape: { layerCount: 5, ringEnabled: true } });
-   *   dappled.setScene("quiet");
+   *   dappled.set({ structure: { layers: [{ type: "rings", preset: "giantPlanet" }] } });
+   *   dappled.setScene("alienValley");
    *   dappled.reseed();
    */
 
   const canvas = document.querySelector(".dappled-background");
   if (!canvas) return;
 
-  // The segment texture layout and shader loop are compile-time constraints.
+  // The segment texture and shader loop are compile-time constraints.
+  // Each row packs start, end, widths, then depth/material as 16-bit pairs.
   const MAX_SEGMENTS = 320;
   const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+  const SEGMENT_MATERIALS = Object.freeze({
+    structure: 0,
+    ink: 1,
+    glow: 2,
+    atmosphere: 3,
+  });
 
   /**
    * Tunable values are grouped by the thing they control:
    *
    * render.pixelScale       Lower values mean larger, chunkier pixels.
-   * palette                 The three colors used after dithering.
-   * noise                   Leaf/canopy texture scale and contrast.
-   * shadows                 Branch blur, leaf density, and depth behavior.
+   * palette                 Colors assigned to the segment materials.
+   * detailField             Fine procedural detail and its contrast.
+   * macroField              Large-scale procedural tone variation.
+   * shadows                 Structure blur, detail density, and depth behavior.
    * tone                    Mapping from physical-ish light to palette tones.
    * composition             Keeps the central title area intentionally quiet.
    * motion                  Wind and parallax response.
-   * structure                Composable scene geometry: tree or landscape.
-   * tree                    The grammar and geometry of generated branches.
+   * structure                A composable list of seeded geometry layers.
+   * tree / landscape        Generator-specific geometry settings.
    */
   const DEFAULT_CONFIG = {
     scene: "canopy",
     structure: {
-      type: "tree",
+      layers: [
+        { type: "tree", preset: "canopy" },
+      ],
     },
     render: {
       pixelScale: 2.5,
@@ -54,28 +65,33 @@
       mid: null,
       shadow: null,
       background: null,
-      branch: null,
+      structure: null,
+      ink: null,
+      glow: null,
+      atmosphere: null,
     },
-    noise: {
-      leafScale: 10.5,
-      leafDriftX: 0.018,
-      leafDriftY: 0.006,
-      leafSoftness: 0.05,
-      leafDepthSoftness: 0.30,
-      leafThresholdNear: 0.84,
-      leafThresholdFar: 0.48,
-      leafShadowStrength: 0.60,
-      canopyScale: 0.42,
-      canopyDrift: 0.004,
-      canopyStrength: 1.0,
+    detailField: {
+      scale: 10.5,
+      driftX: 0.018,
+      driftY: 0.006,
+      softness: 0.05,
+      depthSoftness: 0.30,
+      thresholdNear: 0.84,
+      thresholdFar: 0.48,
+      shadowStrength: 0.60,
+    },
+    macroField: {
+      scale: 0.42,
+      drift: 0.004,
+      strength: 1.0,
     },
     shadows: {
       penumbraBase: 0.006,
       penumbraDepth: 0.055,
-      branchParallax: 0.035,
-      branchWind: 0.012,
-      branchInk: 0.38,
-      leafParallax: 0.10,
+      structureParallax: 0.035,
+      structureWind: 0.012,
+      structureInk: 0.38,
+      detailParallax: 0.10,
     },
     tone: {
       base: 0.05,
@@ -95,8 +111,8 @@
       centerRadius: 0.05,
       centerFalloff: .25,
       centerShadow: 1.0,
-      centerLeafVisibility: 0.0,
-      centerBranchVisibility: 0.0,
+      centerDetailVisibility: 0.0,
+      centerStructureVisibility: 0.0,
       centerVisibility: 0.0,
       centerWarpScale: 1.10,
       centerWarpAmount: 0.0,
@@ -158,8 +174,9 @@
       widthVariation: 0.42,
       depthMinimum: 0.26,
       depthStep: 0.22,
-      ringEnabled: false,
-      ringCount: 0,
+    },
+    rings: {
+      ringCount: 3,
       ringSegments: 64,
       ringRadius: 1.18,
       ringRadiusStep: 0.085,
@@ -169,12 +186,127 @@
     },
   };
 
-  // Presets are deliberately small. Unspecified values inherit from DEFAULT_CONFIG.
-  const SCENE_PRESETS = {
+  const TREE_PRESETS = {
     canopy: {
-      tree: { rootEdges: ["left", "right", "top"] },
+      rootEdges: ["left", "right", "top"],
+    },
+    foregroundRoots: {
+      count: 2,
+      rootEdges: ["left", "right"],
     },
   };
+  const LANDSCAPE_PRESETS = {
+    distantMountains: {
+      layerCount: 4,
+      depthMinimum: 0.42,
+      amplitude: 0.15,
+    },
+  };
+  const RING_PRESETS = {
+    giantPlanet: {
+      ringCount: 3,
+      ringRadius: 1.18,
+      ringCenterY: -0.46,
+    },
+  };
+
+  const STRUCTURE_PRESETS = {
+    tree: TREE_PRESETS,
+    landscape: LANDSCAPE_PRESETS,
+    rings: RING_PRESETS,
+  };
+
+  // Scenes compose reusable generator presets. Unspecified values inherit from defaults.
+  const SCENE_PRESETS = {
+    canopy: {
+      render: {
+        pixelScale: 2.0,
+        widthScale: 0.10,
+      },
+      detailField: {
+        scale: 11.0,
+        thresholdNear: 0.80,
+        thresholdFar: 0.40,
+        shadowStrength: 0.48,
+      },
+      shadows: {
+        penumbraBase: 0.006,
+        penumbraDepth: 0.060,
+        structureParallax: 0.040,
+        structureWind: 0.010,
+        structureInk: 0.18,
+        detailParallax: 0.10,
+      },
+      tone: {
+        base: 0.025,
+        range: 0.58,
+        lightStart: 0.24,
+        lightEnd: 0.76,
+        fringeStart: 0.30,
+        fringePeak: 0.42,
+        fringeEnd: 0.58,
+        fringeReturn: 0.44,
+        centerDip: 0.0,
+        variation: 0.06,
+      },
+      composition: {
+        centerShadow: 0.0,
+        centerDetailVisibility: 1.0,
+        centerStructureVisibility: 1.0,
+        centerVisibility: 1.0,
+      },
+      motion: {
+        windBase: 0.35,
+        windPulse: 0.12,
+        windFlutter: 0.06,
+      },
+      tree: {
+        count: 5,
+        rootEdges: ["top", "left"],
+        rootEdgeYMinimum: 0.30,
+        rootEdgeYMaximum: 0.80,
+        minimumWidth: 0.0010,
+        maximumDepth: 12,
+        lengthScale: 16.0,
+        maximumLength: 0.32,
+        lengthMinimum: 0.85,
+        lengthVariation: 0.30,
+        widthDecayMinimum: 0.97,
+        widthDecayVariation: 0.0,
+        areaConservation: 0.95,
+        forkProbability: 0.70,
+        forkAfterDepth: 0,
+        secondSideProbability: 0.30,
+        leaderAreaMinimum: 0.57,
+        leaderAreaVariation: 0.10,
+        angleJitter: 0.05,
+        curl: 0.30,
+        sideAngle: 0.35,
+        sideAngleThinness: 0.55,
+        sideAngleJitter: 0.15,
+        leaderDepthJitter: 0.10,
+        sideDepthJitter: 0.40,
+        rootXMinimum: 0.08,
+        rootXMaximum: 0.42,
+        rootXJitter: 0.15,
+        rootAngleJitter: 0.60,
+        rootWidth: 0.032,
+        rootWidthVariation: 0.20,
+        rootDepth: 0.04,
+        rootDepthVariation: 0.40,
+      },
+    },
+    alienValley: {
+      structure: {
+        layers: [
+          { type: "landscape", preset: "distantMountains", material: "atmosphere" },
+          { type: "rings", preset: "giantPlanet", material: "glow" },
+          { type: "tree", preset: "foregroundRoots", material: "structure" },
+        ],
+      },
+    },
+  };
+
 
   const vertexSource = `
     attribute vec2 position;
@@ -202,36 +334,38 @@
     uniform float uParallax;
     uniform vec3 uLight;
     uniform vec3 uMid;
-    uniform vec3 uBranch;
+    uniform vec3 uStructure;
+    uniform vec3 uInk;
+    uniform vec3 uGlow;
+    uniform vec3 uAtmosphere;
     uniform vec3 uShadow;
     uniform vec3 uBackground;
 
-    uniform float uLeafScale;
-    uniform float uLeafDriftX;
-    uniform float uLeafDriftY;
-    uniform float uLeafSoftness;
-    uniform float uLeafDepthSoftness;
-    uniform float uLeafThresholdNear;
-    uniform float uLeafThresholdFar;
-    uniform float uLeafShadowStrength;
-    uniform float uCanopyScale;
-    uniform float uCanopyDrift;
-    uniform float uCanopyStrength;
-    uniform float uHaloMode;
+    uniform float uDetailScale;
+    uniform float uDetailDriftX;
+    uniform float uDetailDriftY;
+    uniform float uDetailSoftness;
+    uniform float uDetailDepthSoftness;
+    uniform float uDetailThresholdNear;
+    uniform float uDetailThresholdFar;
+    uniform float uDetailShadowStrength;
+    uniform float uMacroScale;
+    uniform float uMacroDrift;
+    uniform float uMacroStrength;
 
     uniform float uPenumbraBase;
     uniform float uPenumbraDepth;
-    uniform float uBranchParallax;
-    uniform float uBranchWind;
-    uniform float uBranchInk;
-    uniform float uLeafParallax;
+    uniform float uStructureParallax;
+    uniform float uStructureWind;
+    uniform float uStructureInk;
+    uniform float uDetailParallax;
     uniform float uCenterX;
     uniform float uCenterY;
     uniform float uCenterRadius;
     uniform float uCenterFalloff;
     uniform float uCenterShadow;
-    uniform float uCenterLeafVisibility;
-    uniform float uCenterBranchVisibility;
+    uniform float uCenterDetailVisibility;
+    uniform float uCenterStructureVisibility;
     uniform float uCenterVisibility;
     uniform float uCenterWarpScale;
     uniform float uCenterWarpAmount;
@@ -302,12 +436,14 @@
       return (bytes.x * 255.0 * 256.0 + bytes.y * 255.0) / 65535.0;
     }
 
-    vec2 branchField(vec2 position) {
-      position.x += uParallax * uBranchParallax;
-      position.x += sin(uTime * 0.65 + position.y * 4.5) * uBranchWind * uWind;
+    // Returns distance, depth, and the semantic material id.
+    vec3 structureField(vec2 position) {
+      position.x += uParallax * uStructureParallax;
+      position.x += sin(uTime * 0.65 + position.y * 4.5) * uStructureWind * uWind;
 
       float nearestDistance = 1000.0;
       float nearestDepth = 0.0;
+      float nearestMaterial = 0.0;
       float rowScale = 1.0 / float(MAX_SEGMENTS);
 
       for (int i = 0; i < MAX_SEGMENTS; i++) {
@@ -317,7 +453,7 @@
         vec4 first = texture2D(uSegments, vec2(0.125, row));
         vec4 second = texture2D(uSegments, vec2(0.375, row));
         vec4 widths = texture2D(uSegments, vec2(0.625, row));
-        vec4 depth = texture2D(uSegments, vec2(0.875, row));
+        vec4 metadata = texture2D(uSegments, vec2(0.875, row));
 
         vec2 start = vec2(decode16(first.rg), decode16(first.ba)) * uPositionScale - 1.0;
         vec2 end = vec2(decode16(second.rg), decode16(second.ba)) * uPositionScale - 1.0;
@@ -329,24 +465,25 @@
 
         if (distanceToSegment < nearestDistance) {
           nearestDistance = distanceToSegment;
-          nearestDepth = decode16(depth.rg);
+          nearestDepth = decode16(metadata.rg);
+          nearestMaterial = floor(decode16(metadata.ba) * 3.0 + 0.5);
         }
       }
 
-      return vec2(nearestDistance, nearestDepth);
+      return vec3(nearestDistance, nearestDepth, nearestMaterial);
     }
 
-    float branchShadow(float distanceToBranch, float depth) {
+    float structureShadow(float distanceToStructure, float depth) {
       float penumbra = uPenumbraBase + depth * uPenumbraDepth;
-      return 1.0 - smoothstep(-penumbra, penumbra, distanceToBranch);
+      return 1.0 - smoothstep(-penumbra, penumbra, distanceToStructure);
     }
 
-    float leafShadow(vec2 position, float depth) {
-      position.x += uParallax * (uLeafParallax + depth) * 0.1;
-      vec2 drift = vec2(uTime * uLeafDriftX * uWind, uTime * uLeafDriftY * uWind);
-      vec2 samplePoint = position * uLeafScale + drift + uSeed + vec2(13.0, 89.0);
-      float softness = uLeafSoftness + depth * uLeafDepthSoftness;
-      float threshold = mix(uLeafThresholdNear, uLeafThresholdFar, clamp(depth, 0.0, 1.0));
+    float detailShadow(vec2 position, float depth) {
+      position.x += uParallax * (uDetailParallax + depth) * 0.1;
+      vec2 drift = vec2(uTime * uDetailDriftX * uWind, uTime * uDetailDriftY * uWind);
+      vec2 samplePoint = position * uDetailScale + drift + uSeed + vec2(13.0, 89.0);
+      float softness = uDetailSoftness + depth * uDetailDepthSoftness;
+      float threshold = mix(uDetailThresholdNear, uDetailThresholdFar, clamp(depth, 0.0, 1.0));
       return smoothstep(threshold + softness, threshold - softness, fbm(samplePoint));
     }
 
@@ -354,33 +491,35 @@
       vec2 uv = vUv;
       float aspect = uResolution.x / max(uResolution.y, 1.0);
       vec2 position = vec2(uv.x * aspect, uv.y);
-      vec2 branches = branchField(position);
+      vec3 structure = structureField(position);
+      float isStructure = 1.0 - step(0.5, abs(structure.z - 0.0));
+      float isInk = 1.0 - step(0.5, abs(structure.z - 1.0));
+      float isGlow = 1.0 - step(0.5, abs(structure.z - 2.0));
+      float isAtmosphere = 1.0 - step(0.5, abs(structure.z - 3.0));
+      float structureInShadow = structureShadow(structure.x, structure.y) * isStructure;
 
-      float branchesInShadow = branchShadow(branches.x, branches.y);
-      float leafDepth = clamp(branches.y + 0.16, 0.0, 1.0);
-      float leavesInShadow = leafShadow(position, leafDepth);
+      float detailDepth = clamp(structure.y + 0.16, 0.0, 1.0);
+      float detailsInShadow = detailShadow(position, detailDepth) * isStructure;
       float centerWarp = (fbm(position * uCenterWarpScale + uSeed + vec2(211.0, 37.0)) - 0.5) * uCenterWarpAmount;
       vec2 centerDelta = uv - vec2(uCenterX, uCenterY);
       float centerDistance = length(vec2(centerDelta.x * aspect, centerDelta.y)) + centerWarp;
       float centerClear = smoothstep(uCenterRadius, uCenterFalloff, centerDistance);
-      branchesInShadow *= mix(uCenterBranchVisibility, 1.0, centerClear);
-      leavesInShadow *= mix(uCenterLeafVisibility, 1.0, centerClear);
+      structureInShadow *= mix(uCenterStructureVisibility, 1.0, centerClear);
+      detailsInShadow *= mix(uCenterDetailVisibility, 1.0, centerClear);
 
-      float canopyVariation = smoothstep(
+      float macroVariation = smoothstep(
         0.3,
         0.7,
-        fbm(position * uCanopyScale + vec2(uTime * uCanopyDrift * uWind, 19.0) + uSeed + vec2(101.0, 57.0))
+        fbm(position * uMacroScale + vec2(uTime * uMacroDrift * uWind, 19.0) + uSeed + vec2(101.0, 57.0))
       );
 
-      float shadow = max(branchesInShadow, leavesInShadow * uLeafShadowStrength);
+      float shadow = max(structureInShadow, detailsInShadow * uDetailShadowStrength);
       shadow = max(shadow, (1.0 - centerClear) * uCenterShadow);
       float tone = uToneBase + (1.0 - shadow) * uToneRange;
-      float structurePresence = 1.0 - smoothstep(-0.005, 0.018, branches.x);
-      float ringLight = structurePresence * (1.0 - smoothstep(0.05, 0.42, branches.y));
-      if (uHaloMode > 0.5) {
-        tone = mix(tone, uToneBase + shadow * uToneRange, ringLight);
-      }
-      tone += (canopyVariation - 0.5) * uToneVariation * uCanopyStrength;
+      float structurePresence = 1.0 - smoothstep(-0.005, 0.018, structure.x);
+      float glowLight = structurePresence * isGlow * (1.0 - smoothstep(0.05, 0.42, structure.y));
+      tone = mix(tone, uToneBase + shadow * uToneRange, glowLight);
+      tone += (macroVariation - 0.5) * uToneVariation * uMacroStrength;
       tone -= (1.0 - centerClear) * uCenterDip;
       tone = clamp(tone, 0.0, 1.0);
 
@@ -393,8 +532,13 @@
         * smoothstep(uFringeEnd, uFringeReturn, tone);
       vec3 dark = step(shiftedDither, fringe) > 0.5 ? uMid : uShadow;
       vec3 color = lit > 0.5 ? uLight : dark;
-      float branchInk = 1.0 - smoothstep(-0.005, 0.012, branches.x);
-      color = mix(color, uBranch, branchInk * uBranchInk);
+      float ink = structurePresence * (isStructure + isInk)
+        * (1.0 - smoothstep(-0.005, 0.012, structure.x));
+      color = mix(color, isInk > 0.5 ? uInk : uStructure, ink * uStructureInk);
+      float glow = isGlow * (1.0 - smoothstep(-0.005, 0.025, structure.x));
+      color = mix(color, uGlow, glow);
+      float atmosphere = isAtmosphere * (1.0 - smoothstep(-0.005, 0.035, structure.x));
+      color = mix(color, uAtmosphere, atmosphere * 0.55);
       float sceneVisibility = mix(uCenterVisibility, 1.0, centerClear);
       color = mix(uBackground, color, sceneVisibility);
 
@@ -428,8 +572,7 @@
 
   const mulberrySeed = () => Math.floor(Math.random() * 0x7fffffff);
 
-  /** Generate branch segments using a probabilistic, area-conserving grammar. */
-  function growTree(seed, aspect, treeConfig) {
+  function growTree(seed, aspect, treeConfig, material = SEGMENT_MATERIALS.structure) {
     const random = randomGenerator(seed);
     const segments = [];
     const tree = treeConfig;
@@ -445,7 +588,7 @@
       const endY = y + Math.sin(nextAngle) * length;
       const endWidth = width * (tree.widthDecayMinimum + random() * tree.widthDecayVariation);
 
-      segments.push([x, y, endX, endY, width, endWidth, clamp(depth, 0.02, 0.98)]);
+      segments.push([x, y, endX, endY, width, endWidth, clamp(depth, 0.02, 0.98), material]);
 
       const availableArea = endWidth * endWidth * tree.areaConservation;
       const shouldFork = random() < tree.forkProbability && iteration > tree.forkAfterDepth;
@@ -533,19 +676,19 @@
       grow(rootX, rootY, rootAngle, rootWidth, rootDepth, 0, random() * Math.PI * 2);
     }
 
-    return { segments, positionScale: aspect + 2.0 };
+    return { segments };
   }
   /**
    * Generate a layered horizon and optional ringworld arcs.
    * Both are packed as depth-aware segments, making landscapes composable
    * with the same shader and runtime controls as tree canopies.
    */
-  function growLandscape(seed, aspect, landscapeConfig) {
+  function growLandscape(seed, aspect, landscapeConfig, material = SEGMENT_MATERIALS.structure) {
     const random = randomGenerator(seed);
     const segments = [];
     const landscape = landscapeConfig;
     const points = Math.max(8, Math.round(landscape.segmentsPerLayer));
-    const addPolyline = (pointsForLine, width, depth) => {
+    const addPolyline = (pointsForLine, width, depth, lineMaterial = material) => {
       for (let index = 1; index < pointsForLine.length; index += 1) {
         const previous = pointsForLine[index - 1];
         const current = pointsForLine[index];
@@ -559,6 +702,7 @@
           previousWidth,
           currentWidth,
           clamp(depth + (random() - 0.5) * 0.10, 0.02, 0.98),
+          lineMaterial,
         ]);
       }
     };
@@ -596,11 +740,55 @@
             landscape.ringCenterY + Math.sin(angle) * radius + jitter,
           ]);
         }
-        addPolyline(arc, landscape.ringWidth, 0.12 + ringIndex * 0.08);
+        addPolyline(arc, landscape.ringWidth, 0.12 + ringIndex * 0.08, material);
       }
     }
 
-    return { segments: segments.slice(0, MAX_SEGMENTS), positionScale: aspect + 2.0 };
+    return { segments: segments.slice(0, MAX_SEGMENTS) };
+  }
+ 
+  const materialId = (value) => {
+    if (typeof value === "number") return clamp(Math.round(value), 0, 3);
+    return SEGMENT_MATERIALS[value] ?? SEGMENT_MATERIALS.structure;
+  };
+
+  const structureLayerConfig = (config, layer) => {
+    const type = layer.type === "rings" ? "rings" : layer.type;
+    const preset = STRUCTURE_PRESETS[type]?.[layer.preset] || {};
+    const base = type === "rings"
+      ? merge(config.landscape, config.rings, { ringEnabled: true, layerCount: 0 })
+      : config[type];
+    return {
+      type,
+      material: materialId(layer.material),
+      config: merge(base || {}, preset, layer.config || {}),
+    };
+  };
+
+  /** Compose independent generator outputs into one renderer-ready segment stream. */
+  function growStructure(seed, aspect, config) {
+    const configuredLayers = config.structure?.layers;
+    const layers = Array.isArray(configuredLayers)
+      ? configuredLayers
+      : [{ type: config.structure?.type || "tree" }];
+    const segments = [];
+
+    layers.forEach((layer, index) => {
+      if (!layer || segments.length >= MAX_SEGMENTS) return;
+      const resolved = structureLayerConfig(config, layer);
+      const layerSeed = seed + index * 1009;
+      const output = resolved.type === "landscape" || resolved.type === "rings"
+        ? growLandscape(layerSeed, aspect, resolved.config, resolved.material)
+        : resolved.type === "tree"
+          ? growTree(layerSeed, aspect, resolved.config, resolved.material)
+          : { segments: [] };
+      for (const segment of output.segments) {
+        if (segments.length >= MAX_SEGMENTS) break;
+        segments.push(segment);
+      }
+    });
+
+    return { segments };
   }
 
 
@@ -677,6 +865,7 @@
       config,
       width: 1,
       height: 1,
+      positionScale: 3,
       sceneSeed: mulberrySeed(),
       noiseSeed: [Math.random() * 1000, Math.random() * 1000],
       structure: null,
@@ -698,25 +887,28 @@
         mid: cssColor(config.palette.mid, "--dappled-mid", "#c78945"),
         shadow: cssColor(config.palette.shadow, "--dappled-shadow", "#101a2b"),
         background: cssColor(config.palette.background, "--background", "#05070b"),
-        branch: cssColor(config.palette.branch, "--dappled-branch", "#000000"),
+        structure: cssColor(config.palette.structure, "--dappled-structure", "#000000"),
+        ink: cssColor(config.palette.ink, "--dappled-ink", "#000000"),
+        glow: cssColor(config.palette.glow, "--dappled-glow", "#c78945"),
+        atmosphere: cssColor(config.palette.atmosphere, "--dappled-atmosphere", "#704040"),
       };
     };
 
     const rebuild = () => {
-      state.structure = config.structure.type === "landscape"
-        ? growLandscape(state.sceneSeed, state.width / state.height, config.landscape)
-        : growTree(state.sceneSeed, state.width / state.height, config.tree);
+      const aspect = state.width / state.height;
+      state.positionScale = aspect + 2.0;
+      state.structure = growStructure(state.sceneSeed, aspect, config);
       packedSegments.fill(0);
       state.structure.segments.forEach((segment, index) => {
         const offset = index * 16;
-        const scale = state.structure.positionScale;
-        encode((segment[0] + 1) / scale, offset);
-        encode((segment[1] + 1) / scale, offset + 2);
-        encode((segment[2] + 1) / scale, offset + 4);
-        encode((segment[3] + 1) / scale, offset + 6);
+        encode((segment[0] + 1) / state.positionScale, offset);
+        encode((segment[1] + 1) / state.positionScale, offset + 2);
+        encode((segment[2] + 1) / state.positionScale, offset + 4);
+        encode((segment[3] + 1) / state.positionScale, offset + 6);
         encode(segment[4] / config.render.widthScale, offset + 8);
         encode(segment[5] / config.render.widthScale, offset + 10);
         encode(segment[6], offset + 12);
+        encode(segment[7] / 3, offset + 14);
       });
       state.segmentCount = state.structure.segments.length;
       gl.bindTexture(gl.TEXTURE_2D, segmentTexture);
@@ -741,7 +933,7 @@
     };
 
     const draw = (time) => {
-      const { noise, shadows, tone, composition } = config;
+      const { detailField, macroField, shadows, tone, composition } = config;
       gl.useProgram(program);
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, segmentTexture);
@@ -749,7 +941,7 @@
       gl.uniform2f(uniform("uResolution"), state.width, state.height);
       gl.uniform2f(uniform("uSeed"), state.noiseSeed[0], state.noiseSeed[1]);
       set1f("uSegmentCount", state.segmentCount);
-      set1f("uPositionScale", state.structure.positionScale);
+      set1f("uPositionScale", state.positionScale);
       set1f("uWidthScale", config.render.widthScale);
       set1f("uTime", time);
       set1f("uWind", state.wind);
@@ -758,35 +950,37 @@
       gl.uniform3fv(uniform("uMid"), state.colors.mid);
       gl.uniform3fv(uniform("uShadow"), state.colors.shadow);
       gl.uniform3fv(uniform("uBackground"), state.colors.background);
-      gl.uniform3fv(uniform("uBranch"), state.colors.branch);
+      gl.uniform3fv(uniform("uStructure"), state.colors.structure);
+      gl.uniform3fv(uniform("uInk"), state.colors.ink);
+      gl.uniform3fv(uniform("uGlow"), state.colors.glow);
+      gl.uniform3fv(uniform("uAtmosphere"), state.colors.atmosphere);
 
-      set1f("uLeafScale", noise.leafScale);
-      set1f("uLeafDriftX", noise.leafDriftX);
-      set1f("uLeafDriftY", noise.leafDriftY);
-      set1f("uLeafSoftness", noise.leafSoftness);
-      set1f("uLeafDepthSoftness", noise.leafDepthSoftness);
-      set1f("uLeafThresholdNear", noise.leafThresholdNear);
-      set1f("uLeafThresholdFar", noise.leafThresholdFar);
-      set1f("uLeafShadowStrength", noise.leafShadowStrength);
-      set1f("uCanopyScale", noise.canopyScale);
-      set1f("uCanopyDrift", noise.canopyDrift);
-      set1f("uCanopyStrength", noise.canopyStrength);
-      set1f("uHaloMode", config.structure.type === "landscape" && config.landscape.ringEnabled ? 1 : 0);
+      set1f("uDetailScale", detailField.scale);
+      set1f("uDetailDriftX", detailField.driftX);
+      set1f("uDetailDriftY", detailField.driftY);
+      set1f("uDetailSoftness", detailField.softness);
+      set1f("uDetailDepthSoftness", detailField.depthSoftness);
+      set1f("uDetailThresholdNear", detailField.thresholdNear);
+      set1f("uDetailThresholdFar", detailField.thresholdFar);
+      set1f("uDetailShadowStrength", detailField.shadowStrength);
+      set1f("uMacroScale", macroField.scale);
+      set1f("uMacroDrift", macroField.drift);
+      set1f("uMacroStrength", macroField.strength);
 
       set1f("uPenumbraBase", shadows.penumbraBase);
       set1f("uPenumbraDepth", shadows.penumbraDepth);
-      set1f("uBranchParallax", shadows.branchParallax);
-      set1f("uBranchWind", shadows.branchWind);
-      set1f("uBranchInk", shadows.branchInk);
-      set1f("uLeafParallax", shadows.leafParallax);
+      set1f("uStructureParallax", shadows.structureParallax);
+      set1f("uStructureWind", shadows.structureWind);
+      set1f("uStructureInk", shadows.structureInk);
+      set1f("uDetailParallax", shadows.detailParallax);
 
       set1f("uCenterX", composition.centerX);
       set1f("uCenterY", composition.centerY);
       set1f("uCenterRadius", composition.centerRadius);
       set1f("uCenterFalloff", composition.centerFalloff);
       set1f("uCenterShadow", composition.centerShadow);
-      set1f("uCenterLeafVisibility", composition.centerLeafVisibility);
-      set1f("uCenterBranchVisibility", composition.centerBranchVisibility);
+      set1f("uCenterDetailVisibility", composition.centerDetailVisibility);
+      set1f("uCenterStructureVisibility", composition.centerStructureVisibility);
       set1f("uCenterVisibility", composition.centerVisibility);
       set1f("uCenterWarpScale", composition.centerWarpScale);
       set1f("uCenterWarpAmount", composition.centerWarpAmount);
@@ -874,7 +1068,7 @@
         overrides = merge(overrides, partial);
         apply(
           merge(DEFAULT_CONFIG, SCENE_PRESETS[sceneName], overrides),
-          Boolean(partial.tree || partial.landscape || partial.structure || partial.render),
+          Boolean(partial.tree || partial.landscape || partial.rings || partial.structure || partial.render),
         );
         return api;
       },
@@ -930,6 +1124,7 @@
     create: createDappledBackground,
     defaults: clone(DEFAULT_CONFIG),
     presets: clone(SCENE_PRESETS),
+    structurePresets: clone(STRUCTURE_PRESETS),
   };
   window.dappled = createDappledBackground(canvas);
 })();
