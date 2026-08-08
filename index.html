@@ -42,6 +42,194 @@
     </nav>
   </main>
 
-  <script src="/assets/dappled.js"></script>
+  <aside class="scene-ui" aria-label="Scene controls">
+    <button class="scene-launch" id="scene-launch" type="button">turn on scene</button>
+    <button class="scene-close" id="scene-close" type="button" hidden>close scene</button>
+
+    <div class="scene-panel" id="scene-panel" hidden>
+      <div class="scene-panel-heading">
+        <span class="scene-panel-label">scene</span>
+        <button class="scene-toggle" id="scene-toggle" type="button" aria-expanded="true" aria-controls="scene-panel-body">
+          scene controls
+        </button>
+      </div>
+      <div id="scene-panel-body">
+        <div class="scene-options" id="scene-options" role="group" aria-label="Choose a scene">
+          <button type="button" data-scene="canopy" aria-pressed="true">canopy</button>
+          <button type="button" data-scene="caustics" aria-pressed="false">caustics</button>
+          <button type="button" data-scene="windowLight" aria-pressed="false">window light</button>
+        </div>
+        <button class="scene-reseed" id="scene-reseed" type="button">new seed <span aria-hidden="true">↗</span></button>
+        <div class="scene-inspector" id="scene-inspector" aria-label="Scene parameters"></div>
+      </div>
+    </div>
+    <p class="scene-status" id="scene-status" role="status" aria-live="polite"></p>
+  </aside>
+
+  <script>
+    (() => {
+      const canvas = document.querySelector(".dappled-background");
+      const launch = document.querySelector("#scene-launch");
+      const toggle = document.querySelector("#scene-toggle");
+      const panel = document.querySelector("#scene-panel");
+      const panelBody = document.querySelector("#scene-panel-body");
+      const close = document.querySelector("#scene-close");
+      const inspector = document.querySelector("#scene-inspector");
+      const status = document.querySelector("#scene-status");
+      const scriptPath = "/assets/dappled.js";
+      let loading = false;
+      let panelOpen = false;
+
+      const setPanel = (open) => {
+        panelOpen = Boolean(open);
+        panel.classList.toggle("is-open", open);
+        panelBody.toggleAttribute("hidden", !open);
+        toggle.setAttribute("aria-expanded", String(open));
+        toggle.textContent = "scene controls";
+      };
+
+      const controlRange = (value, key) => {
+        const magnitude = Math.abs(value);
+        if (key.toLowerCase().includes("count") || key.toLowerCase().includes("depth")) {
+          return { min: 0, max: Math.max(10, Math.ceil(magnitude * 2)), step: 1 };
+        }
+        if (magnitude <= 1) return { min: value < 0 ? -1 : 0, max: 1, step: 0.01 };
+        return { min: 0, max: Math.ceil(magnitude * 2), step: 0.01 };
+      };
+
+      const makePatch = (path, value) => path.reduceRight((result, key) => ({ [key]: result }), value);
+
+      const renderInspector = () => {
+        if (!window.dappled) return;
+        inspector.replaceChildren();
+        const config = window.dappled.getConfig();
+        Object.entries(config).forEach(([section, values]) => {
+          if (!values || typeof values !== "object" || Array.isArray(values)) return;
+          const displayedValues = section === "palette"
+            ? Object.fromEntries(Object.entries(values).map(([key, value]) => {
+              const cssName = key === "background" ? "--background" : `--dappled-${key}`;
+              const inherited = getComputedStyle(document.documentElement).getPropertyValue(cssName).trim();
+              const fallback = {
+                light: "#f5f0e5",
+                mid: "#c78945",
+                shadow: "#101a2b",
+                background: "#05070b",
+                structure: "#000000",
+                ink: "#000000",
+                glow: "#c78945",
+                atmosphere: "#704040",
+              }[key];
+              return [key, value || inherited || fallback];
+            }))
+            : values;
+          const group = document.createElement("details");
+          group.className = "scene-inspector-group";
+          group.open = section === "motion";
+          const summary = document.createElement("summary");
+          summary.textContent = section;
+          group.append(summary);
+
+          Object.entries(displayedValues).forEach(([key, value]) => {
+            const isNumber = typeof value === "number" && Number.isFinite(value);
+            const isColor = section === "palette" && typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value);
+            if (!isNumber && !isColor) return;
+            const row = document.createElement("label");
+            row.className = "scene-control";
+            const name = document.createElement("span");
+            name.textContent = key;
+            const output = document.createElement("output");
+            output.textContent = String(value);
+            const input = document.createElement("input");
+            if (isColor) {
+              Object.assign(input, { type: "color", value });
+            } else {
+              const range = controlRange(value, key);
+              Object.assign(input, { type: "range", value, min: range.min, max: range.max, step: range.step });
+            }
+            input.addEventListener("input", () => {
+              const nextValue = isColor ? input.value : Number(input.value);
+              output.textContent = String(nextValue);
+              window.dappled.set(makePatch([section, key], nextValue));
+            });
+            row.append(name, output, input);
+            group.append(row);
+          });
+          if (group.querySelector(".scene-control")) inspector.append(group);
+        });
+      };
+
+      const showFailure = () => {
+        loading = false;
+        launch.disabled = false;
+        launch.textContent = "scene unavailable";
+        status.textContent = "the scene could not be loaded";
+        document.body.classList.add("scene-failed");
+      };
+
+      const initialize = () => {
+        if (!window.DappledBackground || !canvas) return showFailure();
+        try {
+          window.dappled = window.DappledBackground.create(canvas);
+        } catch (error) {
+          console.error("[scene] initialization failed:", error);
+          return showFailure();
+        }
+        if (!window.dappled) return showFailure();
+        loading = false;
+        canvas.classList.add("is-active");
+        launch.hidden = true;
+        close.hidden = false;
+        panel.hidden = false;
+        launch.disabled = false;
+        renderInspector();
+        setPanel(true);
+      };
+
+      launch.addEventListener("click", () => {
+        if (loading) return;
+        if (window.dappled) return;
+        loading = true;
+        launch.disabled = true;
+        launch.textContent = "loading scene";
+        if (window.DappledBackground) return initialize();
+        const script = document.createElement("script");
+        script.src = scriptPath;
+        script.onload = initialize;
+        script.onerror = showFailure;
+        document.head.appendChild(script);
+      });
+
+      toggle.addEventListener("click", () => setPanel(!panelOpen));
+
+      close.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        window.dappled?.destroy();
+        window.dappled = null;
+        canvas.classList.remove("is-active");
+        panel.hidden = true;
+        close.hidden = true;
+        launch.hidden = false;
+        launch.disabled = false;
+        launch.textContent = "turn on scene";
+        panelBody.hidden = false;
+        panelOpen = false;
+        status.textContent = "";
+      });
+
+      document.querySelectorAll("[data-scene]").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (!window.dappled) return;
+          window.dappled.setScene(button.dataset.scene);
+          renderInspector();
+          document.querySelectorAll("[data-scene]").forEach((option) => {
+            option.setAttribute("aria-pressed", String(option === button));
+          });
+        });
+      });
+
+      document.querySelector("#scene-reseed").addEventListener("click", () => window.dappled?.reseed());
+    })();
+  </script>
 </body>
 </html>

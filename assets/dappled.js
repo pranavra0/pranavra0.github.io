@@ -1363,7 +1363,7 @@
       renderer.state.rippleX = event.clientX / Math.max(window.innerWidth, 1);
       renderer.state.rippleY = 1 - event.clientY / Math.max(window.innerHeight, 1);
       renderer.state.rippleAge = 0;
-      if (reducedMotion.matches) drawOnce();
+      drawOnce();
     };
     const onResize = () => {
       clearTimeout(resizeTimer);
@@ -1393,7 +1393,7 @@
     const apply = (nextConfig, rebuildTree = true) => {
       config = nextConfig;
       renderer.updateConfig(config, rebuildTree);
-      if (reducedMotion.matches) drawOnce();
+      drawOnce();
     };
 
     const api = {
@@ -1436,25 +1436,15 @@
         window.removeEventListener("resize", onResize);
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("click", onClick);
-        renderer.loseContext();
       },
     };
 
     window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pointermove", onPointerMove, { passive: true });
     window.addEventListener("click", onClick, { passive: true });
-    reducedMotion.addEventListener?.("change", () => {
-      if (reducedMotion.matches) {
-        window.cancelAnimationFrame(animationFrame);
-        drawOnce();
-      } else {
-        previousTime = 0;
-        animationFrame = window.requestAnimationFrame(loop);
-      }
-    });
-
-    if (reducedMotion.matches) drawOnce();
-    else animationFrame = window.requestAnimationFrame(loop);
+    // Keep a live loop after opt-in so caustics, wind, and pointer parallax all
+    // continue to work. The scene is an intentional, user-enabled effect.
+    animationFrame = window.requestAnimationFrame(loop);
 
     return api;
   }
@@ -1465,5 +1455,6 @@
     presets: clone(SCENE_PRESETS),
     structurePresets: clone(STRUCTURE_PRESETS),
   };
-  window.dappled = createDappledBackground(canvas);
+  // The small inline bootstrapper owns startup so this renderer can be lazy-loaded.
+  // Keeping creation opt-in also means a failed load leaves the document pitch black.
 })();

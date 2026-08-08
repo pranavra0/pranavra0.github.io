@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  --background: #05070b;
+  --background: #000;
   --foreground: #f5f5f5;
   --muted: #8a8a8a;
   --hover: #fff;
@@ -24,7 +24,7 @@ body {
   display: grid;
   place-items: center;
   padding: 2rem;
-  background: var(--background);
+  background: #000;
   color: var(--foreground);
   font-family: "Instrument Sans", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -47,9 +47,13 @@ main {
   display: block;
   pointer-events: none;
   image-rendering: pixelated;
-  background:
-    radial-gradient(circle at 72% 18%, #c7894530, transparent 35%),
-    var(--background);
+  background: #000;
+  opacity: 0;
+  transition: opacity 500ms ease;
+}
+
+.dappled-background.is-active {
+  opacity: 1;
 }
 
 h1 {
@@ -104,6 +108,166 @@ h1 {
   height: 44px;
 }
 
+.scene-ui {
+  position: fixed;
+  z-index: 2;
+  right: 1.5rem;
+  bottom: 1.25rem;
+  display: grid;
+  justify-items: end;
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.scene-launch,
+.scene-toggle,
+.scene-close,
+.scene-panel button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.scene-launch:hover,
+.scene-toggle:hover,
+.scene-close:hover,
+.scene-panel button:hover,
+.scene-launch:focus-visible,
+.scene-toggle:focus-visible,
+.scene-close:focus-visible,
+.scene-panel button:focus-visible {
+  color: var(--hover);
+}
+
+.scene-launch:disabled {
+  cursor: wait;
+  opacity: 0.5;
+}
+
+.scene-panel {
+  width: 15rem;
+  margin-bottom: 0.55rem;
+  padding: 0.5rem 0.65rem;
+  border-left: 1px solid #ffffff32;
+  background: #050505d9;
+}
+
+.scene-close {
+  margin-bottom: 0.55rem;
+  color: var(--muted);
+}
+
+.scene-panel-heading {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.45rem;
+}
+
+.scene-panel-heading .scene-toggle {
+  color: var(--muted);
+}
+
+.scene-panel-label {
+  color: var(--foreground);
+}
+
+.scene-close {
+  color: var(--muted);
+}
+
+.scene-options {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: start;
+}
+
+.scene-options button[aria-pressed="true"] {
+  color: var(--foreground);
+}
+
+.scene-options button[aria-pressed="true"]::before {
+  content: "·";
+  display: inline-block;
+  width: 0.8rem;
+  color: var(--foreground);
+}
+
+.scene-options button[aria-pressed="false"]::before {
+  content: "";
+  display: inline-block;
+  width: 0.8rem;
+}
+
+.scene-reseed {
+  margin-top: 0.65rem !important;
+  color: var(--muted);
+}
+
+.scene-inspector {
+  width: 100%;
+  max-height: min(24rem, 45vh);
+  margin-top: 0.65rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.scene-inspector-group {
+  border-top: 1px solid #ffffff1c;
+  padding: 0.45rem 0;
+}
+
+.scene-inspector-group summary {
+  color: var(--foreground);
+  cursor: pointer;
+  list-style: none;
+}
+
+.scene-inspector-group summary::-webkit-details-marker {
+  display: none;
+}
+
+.scene-inspector-group summary::before {
+  content: "+";
+  display: inline-block;
+  width: 0.8rem;
+  color: var(--muted);
+}
+
+.scene-inspector-group[open] summary::before {
+  content: "−";
+}
+
+.scene-control {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.15rem 0.4rem;
+  margin-top: 0.45rem;
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.scene-control output {
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.scene-control input {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 0.8rem;
+  accent-color: var(--foreground);
+}
+
+.scene-status {
+  margin: 0.4rem 0 0;
+  color: #777;
+  font-size: 0.68rem;
+}
+
 @media (max-width: 600px) {
   body {
     padding: 1rem;
@@ -125,6 +289,11 @@ h1 {
   .socials svg {
     width: 2.5rem;
     height: 2.5rem;
+  }
+
+  .scene-ui {
+    right: 1rem;
+    bottom: 1rem;
   }
 }
 
