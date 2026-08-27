@@ -34,6 +34,7 @@ body {
 main {
   position: relative;
   z-index: 1;
+  width: min(100%, 72rem);
   padding: 2rem;
   text-align: center;
 }
@@ -52,9 +53,6 @@ main {
   transition: opacity 500ms ease;
 }
 
-.dappled-background.is-active {
-  opacity: 1;
-}
 
 h1 {
   margin: 0 0 0.75rem;
@@ -108,165 +106,216 @@ h1 {
   height: 44px;
 }
 
-.scene-ui {
-  position: fixed;
-  z-index: 2;
-  right: 1.5rem;
-  bottom: 1.25rem;
-  display: grid;
-  justify-items: end;
+.projects-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 2rem;
   color: var(--muted);
-  font-size: 0.75rem;
-  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+  text-decoration: none;
 }
 
-.scene-launch,
-.scene-toggle,
-.scene-close,
-.scene-panel button {
-  border: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-}
-
-.scene-launch:hover,
-.scene-toggle:hover,
-.scene-close:hover,
-.scene-panel button:hover,
-.scene-launch:focus-visible,
-.scene-toggle:focus-visible,
-.scene-close:focus-visible,
-.scene-panel button:focus-visible {
+.projects-link:hover {
   color: var(--hover);
 }
 
-.scene-launch:disabled {
-  cursor: wait;
-  opacity: 0.5;
+.projects-link:focus-visible,
+.back-link:focus-visible {
+  outline: 2px solid var(--hover);
+  outline-offset: 4px;
 }
 
-.scene-panel {
-  width: 15rem;
-  margin-bottom: 0.55rem;
-  padding: 0.5rem 0.65rem;
-  border-left: 1px solid #ffffff32;
-  background: #050505d9;
+.projects-link svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
 }
 
-.scene-close {
-  margin-bottom: 0.55rem;
+.projects-page {
+  max-width: 64rem;
+}
+
+.projects-header {
+  text-align: left;
+}
+
+.back-link {
   color: var(--muted);
+  font-size: 0.9rem;
+  text-decoration: none;
 }
 
-.scene-panel-heading {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.45rem;
+.back-link:hover {
+  color: var(--hover);
 }
 
-.scene-panel-heading .scene-toggle {
-  color: var(--muted);
+.projects-header h1 {
+  margin-top: 2rem;
 }
 
-.scene-panel-label {
+.projects-page .projects {
+  margin-top: 4rem;
+}
+
+.projects h2 {
+  margin: 0 0 0.85rem;
   color: var(--foreground);
+  font-size: 1.1rem;
+  font-weight: 500;
 }
 
-.scene-close {
-  color: var(--muted);
-}
-
-.scene-options {
+.project-grid {
   display: grid;
-  gap: 0.35rem;
-  justify-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0.85rem;
 }
 
-.scene-options button[aria-pressed="true"] {
-  color: var(--foreground);
-}
-
-.scene-options button[aria-pressed="true"]::before {
-  content: "·";
-  display: inline-block;
-  width: 0.8rem;
-  color: var(--foreground);
-}
-
-.scene-options button[aria-pressed="false"]::before {
-  content: "";
-  display: inline-block;
-  width: 0.8rem;
-}
-
-.scene-reseed {
-  margin-top: 0.65rem !important;
-  color: var(--muted);
-}
-
-.scene-inspector {
+.project-card {
+  display: block;
   width: 100%;
-  max-height: min(24rem, 45vh);
-  margin-top: 0.65rem;
-  overflow-y: auto;
-  scrollbar-width: thin;
-}
-
-.scene-inspector-group {
-  border-top: 1px solid #ffffff1c;
-  padding: 0.45rem 0;
-}
-
-.scene-inspector-group summary {
-  color: var(--foreground);
+  min-width: 0;
+  padding: 0.55rem;
+  border: 0;
+  appearance: none;
+  background: #242424;
+  color: inherit;
+  font: inherit;
+  text-align: left;
   cursor: pointer;
-  list-style: none;
+  border-radius: 6px;
+}
+.project-card:focus,
+.project-card:focus-visible {
+  outline: none;
 }
 
-.scene-inspector-group summary::-webkit-details-marker {
-  display: none;
+.project-card:hover {
+  background: #2a2a2a;
 }
 
-.scene-inspector-group summary::before {
-  content: "+";
-  display: inline-block;
-  width: 0.8rem;
-  color: var(--muted);
+
+.project-content {
+  padding: 0.1rem 0.15rem 0.2rem;
 }
 
-.scene-inspector-group[open] summary::before {
-  content: "−";
-}
-
-.scene-control {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0.15rem 0.4rem;
-  margin-top: 0.45rem;
-  color: var(--muted);
-  font-size: 0.68rem;
-}
-
-.scene-control output {
+.project-card h3 {
+  margin: 0.3rem 0 0.3rem;
   color: var(--foreground);
-  font-variant-numeric: tabular-nums;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
-.scene-control input {
-  grid-column: 1 / -1;
-  width: 100%;
-  height: 0.8rem;
-  accent-color: var(--foreground);
+.project-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
 }
 
-.scene-status {
-  margin: 0.4rem 0 0;
-  color: #777;
-  font-size: 0.68rem;
+.project-card .project-blurb {
+  margin-top: 0.4rem;
+  color: #c4c4c4;
 }
+
+
+
+.project-card .project-stack {
+  margin-top: 0.35rem;
+  color: #999;
+  font-size: 0.7rem;
+}
+
+.project-dialog {
+  width: min(calc(100% - 2rem), 42rem);
+  max-height: calc(100% - 2rem);
+  overflow: auto;
+  padding: 1rem;
+  border: 1px solid #555;
+  border-radius: 8px;
+  background: #181818;
+  color: var(--foreground);
+}
+
+.project-dialog::backdrop {
+  background: rgb(0 0 0 / 78%);
+}
+
+.project-dialog-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.project-dialog h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.project-dialog-close {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.project-dialog-close:hover,
+.project-dialog-close:focus-visible {
+  color: var(--hover);
+}
+
+.project-dialog-close:focus-visible {
+  outline: 2px solid var(--hover);
+  outline-offset: 3px;
+}
+
+
+.project-dialog p {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.project-dialog-description {
+  white-space: pre-line;
+}
+
+.project-dialog-description {
+  color: var(--foreground) !important;
+  text-align: left;
+}
+
+
+.project-dialog .project-dialog-stack {
+  font-size: 0.8rem;
+}
+
+.project-dialog-link {
+  display: inline-block;
+  margin-top: 1.25rem;
+  color: var(--foreground);
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.project-dialog-link:hover {
+  color: var(--hover);
+}
+
+.project-dialog-link:focus-visible {
+  outline: 2px solid var(--hover);
+  outline-offset: 3px;
+}
+
 
 @media (max-width: 600px) {
   body {
@@ -291,17 +340,6 @@ h1 {
     height: 2.5rem;
   }
 
-  .scene-ui {
-    right: 1rem;
-    bottom: 1rem;
-  }
 }
 
 
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    transition-duration: 0.01ms !important;
-  }
-}
